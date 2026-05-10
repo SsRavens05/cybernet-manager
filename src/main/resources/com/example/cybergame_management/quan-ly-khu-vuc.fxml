@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="650.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: #f4f6f9;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyKhuVucController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+
+        <HBox spacing="20.0">
+            <children>
+                <AnchorPane prefHeight="130.0" style="-fx-background-color: #2b88d8; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Khu Vực" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
+                        <Label layoutX="20.0" layoutY="50.0" text="4" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
+                    </children>
+                </AnchorPane>
+
+                <AnchorPane prefHeight="130.0" style="-fx-background-color: #8e24aa; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Số Máy" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
+                        <Label layoutX="20.0" layoutY="50.0" text="43" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
+                    </children>
+                </AnchorPane>
+
+                <AnchorPane prefHeight="130.0" style="-fx-background-color: #ffb300; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label layoutX="60.0" layoutY="20.0" text="Đang Hoạt Động" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
+                        <Label layoutX="20.0" layoutY="50.0" text="3" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
+                    </children>
+                </AnchorPane>
+            </children>
+        </HBox>
+
+        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #e0e0e0; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
+            <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <Label minWidth="180.0" text="Danh Sách Khu Vực">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ComboBox prefWidth="140.0" promptText="Tất cả trạng thái" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;" />
+                        <TextField prefWidth="180.0" promptText="Tìm tên, mã khu vực..." style="-fx-background-color: #fafafa; -fx-border-color: #e0e0e0; -fx-border-radius: 5;" />
+                        <Button styleClass="btn-action" onAction="#onInsertClick" text="+ Insert" />
+                        <Button styleClass="btn-delete" onAction="#onDeleteClick" text="Delete" />
+                        <Button styleClass="btn-action" text="Update" />
+                    </children>
+                    <VBox.margin><Insets bottom="20.0" /></VBox.margin>
+                </HBox>
+
+                <TableView fx:id="tbKhuVuc" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colMaKV" prefWidth="90.0" text="Mã KV" />
+                        <TableColumn fx:id="colTenKV" prefWidth="150.0" text="Tên Khu Vực" />
+                        <TableColumn fx:id="colSoMay" prefWidth="90.0" text="Số Máy" />
+                        <TableColumn fx:id="colGiaThue" prefWidth="120.0" text="Giá Thuê/h" />
+                        <TableColumn fx:id="colTrangThai" prefWidth="120.0" text="Trạng Thái" />
+                        <TableColumn fx:id="colMoTa" prefWidth="250.0" text="Mô Tả" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</VBox>
