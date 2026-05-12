@@ -2,9 +2,17 @@ package com.example.cybergame_management;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class MainController {
@@ -154,5 +162,57 @@ public class MainController {
         }
     }
 
+    @FXML
+    private AnchorPane btnUserProfile; // Khai báo id của vùng User
+
+    @FXML
+    public void onUserClick(MouseEvent event) {
+        // 1. Tạo ContextMenu
+        ContextMenu logoutMenu = new ContextMenu();
+
+        // 2. Tạo Item "Đăng xuất"
+        MenuItem logoutItem = new MenuItem("🚪 Đăng xuất");
+
+        // 3. Xử lý sự kiện khi bấm vào chữ Đăng xuất
+        logoutItem.setOnAction(e -> {
+            performLogout();
+        });
+
+        logoutMenu.getItems().add(logoutItem);
+
+        // 4. Hiển thị menu ngay dưới cái AnchorPane khi click
+        logoutMenu.show(btnUserProfile, Side.BOTTOM, 0, 0);
+    }
+
+    private void performLogout() {
+        try {
+            // Tải lại giao diện Đăng nhập
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login-view.fxml"));
+            Parent root = fxmlLoader.load();
+
+            // Lấy Stage hiện tại và chuyển Scene
+            Stage stage = (Stage) btnUserProfile.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+
+            System.out.println("Đã đăng xuất hệ thống!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private Label lblGreeting;
+
+    // Hàm này sẽ được gọi từ màn hình Login để truyền tên qua
+    public void setGreeting(String username) {
+        if (username != null && !username.trim().isEmpty()) {
+            lblGreeting.setText("Hello, " + username + "!");
+        } else {
+            lblGreeting.setText("Hello, Admin!"); // Phòng hờ nếu bị rỗng
+        }
+    }
 
 }

@@ -45,30 +45,34 @@ public class LoginController {
         String username = txtUsername.getText();
         String password = txtPassword.getText();
 
-        // 1. Kiểm tra rỗng
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Thông báo", "Vui lòng nhập đầy đủ thông tin");
-            return; // Dừng lại không làm tiếp
+            return;
         }
 
-        // 2. Chỗ này sau này ông nối Oracle/SQL Server vào để check tài khoản
-        // Hiện tại tui cho pass qua luôn nếu đã điền đủ thông tin
-        loadMainScene();
+        // Truyền thẳng cái username vào hàm loadMainScene luôn
+        loadMainScene(username);
     }
 
     // Hàm chuyển sang màn hình chính
-    private void loadMainScene() {
+    // Thêm tham số username vào đây
+    private void loadMainScene(String username) {
         try {
-            // Lấy cái Stage (Cửa sổ) hiện tại đang chạy
             Stage stage = (Stage) btnLogin.getScene().getWindow();
 
-            // Tải file fxml của màn hình chính (NHỚ ĐỔI TÊN FILE NÀY THÀNH FILE CỦA ÔNG)
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main-view.fxml"));
-            Parent root = fxmlLoader.load();
+            Parent root = fxmlLoader.load(); // Phải load root trước
+
+            // --- ĐOẠN QUAN TRỌNG NHẤT ĐỂ BẮN DỮ LIỆU ---
+            // Lấy cái MainController vừa được tạo ra
+            MainController mainController = fxmlLoader.getController();
+            // Gọi hàm setGreeting để nhét cái tên đăng nhập vào
+            mainController.setGreeting(username);
+            // -------------------------------------------
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.centerOnScreen(); // Canh giữa màn hình
+            stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

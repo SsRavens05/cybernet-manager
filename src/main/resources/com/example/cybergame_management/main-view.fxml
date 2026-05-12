@@ -11,10 +11,15 @@
       <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f4f6f9;">
 
          <top>
-            <AnchorPane prefHeight="55.0" prefWidth="917.0" style="-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;" BorderPane.alignment="CENTER">
+            <AnchorPane fx:id="btnUserProfile" onMouseClicked="#onUserClick" styleClass="user-profile-area">
                <children>
-                  <Circle fill="#f0f2f5" layoutX="1000.0" layoutY="28.0" radius="15.0" stroke="TRANSPARENT" strokeType="INSIDE" />
-                  <Circle fill="#900000" layoutX="1050.0" layoutY="28.0" radius="18.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                  <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="10.0" layoutY="5.0">
+                     <image>
+                        <Image url="@icons/main_user.png" /> </image>
+                  </ImageView>
+                  <Label layoutX="55.0" layoutY="14.0" text="Admin" textFill="BLACK">
+                     <font><Font name="System Bold" size="14.0" /></font>
+                  </Label>
                </children>
             </AnchorPane>
          </top>
@@ -22,9 +27,13 @@
          <left>
             <AnchorPane prefHeight="587.0" prefWidth="200.0" style="-fx-background-color: #15b50d; -fx-background-radius: 0 20 20 0;" BorderPane.alignment="CENTER">
                <children>
+                  <Label fx:id="lblGreeting" layoutX="15.0" layoutY="20.0" text="Hello, Admin!" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold Italic" size="18.0" />
+                     </font>
+                  </Label>
                   <VBox layoutY="70.0" prefWidth="200.0" spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                      <children>
-
                         <AnchorPane fx:id="btnThietBi" styleClass="sidebar-btn" onMouseClicked="#onThietBiMenuClick" prefHeight="45.0" prefWidth="180.0">
                            <children>
                               <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">

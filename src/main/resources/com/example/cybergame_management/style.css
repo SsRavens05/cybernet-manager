@@ -141,3 +141,31 @@
 .btn-login:hover {
     -fx-background-color: #660000; /* Hiệu ứng tối lại khi rê chuột */
 }
+
+/* --- CONTEXT MENU (Giao diện menu khi click User) --- */
+.context-menu {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #e2e8f0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-padding: 5px;
+}
+
+.menu-item {
+    -fx-padding: 8px 20px;
+    -fx-background-radius: 4px;
+}
+
+.menu-item .label {
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 14px;
+}
+
+.menu-item:focused {
+    -fx-background-color: #fee2e2; /* Màu nền đỏ nhạt khi hover */
+}
+
+.menu-item:focused .label {
+    -fx-text-fill: #ef4444; /* Màu chữ đỏ khi hover vào Đăng xuất */
+}
