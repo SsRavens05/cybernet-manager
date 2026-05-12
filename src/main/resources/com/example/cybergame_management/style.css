@@ -111,3 +111,33 @@
     -fx-background-radius: 8px; -fx-padding: 8px 20px; -fx-cursor: hand;
 }
 .btn-danger:hover { -fx-background-color: #dc2626; }
+
+/* --- LOGIN FORM --- */
+.login-input {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 15px;
+    -fx-font-size: 14px;
+}
+
+.login-input:focused {
+    -fx-border-color: #8b0000; /* Viền đỏ đô khi click vào */
+    -fx-border-width: 2px;
+    -fx-padding: 11px 14px; /* Giảm padding để không bị giật UI khi viền dày lên */
+}
+
+.btn-login {
+    -fx-background-color: #8b0000; /* Nền đỏ đô */
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px;
+    -fx-cursor: hand;
+}
+
+.btn-login:hover {
+    -fx-background-color: #660000; /* Hiệu ứng tối lại khi rê chuột */
+}
