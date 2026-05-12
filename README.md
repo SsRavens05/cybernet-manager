@@ -12,7 +12,7 @@
 * [Đồ án môn học](#đồ-án-môn-học)
 
 ## GIỚI THIỆU MÔN HỌC
-* **Tên môn học:** Quản lý dự án CNTT - Information Technology Project Management
+* **Tên môn học:** Quản lý dự án CNTT
 * **Mã môn học:** IS208
 * **Lớp học:** IS208.Q22
 * **Năm học:** 2025-2026
