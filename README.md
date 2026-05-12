@@ -24,7 +24,7 @@
 | STT | MSSV | Họ và Tên | Github | Email |
 |:---:|:---:|:---|:---|:---|
 | 1 | 24521150 | Phạm Chí Nghĩa | [DeenoPham](https://github.com/SsRavens05) | 24521150@gm.uit.edu.vn |
-| 2 | 24521210 | Trần Duy Nguyên | [LibraJeager]() | 24521210@gm.uit.edu.vn |
+| 2 | 24521210 | Trần Duy Nguyên | [ScrumMaster]() | 24521210@gm.uit.edu.vn |
 | 3 | 24521153 | Hà Hồ Bảo Ngọc | [baongoc2810](https://github.com/baongoc2810) | 24521153@gm.uit.edu.vn |
 | 4 | 24521397 | Trần Đình Phúc | [Sphynlx](https://github.com/Sphynlx) | 24521397@gm.uit.edu.vn |
 
