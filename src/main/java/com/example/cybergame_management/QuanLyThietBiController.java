@@ -3,8 +3,10 @@ package com.example.cybergame_management;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -15,12 +17,18 @@ import javafx.stage.StageStyle;
 
 public class QuanLyThietBiController {
 
-    @FXML private TableView<ThietBi> tbThietBi;
-    @FXML private TableColumn<ThietBi, String> colMaTB;
-    @FXML private TableColumn<ThietBi, String> colTenTB;
-    @FXML private TableColumn<ThietBi, String> colLoaiTB;
-    @FXML private TableColumn<ThietBi, String> colTrangThai;
-    @FXML private TableColumn<ThietBi, String> colNgayMua;
+    @FXML
+    private TableView<ThietBi> tbThietBi;
+    @FXML
+    private TableColumn<ThietBi, String> colMaTB;
+    @FXML
+    private TableColumn<ThietBi, String> colTenTB;
+    @FXML
+    private TableColumn<ThietBi, String> colLoaiTB;
+    @FXML
+    private TableColumn<ThietBi, String> colTrangThai;
+    @FXML
+    private TableColumn<ThietBi, String> colNgayMua;
 
     @FXML
     public void initialize() {
@@ -113,11 +121,16 @@ public class QuanLyThietBiController {
 
         TextField txtNgayMua = new TextField(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")));
 
-        grid.add(new Label("Mã TB"), 0, 0); grid.add(txtMaTB, 0, 1);
-        grid.add(new Label("Tên TB *"), 0, 2); grid.add(txtTenTB, 0, 3);
-        grid.add(new Label("Loại TB *"), 0, 4); grid.add(cbLoai, 0, 5);
-        grid.add(new Label("Trạng Thái"), 0, 6); grid.add(cbTrangThai, 0, 7);
-        grid.add(new Label("Ngày Mua"), 0, 8); grid.add(txtNgayMua, 0, 9);
+        grid.add(new Label("Mã TB"), 0, 0);
+        grid.add(txtMaTB, 0, 1);
+        grid.add(new Label("Tên TB *"), 0, 2);
+        grid.add(txtTenTB, 0, 3);
+        grid.add(new Label("Loại TB *"), 0, 4);
+        grid.add(cbLoai, 0, 5);
+        grid.add(new Label("Trạng Thái"), 0, 6);
+        grid.add(cbTrangThai, 0, 7);
+        grid.add(new Label("Ngày Mua"), 0, 8);
+        grid.add(txtNgayMua, 0, 9);
 
         // Footer
         HBox footer = new HBox(10);
@@ -206,5 +219,37 @@ public class QuanLyThietBiController {
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setScene(scene);
         stage.showAndWait();
+    }
+
+
+    @FXML
+    public void onUpdateClick() {
+        ThietBi selectedItem = tbThietBi.getSelectionModel().getSelectedItem();
+
+        if (selectedItem == null) {
+            System.out.println("Vui lòng chọn một thiết bị để cập nhật!");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("update-thiet-bi.fxml"));
+            Parent root = loader.load();
+
+            // Lấy Controller và truyền dữ liệu
+            UpdateThietBiController updateCtrl = loader.getController();
+            updateCtrl.setThietBiData(selectedItem);
+
+            // Hiện Popup
+            Stage stage = new Stage();
+            stage.setTitle("Cập Nhật Thiết Bị");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            // Cập nhật lại UI bảng Thiết Bị
+            tbThietBi.refresh();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
