@@ -2,9 +2,12 @@ package com.example.cybergame_management;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -179,5 +182,40 @@ public class QuanLyNhanVienController {
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setScene(scene);
         stage.showAndWait();
+    }
+
+    @FXML
+    void onUpdateClick(ActionEvent event) {
+        // 1. Lấy nhân viên đang chọn từ TableView
+        NhanVien selectedNV = tbNhanVien.getSelectionModel().getSelectedItem();
+
+        if (selectedNV == null) {
+            // (Hiện Alert cảnh báo chưa chọn nhân viên)
+            return;
+        }
+
+        try {
+            // 2. Load đúng file FXML của nhân viên
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("update-nhan-vien.fxml"));
+            Parent root = loader.load();
+
+            // 3. Lấy Controller và truyền data
+            UpdateNhanVienController controller = loader.getController();
+            controller.setNhanVienData(selectedNV);
+
+            // 4. Bật form lên (Khóa màn hình dưới)
+            Stage stage = new Stage();
+            stage.setTitle("Cập Nhật Nhân Viên - CyberNet Manager");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
+
+            // TODO: Refresh lại bảng tableNhanVien sau khi tắt popup
+            // tableNhanVien.refresh();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
