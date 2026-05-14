@@ -49,7 +49,7 @@
 
                         <Button styleClass="btn-action" onAction="#onInsertClick" text="+ Insert" />
                         <Button styleClass="btn-delete" onAction="#onDeleteClick" text="Delete" />
-                        <Button styleClass="btn-action" text="Update" />
+                        <Button styleClass="btn-action" onAction="#onUpdateClick" text="Update" />
 
                     </children>
                     <VBox.margin><Insets bottom="15.0" /></VBox.margin>
