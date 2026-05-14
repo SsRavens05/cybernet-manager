@@ -39,20 +39,18 @@
         <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #e0e0e0; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
             <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
             <children>
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <children>
-                        <Label text="Danh Sách Thiết Bị">
-                            <font><Font name="System Bold" size="18.0" /></font>
-                        </Label>
+                        <Label text="Danh Sách thiết bị" styleClass="header-title" />
+
                         <Region HBox.hgrow="ALWAYS" />
-                        <TextField promptText="Tìm mã, tên, loại..." style="-fx-background-radius: 5; -fx-border-color: #e0e0e0; -fx-background-color: #fafafa;" />
 
-                        <Button styleClass="btn-action" onAction="#onInsertClick" text="+ Insert" />
-                        <Button styleClass="btn-delete" onAction="#onDeleteClick" text="Delete" />
-                        <Button styleClass="btn-action" onAction="#onUpdateClick" text="Update" />
+                        <TextField promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
 
+                        <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
+                        <Button mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete" />
+                        <Button mnemonicParsing="false" onAction="#onUpdateClick" styleClass="btn-action" text="Update" />
                     </children>
-                    <VBox.margin><Insets bottom="15.0" /></VBox.margin>
                 </HBox>
 
                 <TableView fx:id="tbThietBi" prefHeight="400.0" prefWidth="850.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">

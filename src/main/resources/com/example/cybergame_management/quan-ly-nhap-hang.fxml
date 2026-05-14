@@ -43,19 +43,18 @@
         <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #e0e0e0; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
             <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
             <children>
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <children>
-                        <Label minWidth="200.0" text="Danh Sách Nhập Hàng">
-                            <font><Font name="System Bold" size="18.0" /></font>
-                        </Label>
+                        <Label text="Danh Sách nhập hàng" styleClass="header-title" />
+
                         <Region HBox.hgrow="ALWAYS" />
-                        <ComboBox prefWidth="140.0" promptText="Tất cả trạng thái" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;" />
-                        <TextField prefWidth="180.0" promptText="Tìm sản phẩm, NCC..." style="-fx-background-color: #fafafa; -fx-border-color: #e0e0e0; -fx-border-radius: 5;" />
-                        <Button styleClass="btn-action" onAction="#onInsertClick" text="+ Insert" />
-                        <Button styleClass="btn-delete" onAction="#onDeleteClick" text="Delete" />
-                        <Button styleClass="btn-action" text="Update" />
+
+                        <TextField promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
+
+                        <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
+                        <Button mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete" />
+                        <Button mnemonicParsing="false"  styleClass="btn-action" text="Update" />
                     </children>
-                    <VBox.margin><Insets bottom="20.0" /></VBox.margin>
                 </HBox>
 
                 <TableView fx:id="tbNhapHang" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">

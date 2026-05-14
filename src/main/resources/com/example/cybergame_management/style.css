@@ -170,3 +170,23 @@
     -fx-text-fill: #ef4444; /* Màu chữ đỏ khi hover vào Đăng xuất */
 }
 
+/* --- HEADER TITLE --- */
+.header-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2937;
+}
+
+/* --- SEARCH BOX --- */
+.search-box {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10 5 10;
+}
+
+.search-box:focused {
+    -fx-border-color: #8b0000; /* Đổi viền sang đỏ đô khi user click vào gõ phím */
+    -fx-border-width: 1.5px;
+}

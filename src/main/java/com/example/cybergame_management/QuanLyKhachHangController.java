@@ -3,6 +3,7 @@ package com.example.cybergame_management;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -211,5 +212,35 @@ public class QuanLyKhachHangController {
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setScene(scene);
         stage.showAndWait();
+    }
+
+    @FXML
+    public void onUpdateClick() {
+        // Lấy khách hàng đang chọn trong bảng tbKhachHang
+        KhachHang selectedItem = tbKhachHang.getSelectionModel().getSelectedItem();
+
+        if (selectedItem == null) {
+            System.out.println("Vui lòng chọn một khách hàng để cập nhật!");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("update-khach-hang.fxml"));
+            Parent root = loader.load();
+
+            UpdateKhachHangController updateCtrl = loader.getController();
+            updateCtrl.setKhachHangData(selectedItem);
+
+            Stage stage = new Stage();
+            stage.setTitle("Cập Nhật Khách Hàng");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            // Cập nhật lại bảng Khách Hàng sau khi tắt popup
+            tbKhachHang.refresh();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
