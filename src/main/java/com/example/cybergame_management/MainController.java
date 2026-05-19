@@ -147,6 +147,32 @@ public class MainController {
     }
 
     @FXML
+    public void onKhuyenMaiMenuClick() {
+        setActiveMenu(btnKhuyenMai);
+        try {
+            Parent fxml = FXMLLoader.load(getClass().getResource("quan-ly-khuyen-mai.fxml"));
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(fxml);
+        } catch (IOException e) {
+            System.out.println("Khong tim thay file quan-ly-khuyen-mai.fxml");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onSuKienMenuClick() {
+        setActiveMenu(btnSuKien);
+        try {
+            Parent fxml = FXMLLoader.load(getClass().getResource("quan-ly-su-kien.fxml"));
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(fxml);
+        } catch (IOException e) {
+            System.out.println("Khong tim thay file quan-ly-su-kien.fxml");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     public void onNhapHangMenuClick() {
         setActiveMenu(btnNhapHang);
         try {

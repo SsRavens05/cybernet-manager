@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLySuKienController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <HBox styleClass="stats-row">
+            <children>
+                <AnchorPane prefHeight="130.0" styleClass="stat-card-blue" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Sự Kiện" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
+                        <Label fx:id="lblTongSK" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane prefHeight="130.0" styleClass="stat-card-green" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label layoutX="60.0" layoutY="20.0" text="Đang Diễn Ra" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
+                        <Label fx:id="lblDangDienRa" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane prefHeight="130.0" styleClass="stat-card-purple" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Người Tham Gia" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
+                        <Label fx:id="lblTongNguoi" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
+                    </children>
+                </AnchorPane>
+            </children>
+        </HBox>
+
+        <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
+            <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
+                    <children>
+                        <Label text="Danh Sách Sự Kiện" styleClass="header-title" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
+                        <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
+                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete" />
+                        <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#onUpdateClick" styleClass="btn-action" text="Update" />
+                    </children>
+                </HBox>
+
+                <TableView fx:id="tbSuKien" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colMaSK" prefWidth="80.0" text="Mã SK" />
+                        <TableColumn fx:id="colTenSK" prefWidth="230.0" text="Tên Sự Kiện" />
+                        <TableColumn fx:id="colNgayTC" prefWidth="120.0" text="Ngày TC" />
+                        <TableColumn fx:id="colGioBD" prefWidth="90.0" text="Giờ BĐ" />
+                        <TableColumn fx:id="colGioKT" prefWidth="90.0" text="Giờ KT" />
+                        <TableColumn fx:id="colSoNguoi" prefWidth="100.0" text="Số Người" />
+                        <TableColumn fx:id="colGiaiThuong" prefWidth="130.0" text="Giải Thưởng" />
+                        <TableColumn fx:id="colTrangThai" prefWidth="140.0" text="Trạng Thái" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</VBox>

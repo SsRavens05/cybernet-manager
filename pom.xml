@@ -124,7 +124,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.cybergame_management/com.example.cybergame_management.HelloApplication
+                                com.example.cybergame_management/com.example.cybergame_management.MainApp
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

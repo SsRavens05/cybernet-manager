@@ -244,7 +244,19 @@
 .badge-active { -fx-background-color: #22c55e; -fx-text-fill: white; }   /* Xanh lá */
 .badge-banned { -fx-background-color: #ef4444; -fx-text-fill: white; }   /* Đỏ */
 .badge-warning { -fx-background-color: #f59e0b; -fx-text-fill: white; }  /* Cam */
+.badge-purple { -fx-background-color: #a855f7; -fx-text-fill: white; }
+.badge-info { -fx-background-color: #06b6d4; -fx-text-fill: white; }
 .badge-default { -fx-background-color: #f3f4f6; -fx-text-fill: #4b5563; }  /* Xám */
+
+.money-income {
+    -fx-text-fill: #22c55e;
+    -fx-font-weight: bold;
+}
+
+.money-expense {
+    -fx-text-fill: #ef4444;
+    -fx-font-weight: bold;
+}
 
 /* --- 7. DIALOG XÁC NHẬN XÓA --- */
 .delete-dialog {

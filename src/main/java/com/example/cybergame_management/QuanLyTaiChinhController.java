@@ -1,48 +1,204 @@
 package com.example.cybergame_management;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class QuanLyTaiChinhController {
 
+    @FXML private Label lblTongThu;
+    @FXML private Label lblTongChi;
+    @FXML private Label lblLoiNhuan;
+    @FXML private Button btnTongQuan;
+    @FXML private Button btnGiaoDich;
+    @FXML private HBox overviewPane;
+    @FXML private VBox transactionPane;
     @FXML private BarChart<String, Number> barChartDoanhThu;
     @FXML private LineChart<String, Number> lineChartLoiNhuan;
+    @FXML private TableView<GiaoDich> tbGiaoDich;
+    @FXML private TableColumn<GiaoDich, String> colMaGD;
+    @FXML private TableColumn<GiaoDich, String> colNgay;
+    @FXML private TableColumn<GiaoDich, String> colKhachHang;
+    @FXML private TableColumn<GiaoDich, String> colLoai;
+    @FXML private TableColumn<GiaoDich, String> colSoTien;
+    @FXML private TableColumn<GiaoDich, String> colGhiChu;
+
+    private final ObservableList<GiaoDich> giaoDichList = FXCollections.observableArrayList(
+            new GiaoDich("GD001", "2025-05-06 09:15:00", "Nguyen Van An", "NAP_TIEN", 200000, "Nap tien tai khoan"),
+            new GiaoDich("GD002", "2025-05-06 10:30:00", "Tran Thi Binh", "THANH_TOAN", -50000, "Thanh toan gio choi"),
+            new GiaoDich("GD003", "2025-05-06 11:00:00", "Le Minh Cuong", "NAP_TIEN", 500000, "Nap tien tai khoan"),
+            new GiaoDich("GD004", "2025-05-06 13:45:00", "Pham Thu Dung", "THANH_TOAN", -80000, "Thanh toan dich vu"),
+            new GiaoDich("GD005", "2025-05-06 15:20:00", "Admin", "CHI_PHI", -150000, "Tien dien thang 5")
+    );
 
     @FXML
     public void initialize() {
-        // --- 1. ĐỔ DỮ LIỆU BIỂU ĐỒ CỘT (Doanh Thu vs Chi Phí) ---
+        setupTable();
+        tbGiaoDich.setItems(giaoDichList);
+        updateSummaryCards();
+        loadChartsFromTransactions();
+        showTongQuan();
+    }
+
+    private void setupTable() {
+        colMaGD.setCellValueFactory(cellData -> cellData.getValue().maGDProperty());
+        colNgay.setCellValueFactory(cellData -> cellData.getValue().ngayProperty());
+        colKhachHang.setCellValueFactory(cellData -> cellData.getValue().khachHangProperty());
+        colLoai.setCellValueFactory(cellData -> cellData.getValue().loaiProperty());
+        colSoTien.setCellValueFactory(cellData -> new SimpleStringProperty(formatSignedMoney(cellData.getValue().getSoTien())));
+        colGhiChu.setCellValueFactory(cellData -> cellData.getValue().ghiChuProperty());
+
+        colLoai.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+                    setText(null);
+                    return;
+                }
+
+                Label badge = new Label(item);
+                badge.getStyleClass().add("badge");
+                if (item.equals("NAP_TIEN")) {
+                    badge.getStyleClass().add("badge-active");
+                } else if (item.equals("THANH_TOAN")) {
+                    badge.getStyleClass().add("badge-info");
+                } else {
+                    badge.getStyleClass().add("badge-banned");
+                }
+                setGraphic(badge);
+                setText(null);
+            }
+        });
+
+        colSoTien.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    getStyleClass().removeAll("money-income", "money-expense");
+                    return;
+                }
+
+                setText(item);
+                getStyleClass().removeAll("money-income", "money-expense");
+                getStyleClass().add(item.startsWith("+") ? "money-income" : "money-expense");
+            }
+        });
+    }
+
+    private void updateSummaryCards() {
+        long tongThu = giaoDichList.stream()
+                .filter(gd -> gd.getSoTien() > 0)
+                .mapToLong(GiaoDich::getSoTien)
+                .sum();
+        long tongChi = giaoDichList.stream()
+                .filter(gd -> gd.getSoTien() < 0)
+                .mapToLong(gd -> Math.abs(gd.getSoTien()))
+                .sum();
+
+        lblTongThu.setText(formatMoney(tongThu));
+        lblTongChi.setText(formatMoney(tongChi));
+        lblLoiNhuan.setText(formatMoney(tongThu - tongChi));
+    }
+
+    private void loadChartsFromTransactions() {
         XYChart.Series<String, Number> seriesThu = new XYChart.Series<>();
-        seriesThu.setName("Doanh Thu");
-        seriesThu.getData().add(new XYChart.Data<>("T1", 4.5));
-        seriesThu.getData().add(new XYChart.Data<>("T2", 5.2));
-        seriesThu.getData().add(new XYChart.Data<>("T3", 4.8));
-        seriesThu.getData().add(new XYChart.Data<>("T4", 6.1));
-        seriesThu.getData().add(new XYChart.Data<>("T5", 5.8));
-        seriesThu.getData().add(new XYChart.Data<>("T6", 7.2));
-
+        seriesThu.setName("Tong Thu");
         XYChart.Series<String, Number> seriesChi = new XYChart.Series<>();
-        seriesChi.setName("Chi Phí");
-        seriesChi.getData().add(new XYChart.Data<>("T1", 1.2));
-        seriesChi.getData().add(new XYChart.Data<>("T2", 1.0));
-        seriesChi.getData().add(new XYChart.Data<>("T3", 1.5));
-        seriesChi.getData().add(new XYChart.Data<>("T4", 1.1));
-        seriesChi.getData().add(new XYChart.Data<>("T5", 1.3));
-        seriesChi.getData().add(new XYChart.Data<>("T6", 1.6));
-
-        barChartDoanhThu.getData().addAll(seriesThu, seriesChi);
-
-        // --- 2. ĐỔ DỮ LIỆU BIỂU ĐỒ ĐƯỜNG (Lợi Nhuận) ---
+        seriesChi.setName("Tong Chi");
         XYChart.Series<String, Number> seriesLoiNhuan = new XYChart.Series<>();
-        seriesLoiNhuan.setName("Lợi Nhuận");
-        seriesLoiNhuan.getData().add(new XYChart.Data<>("T1", 3.3));
-        seriesLoiNhuan.getData().add(new XYChart.Data<>("T2", 4.2));
-        seriesLoiNhuan.getData().add(new XYChart.Data<>("T3", 3.3));
-        seriesLoiNhuan.getData().add(new XYChart.Data<>("T4", 5.0));
-        seriesLoiNhuan.getData().add(new XYChart.Data<>("T5", 4.5));
-        seriesLoiNhuan.getData().add(new XYChart.Data<>("T6", 5.6));
+        seriesLoiNhuan.setName("Loi Nhuan Luy Ke");
 
-        lineChartLoiNhuan.getData().add(seriesLoiNhuan);
+        long loiNhuanLuyKe = 0;
+        for (GiaoDich giaoDich : giaoDichList) {
+            String label = giaoDich.maGDProperty().get();
+            long soTien = giaoDich.getSoTien();
+            long thu = Math.max(soTien, 0);
+            long chi = soTien < 0 ? Math.abs(soTien) : 0;
+            loiNhuanLuyKe += soTien;
+
+            seriesThu.getData().add(new XYChart.Data<>(label, thu));
+            seriesChi.getData().add(new XYChart.Data<>(label, chi));
+            seriesLoiNhuan.getData().add(new XYChart.Data<>(label, loiNhuanLuyKe));
+        }
+
+        barChartDoanhThu.getData().setAll(seriesThu, seriesChi);
+        lineChartLoiNhuan.getData().setAll(seriesLoiNhuan);
+    }
+
+    @FXML
+    public void showTongQuan() {
+        overviewPane.setVisible(true);
+        overviewPane.setManaged(true);
+        transactionPane.setVisible(false);
+        transactionPane.setManaged(false);
+        setActiveTab(btnTongQuan, btnGiaoDich);
+    }
+
+    @FXML
+    public void showGiaoDich() {
+        overviewPane.setVisible(false);
+        overviewPane.setManaged(false);
+        transactionPane.setVisible(true);
+        transactionPane.setManaged(true);
+        setActiveTab(btnGiaoDich, btnTongQuan);
+    }
+
+    private void setActiveTab(Button active, Button inactive) {
+        active.getStyleClass().removeAll("tab-secondary", "tab-primary");
+        inactive.getStyleClass().removeAll("tab-secondary", "tab-primary");
+        active.getStyleClass().add("tab-primary");
+        inactive.getStyleClass().add("tab-secondary");
+    }
+
+    private String formatMoney(long amount) {
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        return formatter.format(amount) + "d";
+    }
+
+    private String formatSignedMoney(long amount) {
+        return (amount >= 0 ? "+" : "-") + formatMoney(Math.abs(amount));
+    }
+
+    public static class GiaoDich {
+        private final SimpleStringProperty maGD;
+        private final SimpleStringProperty ngay;
+        private final SimpleStringProperty khachHang;
+        private final SimpleStringProperty loai;
+        private final long soTien;
+        private final SimpleStringProperty ghiChu;
+
+        public GiaoDich(String maGD, String ngay, String khachHang, String loai, long soTien, String ghiChu) {
+            this.maGD = new SimpleStringProperty(maGD);
+            this.ngay = new SimpleStringProperty(ngay);
+            this.khachHang = new SimpleStringProperty(khachHang);
+            this.loai = new SimpleStringProperty(loai);
+            this.soTien = soTien;
+            this.ghiChu = new SimpleStringProperty(ghiChu);
+        }
+
+        public SimpleStringProperty maGDProperty() { return maGD; }
+        public SimpleStringProperty ngayProperty() { return ngay; }
+        public SimpleStringProperty khachHangProperty() { return khachHang; }
+        public SimpleStringProperty loaiProperty() { return loai; }
+        public long getSoTien() { return soTien; }
+        public SimpleStringProperty ghiChuProperty() { return ghiChu; }
     }
 }

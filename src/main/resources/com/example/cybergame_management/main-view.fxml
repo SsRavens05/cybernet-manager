@@ -96,7 +96,7 @@
                                  </image>
                               </ImageView>
                               <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Tài Chính" textFill="#e0e0e0">
-                                 <font><Font name="System" size="14.0" /></font>
+                                 <font><Font name="System Bold" size="14.0" /></font>
                               </Label>
                            </children>
                         </AnchorPane>
@@ -109,25 +109,25 @@
                                  </image>
                               </ImageView>
                               <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Khu Vực" textFill="#e0e0e0">
-                                 <font><Font name="System" size="14.0" /></font>
+                                 <font><Font name="System Bold" size="14.0" /></font>
                               </Label>
                            </children>
                         </AnchorPane>
 
-                        <AnchorPane prefHeight="45.0" prefWidth="235.0" styleClass="sidebar-btn">
+                        <AnchorPane fx:id="btnKhuyenMai" onMouseClicked="#onKhuyenMaiMenuClick" prefHeight="45.0" prefWidth="235.0" styleClass="sidebar-btn">
                            <children>
                               <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" />
                               <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Khuyến Mãi" textFill="#e0e0e0">
-                                 <font><Font name="System" size="14.0" /></font>
+                                 <font><Font name="System Bold" size="14.0" /></font>
                               </Label>
                            </children>
                         </AnchorPane>
 
-                        <AnchorPane prefHeight="45.0" prefWidth="235.0" styleClass="sidebar-btn">
+                        <AnchorPane fx:id="btnSuKien" onMouseClicked="#onSuKienMenuClick" prefHeight="45.0" prefWidth="235.0" styleClass="sidebar-btn">
                            <children>
                               <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" />
                               <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Sự Kiện" textFill="#e0e0e0">
-                                 <font><Font name="System" size="14.0" /></font>
+                                 <font><Font name="System Bold" size="14.0" /></font>
                               </Label>
                            </children>
                         </AnchorPane>
@@ -140,7 +140,7 @@
                                  </image>
                               </ImageView>
                               <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Nhập Hàng" textFill="#e0e0e0">
-                                 <font><Font name="System" size="14.0" /></font>
+                                 <font><Font name="System Bold" size="14.0" /></font>
                               </Label>
                            </children>
                         </AnchorPane>
