@@ -24,6 +24,8 @@ public class QuanLyKhuVucController {
     @FXML private TableColumn<KhuVuc, String> colGiaThue;
     @FXML private TableColumn<KhuVuc, String> colTrangThai;
     @FXML private TableColumn<KhuVuc, String> colMoTa;
+    @FXML private Button btnDelete;
+    @FXML private Button btnUpdate;
 
     @FXML
     public void initialize() {
@@ -68,6 +70,12 @@ public class QuanLyKhuVucController {
                 new KhuVuc("KV004", "Khu Offline", "5", "8.000đ", "BAOTRI", "Đang bảo trì")
         );
         tbKhuVuc.setItems(list);
+        bindActionButtons();
+    }
+
+    private void bindActionButtons() {
+        btnDelete.disableProperty().bind(tbKhuVuc.getSelectionModel().selectedItemProperty().isNull());
+        btnUpdate.disableProperty().bind(tbKhuVuc.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML

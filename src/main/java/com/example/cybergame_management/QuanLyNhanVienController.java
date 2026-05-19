@@ -27,6 +27,8 @@ public class QuanLyNhanVienController {
     @FXML private TableColumn<NhanVien, String> colCaLam;
     @FXML private TableColumn<NhanVien, String> colTrangThai;
     @FXML private TableColumn<NhanVien, String> colNgayVao;
+    @FXML private Button btnDelete;
+    @FXML private Button btnUpdate;
 
     @FXML
     public void initialize() {
@@ -74,6 +76,12 @@ public class QuanLyNhanVienController {
                 new NhanVien("NV005", "Hoàng Thị Mai", "Nhân viên", "0945555666", "4.800.000đ", "Toàn ca", "Nghỉ việc", "2023-11-05")
         );
         tbNhanVien.setItems(list);
+        bindActionButtons();
+    }
+
+    private void bindActionButtons() {
+        btnDelete.disableProperty().bind(tbNhanVien.getSelectionModel().selectedItemProperty().isNull());
+        btnUpdate.disableProperty().bind(tbNhanVien.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML

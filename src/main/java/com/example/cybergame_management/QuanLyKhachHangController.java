@@ -24,6 +24,8 @@ public class QuanLyKhachHangController {
     @FXML private TableColumn<KhachHang, String> colHang;
     @FXML private TableColumn<KhachHang, String> colTrangThai;
     @FXML private TableColumn<KhachHang, String> colNgayDK;
+    @FXML private Button btnDelete;
+    @FXML private Button btnUpdate;
 
     @FXML
     public void initialize() {
@@ -71,6 +73,12 @@ public class QuanLyKhachHangController {
                 new KhachHang("KH003", "Lê Minh Cường", "0923456789", "cuong@email.com", "0đ", "Thường", "INACTIVE", "2025-03-20")
         );
         tbKhachHang.setItems(list);
+        bindActionButtons();
+    }
+
+    private void bindActionButtons() {
+        btnDelete.disableProperty().bind(tbKhachHang.getSelectionModel().selectedItemProperty().isNull());
+        btnUpdate.disableProperty().bind(tbKhachHang.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML

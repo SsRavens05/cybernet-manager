@@ -1,23 +1,195 @@
 /* --- 1. BẢNG (TABLEVIEW) --- */
-.table-view { -fx-background-color: transparent; -fx-border-color: transparent; }
-.table-view .table-row-cell { -fx-cell-size: 40px; -fx-font-size: 14px; -fx-border-color: transparent transparent #f3f4f6 transparent; }
-.table-view .table-row-cell:odd { -fx-background-color: #f9fafb; }
-.table-view .table-row-cell:even { -fx-background-color: #ffffff; }
-.table-view .table-row-cell:selected { -fx-background-color: #e0f2fe; }
-.table-view .column-header-background { -fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-width: 0 0 1 0; }
-.table-view .column-header { -fx-background-color: transparent; -fx-size: 45px; }
-.table-view .column-header .label { -fx-text-fill: #4b5563; -fx-font-weight: bold; }
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+.table-view .virtual-flow,
+.table-view .clipped-container,
+.table-view .sheet {
+    -fx-background-color: transparent;
+}
+.table-view .table-row-cell {
+    -fx-cell-size: 56px;
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #f3f4f6 transparent;
+}
+.table-view .table-row-cell:odd,
+.table-view .table-row-cell:even {
+    -fx-background-color: #ffffff;
+}
+.table-view .table-row-cell:hover {
+    -fx-background-color: #f9fafb;
+}
+.table-view .table-row-cell:selected {
+    -fx-background-color: #eef6ff;
+}
+.table-view .table-cell {
+    -fx-alignment: CENTER_LEFT;
+    -fx-text-fill: #334155;
+    -fx-border-color: transparent;
+    -fx-padding: 0 20 0 20;
+}
+.table-view .column-header-background {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #eef2f7 transparent #eef2f7 transparent;
+    -fx-border-width: 1 0 1 0;
+}
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 48px;
+    -fx-padding: 0 20 0 20;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #64748b;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
 
 /* --- 2. SIDEBAR --- */
-.sidebar-btn { -fx-background-color: transparent; -fx-background-radius: 8; -fx-cursor: hand; }
-.sidebar-btn:hover { -fx-background-color: rgba(255, 255, 255, 0.1); }
-.sidebar-btn-active { -fx-background-color: rgba(255, 255, 255, 0.2); }
+.app-shell {
+    -fx-background-color: #f4f6f9;
+}
+.sidebar {
+    -fx-background-color: #9f0719;
+}
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+.sidebar-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+}
+.sidebar-btn-active {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+}
+.user-profile-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 0 0 1 0;
+}
+
+.dashboard-page {
+    -fx-background-color: #f4f6f9;
+}
+.stats-row {
+    -fx-spacing: 20;
+}
+.stat-card-blue,
+.stat-card-purple,
+.stat-card-yellow,
+.stat-card-green,
+.stat-card-red {
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.10), 12, 0, 0, 4);
+}
+.stat-card-blue {
+    -fx-background-color: linear-gradient(to right bottom, #47bee8, #078ed7);
+}
+.stat-card-purple {
+    -fx-background-color: linear-gradient(to right bottom, #c17ad8, #861ab3);
+}
+.stat-card-yellow {
+    -fx-background-color: linear-gradient(to right bottom, #ffd36b, #ffad1f);
+}
+.stat-card-green {
+    -fx-background-color: linear-gradient(to right bottom, #47c978, #16a34a);
+}
+.stat-card-red {
+    -fx-background-color: linear-gradient(to right bottom, #ff6b6b, #ef4444);
+}
+.stat-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+.stat-value {
+    -fx-font-size: 46px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+.stat-ring {
+    -fx-fill: transparent;
+    -fx-stroke: rgba(255, 255, 255, 0.20);
+    -fx-stroke-width: 10;
+}
+.table-panel {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.12), 10, 0, 0, 2);
+}
+.table-toolbar {
+    -fx-padding: 0 0 18 0;
+}
+.chart-panel {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.10), 10, 0, 0, 2);
+}
+.tab-primary {
+    -fx-background-color: #9f0719;
+    -fx-text-fill: white;
+    -fx-background-radius: 9;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.tab-secondary {
+    -fx-background-color: white;
+    -fx-border-color: #d8dee7;
+    -fx-border-radius: 9;
+    -fx-background-radius: 9;
+    -fx-text-fill: #334155;
+    -fx-cursor: hand;
+}
 
 /* --- 3. NÚT THAO TÁC TRÊN THANH CÔNG CỤ (Insert, Update, Delete) --- */
-.btn-action { -fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 5; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 5 15; }
-.btn-action:hover { -fx-background-color: #f3f4f6; }
-.btn-delete { -fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 5; -fx-text-fill: #e53935; -fx-cursor: hand; -fx-padding: 5 15; }
-.btn-delete:hover { -fx-background-color: #fee2e2; }
+.btn-action {
+    -fx-background-color: white;
+    -fx-border-color: #d8dee7;
+    -fx-border-radius: 9;
+    -fx-background-radius: 9;
+    -fx-cursor: hand;
+    -fx-padding: 9 18;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+.btn-action:hover {
+    -fx-background-color: #f8fafc;
+}
+.btn-action:disabled {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5eaf0;
+    -fx-text-fill: #cbd5e1;
+    -fx-opacity: 1;
+}
+.btn-delete {
+    -fx-background-color: white;
+    -fx-border-color: #d8dee7;
+    -fx-border-radius: 9;
+    -fx-background-radius: 9;
+    -fx-text-fill: #0f172a;
+    -fx-cursor: hand;
+    -fx-padding: 9 18;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.btn-delete:hover {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #ef4444;
+}
+.btn-delete:disabled {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5eaf0;
+    -fx-text-fill: #cbd5e1;
+    -fx-opacity: 1;
+}
 
 /* --- 4. CUSTOM DIALOG (FIGMA STYLE) --- */
 .custom-dialog {
@@ -64,13 +236,14 @@
     -fx-font-weight: bold;
     -fx-font-size: 11px;
     -fx-background-radius: 12px;
-    -fx-min-width: 90px;
-    -fx-min-height: 25px;
+    -fx-min-width: 72px;
+    -fx-min-height: 22px;
     -fx-alignment: center;
+    -fx-padding: 2 10;
 }
-.badge-active { -fx-background-color: #dcfce7; -fx-text-fill: #16a34a; }   /* Xanh lá */
-.badge-banned { -fx-background-color: #fee2e2; -fx-text-fill: #dc2626; }   /* Đỏ */
-.badge-warning { -fx-background-color: #ffedd5; -fx-text-fill: #ea580c; }  /* Cam */
+.badge-active { -fx-background-color: #22c55e; -fx-text-fill: white; }   /* Xanh lá */
+.badge-banned { -fx-background-color: #ef4444; -fx-text-fill: white; }   /* Đỏ */
+.badge-warning { -fx-background-color: #f59e0b; -fx-text-fill: white; }  /* Cam */
 .badge-default { -fx-background-color: #f3f4f6; -fx-text-fill: #4b5563; }  /* Xám */
 
 /* --- 7. DIALOG XÁC NHẬN XÓA --- */
@@ -174,16 +347,18 @@
 .header-title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #1f2937;
+    -fx-text-fill: #0f172a;
 }
 
 /* --- SEARCH BOX --- */
 .search-box {
-    -fx-background-color: white;
-    -fx-border-color: #d1d5db;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-padding: 5 10 5 10;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d8dee7;
+    -fx-border-radius: 9;
+    -fx-background-radius: 9;
+    -fx-padding: 9 14 9 14;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #94a3b8;
 }
 
 .search-box:focused {

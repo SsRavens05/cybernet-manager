@@ -27,6 +27,8 @@ public class QuanLyNhapHangController {
     @FXML private TableColumn<NhapHang, String> colNgayNhap;
     @FXML private TableColumn<NhapHang, String> colNguoiNhap;
     @FXML private TableColumn<NhapHang, String> colTrangThai;
+    @FXML private Button btnDelete;
+    @FXML private Button btnUpdate;
 
     @FXML
     public void initialize() {
@@ -77,6 +79,12 @@ public class QuanLyNhapHangController {
                 new NhapHang("NH004", "Cáp HDMI", "Ugreen", "5", "80.000đ", "400.000đ", "2025-05-07 11:00:00", "NV002", "DA_NHAP")
         );
         tbNhapHang.setItems(list);
+        bindActionButtons();
+    }
+
+    private void bindActionButtons() {
+        btnDelete.disableProperty().bind(tbNhapHang.getSelectionModel().selectedItemProperty().isNull());
+        btnUpdate.disableProperty().bind(tbNhapHang.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML

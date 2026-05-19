@@ -29,6 +29,10 @@ public class QuanLyThietBiController {
     private TableColumn<ThietBi, String> colTrangThai;
     @FXML
     private TableColumn<ThietBi, String> colNgayMua;
+    @FXML
+    private Button btnDelete;
+    @FXML
+    private Button btnUpdate;
 
     @FXML
     public void initialize() {
@@ -74,6 +78,12 @@ public class QuanLyThietBiController {
                 new ThietBi("TB1778342880004", "Tai nghe DareU EH722X", "Tai Nghe", "HONG", "2024-11-20")
         );
         tbThietBi.setItems(list);
+        bindActionButtons();
+    }
+
+    private void bindActionButtons() {
+        btnDelete.disableProperty().bind(tbThietBi.getSelectionModel().selectedItemProperty().isNull());
+        btnUpdate.disableProperty().bind(tbThietBi.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML

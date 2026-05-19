@@ -24,6 +24,8 @@ public class QuanLySanPhamController {
     @FXML private TableColumn<SanPham, String> colSoLuong;
     @FXML private TableColumn<SanPham, String> colDonVi;
     @FXML private TableColumn<SanPham, String> colTrangThai;
+    @FXML private Button btnDelete;
+    @FXML private Button btnUpdate;
 
     @FXML
     public void initialize() {
@@ -74,6 +76,12 @@ public class QuanLySanPhamController {
                 new SanPham("SP006", "Cà Phê Đen", "Đồ uống", "20.000đ", "50", "Ly", "Còn Hàng")
         );
         tbSanPham.setItems(list);
+        bindActionButtons();
+    }
+
+    private void bindActionButtons() {
+        btnDelete.disableProperty().bind(tbSanPham.getSelectionModel().selectedItemProperty().isNull());
+        btnUpdate.disableProperty().bind(tbSanPham.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML

@@ -6,15 +6,15 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="650.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: #f4f6f9;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyNhapHangController">
+<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyNhapHangController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <children>
 
-        <HBox spacing="20.0">
+        <HBox styleClass="stats-row">
             <children>
-                <AnchorPane prefHeight="130.0" style="-fx-background-color: #2b88d8; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                <AnchorPane prefHeight="130.0" styleClass="stat-card-blue" HBox.hgrow="ALWAYS">
                     <children>
                         <Label layoutX="60.0" layoutY="20.0" text="Tổng Phiếu Nhập" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
                         <Label layoutX="20.0" layoutY="50.0" text="4" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
@@ -22,7 +22,7 @@
                     </children>
                 </AnchorPane>
 
-                <AnchorPane prefHeight="130.0" style="-fx-background-color: #ffb300; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                <AnchorPane prefHeight="130.0" styleClass="stat-card-yellow" HBox.hgrow="ALWAYS">
                     <children>
                         <Label layoutX="60.0" layoutY="20.0" text="Tổng Chi Nhập Hàng" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
                         <Label layoutX="20.0" layoutY="50.0" text="2.400.000đ" textFill="WHITE"><font><Font name="System Bold" size="36.0" /></font></Label>
@@ -30,7 +30,7 @@
                     </children>
                 </AnchorPane>
 
-                <AnchorPane prefHeight="130.0" style="-fx-background-color: #e53935; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                <AnchorPane prefHeight="130.0" styleClass="stat-card-red" HBox.hgrow="ALWAYS">
                     <children>
                         <Label layoutX="60.0" layoutY="20.0" text="Chờ Xử Lý" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
                         <Label layoutX="20.0" layoutY="50.0" text="1" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
@@ -40,10 +40,10 @@
             </children>
         </HBox>
 
-        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #e0e0e0; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
+        <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
             <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
             <children>
-                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
                     <children>
                         <Label text="Danh Sách nhập hàng" styleClass="header-title" />
 
@@ -52,8 +52,8 @@
                         <TextField promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
 
                         <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
-                        <Button mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete" />
-                        <Button mnemonicParsing="false" onAction="#onUpdateClick" styleClass="btn-action" text="Update" />
+                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete" />
+                        <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#onUpdateClick" styleClass="btn-action" text="Update" />
                     </children>
                 </HBox>
 
