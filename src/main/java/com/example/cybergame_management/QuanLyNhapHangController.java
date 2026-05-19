@@ -3,8 +3,10 @@ package com.example.cybergame_management;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -236,5 +238,32 @@ public class QuanLyNhapHangController {
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setScene(scene);
         stage.showAndWait();
+    }
+
+    @FXML
+    public void onUpdateClick() {
+        NhapHang selectedItem = tbNhapHang.getSelectionModel().getSelectedItem();
+
+        if (selectedItem == null) {
+            System.out.println("Vui lòng chọn một phiếu nhập để cập nhật!");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("update-nhap-hang.fxml"));
+            Parent root = loader.load();
+
+            UpdateNhapHangController updateCtrl = loader.getController();
+            updateCtrl.setNhapHangData(selectedItem);
+
+            Stage stage = new Stage();
+            stage.setTitle("Cập Nhật Nhập Hàng");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            tbNhapHang.refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

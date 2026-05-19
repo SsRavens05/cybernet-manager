@@ -53,7 +53,7 @@
 
                         <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
                         <Button mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete" />
-                        <Button mnemonicParsing="false"  styleClass="btn-action" text="Update" />
+                        <Button mnemonicParsing="false" onAction="#onUpdateClick" styleClass="btn-action" text="Update" />
                     </children>
                 </HBox>
 

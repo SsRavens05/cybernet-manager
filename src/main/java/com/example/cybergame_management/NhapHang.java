@@ -35,4 +35,24 @@ public class NhapHang {
     public StringProperty ngayNhapProperty() { return ngayNhap; }
     public StringProperty nguoiNhapProperty() { return nguoiNhap; }
     public StringProperty trangThaiProperty() { return trangThai; }
+
+    public String getMaNH() { return maNH.get(); }
+    public String getTenSP() { return tenSP.get(); }
+    public String getNhaCC() { return nhaCC.get(); }
+    public String getSoLuong() { return soLuong.get(); }
+    public String getDonGia() { return donGia.get(); }
+    public String getTongTien() { return tongTien.get(); }
+    public String getNgayNhap() { return ngayNhap.get(); }
+    public String getNguoiNhap() { return nguoiNhap.get(); }
+    public String getTrangThai() { return trangThai.get(); }
+
+    public void setMaNH(String value) { maNH.set(value); }
+    public void setTenSP(String value) { tenSP.set(value); }
+    public void setNhaCC(String value) { nhaCC.set(value); }
+    public void setSoLuong(String value) { soLuong.set(value); }
+    public void setDonGia(String value) { donGia.set(value); }
+    public void setTongTien(String value) { tongTien.set(value); }
+    public void setNgayNhap(String value) { ngayNhap.set(value); }
+    public void setNguoiNhap(String value) { nguoiNhap.set(value); }
+    public void setTrangThai(String value) { trangThai.set(value); }
 }

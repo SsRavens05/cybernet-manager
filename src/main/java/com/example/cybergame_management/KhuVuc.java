@@ -26,4 +26,18 @@ public class KhuVuc {
     public StringProperty giaThueProperty() { return giaThue; }
     public StringProperty trangThaiProperty() { return trangThai; }
     public StringProperty moTaProperty() { return moTa; }
+
+    public String getMaKV() { return maKV.get(); }
+    public String getTenKV() { return tenKV.get(); }
+    public String getSoMay() { return soMay.get(); }
+    public String getGiaThue() { return giaThue.get(); }
+    public String getTrangThai() { return trangThai.get(); }
+    public String getMoTa() { return moTa.get(); }
+
+    public void setMaKV(String value) { maKV.set(value); }
+    public void setTenKV(String value) { tenKV.set(value); }
+    public void setSoMay(String value) { soMay.set(value); }
+    public void setGiaThue(String value) { giaThue.set(value); }
+    public void setTrangThai(String value) { trangThai.set(value); }
+    public void setMoTa(String value) { moTa.set(value); }
 }
