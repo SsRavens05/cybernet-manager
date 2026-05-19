@@ -31,6 +31,11 @@ public class MainController {
     @FXML private AnchorPane btnSuKien;
     @FXML private AnchorPane btnNhapHang;
 
+    @FXML
+    public void initialize() {
+        loadContent("quan-ly-thiet-bi.fxml", btnThietBi);
+    }
+
     private void setActiveMenu(AnchorPane activeBtn) {
         // Gom tất cả các nút vào 1 mảng để xử lý cho lẹ
         AnchorPane[] allBtns = {btnThietBi, btnKhachHang, btnNhanVien, btnSanPham,
@@ -53,8 +58,21 @@ public class MainController {
     }
 
     // Hàm này sẽ chạy khi ông click chuột vào nút Quản lý thiết bị trên Sidebar
+    private void loadContent(String fxmlFile, AnchorPane activeBtn) {
+        setActiveMenu(activeBtn);
+        try {
+            Parent fxml = FXMLLoader.load(getClass().getResource(fxmlFile));
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(fxml);
+        } catch (IOException e) {
+            System.out.println("Khong tim thay file " + fxmlFile);
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void onThietBiMenuClick() {
+        setActiveMenu(btnThietBi);
         try {
             // 1. Tải cái ruột (file quan-ly-thiet-bi.fxml) lên
             Parent fxml = FXMLLoader.load(getClass().getResource("quan-ly-thiet-bi.fxml"));

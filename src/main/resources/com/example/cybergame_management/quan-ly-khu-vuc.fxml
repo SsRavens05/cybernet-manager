@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
@@ -52,8 +53,20 @@
                         <TextField promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
 
                         <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
-                        <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete" />
-                        <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#onUpdateClick" styleClass="btn-action" text="Update" />
+                        <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">
+                            <graphic>
+                                <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                                    <image><Image url="@icons/xoa.png" /></image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnUpdate" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onUpdateClick" styleClass="btn-action" text="Update">
+                            <graphic>
+                                <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                                    <image><Image url="@icons/cap-nhat.png" /></image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
                 </HBox>
 
