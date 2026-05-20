@@ -2,6 +2,7 @@ package com.example.cybergame_management;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -17,6 +18,9 @@ import javafx.stage.StageStyle;
 
 public class QuanLyNhapHangController {
 
+    @FXML private Label lblTongPhieuNhap;
+    @FXML private Label lblTongChiNhap;
+    @FXML private Label lblChoDuyet;
     @FXML private TableView<NhapHang> tbNhapHang;
     @FXML private TableColumn<NhapHang, String> colMaNH;
     @FXML private TableColumn<NhapHang, String> colTenSP;
@@ -27,8 +31,10 @@ public class QuanLyNhapHangController {
     @FXML private TableColumn<NhapHang, String> colNgayNhap;
     @FXML private TableColumn<NhapHang, String> colNguoiNhap;
     @FXML private TableColumn<NhapHang, String> colTrangThai;
+    @FXML private TextField txtSearch;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
+    private final ObservableList<NhapHang> data = DatabaseSeedData.nhapHang();
 
     @FXML
     public void initialize() {
@@ -72,8 +78,27 @@ public class QuanLyNhapHangController {
         });
 
         // Dữ liệu giả y hệt thiết kế
-        tbNhapHang.setItems(DatabaseSeedData.nhapHang());
+        FilteredList<NhapHang> filtered = new FilteredList<>(data, item -> true);
+        tbNhapHang.setItems(filtered);
+        txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
         bindActionButtons();
+        updateStats();
+    }
+
+    private boolean matchesFilter(NhapHang item) {
+        return SearchMatcher.containsKeyword(txtSearch.getText(),
+                item.getMaNH(), item.getTenSP(), item.getNhaCC(), item.getSoLuong(),
+                item.getDonGia(), item.getTongTien(), item.getNgayNhap(), item.getNguoiNhap(), item.getTrangThai());
+    }
+
+    private void updateStats() {
+        lblTongPhieuNhap.setText(String.valueOf(data.size()));
+        lblTongChiNhap.setText(DisplayFormat.money(data.stream()
+                .mapToLong(nh -> DisplayFormat.parseMoney(nh.getTongTien()))
+                .sum()));
+        lblChoDuyet.setText(String.valueOf(data.stream()
+                .filter(nh -> "CHO_DUYET".equalsIgnoreCase(nh.getTrangThai()))
+                .count()));
     }
 
     private void bindActionButtons() {
@@ -158,12 +183,13 @@ public class QuanLyNhapHangController {
         Button bLuu = new Button("Lưu");
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
-            String maMoi = "NH" + String.format("%03d", tbNhapHang.getItems().size() + 1);
+            String maMoi = "NH" + String.format("%03d", data.size() + 1);
 
             // Tách lấy con số tổng tiền từ cái Label để lưu vào bảng
             String tongTienStr = lblTongTien.getText().replace("Tổng tiền: ", "");
 
-            tbNhapHang.getItems().add(new NhapHang(maMoi, txtTenSP.getText(), txtNCC.getText(), txtSL.getText(), txtDonGia.getText() + "đ", tongTienStr, java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), txtNguoiNhap.getText(), cbTrangThai.getValue()));
+            data.add(new NhapHang(maMoi, txtTenSP.getText(), txtNCC.getText(), txtSL.getText(), txtDonGia.getText() + "đ", tongTienStr, java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), txtNguoiNhap.getText(), cbTrangThai.getValue()));
+            updateStats();
             stage.close();
         });
 
@@ -227,7 +253,8 @@ public class QuanLyNhapHangController {
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
             // THỰC HIỆN XÓA KHỎI BẢNG (Và sau này là xóa khỏi Database)
-            tbNhapHang.getItems().remove(selectedItem);
+            data.remove(selectedItem);
+            updateStats();
             stage.close(); // Xóa xong thì đóng popup
         });
 
@@ -264,6 +291,7 @@ public class QuanLyNhapHangController {
             stage.showAndWait();
 
             tbNhapHang.refresh();
+            updateStats();
         } catch (Exception e) {
             e.printStackTrace();
         }

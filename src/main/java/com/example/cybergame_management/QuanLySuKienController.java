@@ -76,11 +76,10 @@ public class QuanLySuKienController {
     }
 
     private boolean matchesFilter(SuKien item) {
-        String keyword = txtSearch.getText() == null ? "" : txtSearch.getText().trim().toLowerCase();
-        boolean matchText = keyword.isEmpty()
-                || item.maSKProperty().get().toLowerCase().contains(keyword)
-                || item.tenSKProperty().get().toLowerCase().contains(keyword);
-        return matchText;
+        return SearchMatcher.containsKeyword(txtSearch.getText(),
+                item.maSKProperty().get(), item.tenSKProperty().get(), item.ngayTCProperty().get(),
+                item.gioBDProperty().get(), item.gioKTProperty().get(), item.soNguoiProperty().get(),
+                item.giaiThuongProperty().get(), item.trangThaiProperty().get());
     }
 
     private void updateStats() {

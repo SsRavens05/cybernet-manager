@@ -2,6 +2,7 @@ package com.example.cybergame_management;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -15,6 +16,9 @@ import java.time.LocalDate;
 
 public class QuanLyKhachHangController {
 
+    @FXML private Label lblTongKH;
+    @FXML private Label lblKhachActive;
+    @FXML private Label lblKhachInactive;
     @FXML private TableView<KhachHang> tbKhachHang;
     @FXML private TableColumn<KhachHang, String> colMaKH;
     @FXML private TableColumn<KhachHang, String> colHoTen;
@@ -24,8 +28,10 @@ public class QuanLyKhachHangController {
     @FXML private TableColumn<KhachHang, String> colHang;
     @FXML private TableColumn<KhachHang, String> colTrangThai;
     @FXML private TableColumn<KhachHang, String> colNgayDK;
+    @FXML private TextField txtSearch;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
+    private final ObservableList<KhachHang> data = DatabaseSeedData.khachHang();
 
     @FXML
     public void initialize() {
@@ -66,8 +72,27 @@ public class QuanLyKhachHangController {
             }
         });
 
-        tbKhachHang.setItems(DatabaseSeedData.khachHang());
+        FilteredList<KhachHang> filtered = new FilteredList<>(data, item -> true);
+        tbKhachHang.setItems(filtered);
+        txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
         bindActionButtons();
+        updateStats();
+    }
+
+    private boolean matchesFilter(KhachHang item) {
+        return SearchMatcher.containsKeyword(txtSearch.getText(),
+                item.getMaKH(), item.getHoTen(), item.getSdt(), item.getEmail(),
+                item.getSoDu(), item.getHang(), item.getTrangThai(), item.getNgayDK());
+    }
+
+    private void updateStats() {
+        lblTongKH.setText(String.valueOf(data.size()));
+        lblKhachActive.setText(String.valueOf(data.stream()
+                .filter(kh -> "ACTIVE".equalsIgnoreCase(kh.getTrangThai()))
+                .count()));
+        lblKhachInactive.setText(String.valueOf(data.stream()
+                .filter(kh -> !"ACTIVE".equalsIgnoreCase(kh.getTrangThai()))
+                .count()));
     }
 
     private void bindActionButtons() {
@@ -134,8 +159,9 @@ public class QuanLyKhachHangController {
                 return;
             }
             // Thêm vào bảng
-            String maKH = "KH" + String.format("%03d", tbKhachHang.getItems().size() + 1);
-            tbKhachHang.getItems().add(new KhachHang(maKH, txtHoTen.getText(), txtSDT.getText(), txtEmail.getText(), txtSoDu.getText()+"đ", cbHang.getValue(), cbTrangThai.getValue(), LocalDate.now().toString()));
+            String maKH = "KH" + String.format("%03d", data.size() + 1);
+            data.add(new KhachHang(maKH, txtHoTen.getText(), txtSDT.getText(), txtEmail.getText(), txtSoDu.getText()+"đ", cbHang.getValue(), cbTrangThai.getValue(), LocalDate.now().toString()));
+            updateStats();
             stage.close(); // Lưu xong thì đóng
         });
 
@@ -201,7 +227,8 @@ public class QuanLyKhachHangController {
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
             // THỰC HIỆN XÓA KHỎI BẢNG (Và sau này là xóa khỏi Database)
-            tbKhachHang.getItems().remove(selectedItem);
+            data.remove(selectedItem);
+            updateStats();
             stage.close(); // Xóa xong thì đóng popup
         });
 
@@ -240,6 +267,7 @@ public class QuanLyKhachHangController {
 
             // Cập nhật lại bảng Khách Hàng sau khi tắt popup
             tbKhachHang.refresh();
+            updateStats();
 
         } catch (Exception e) {
             e.printStackTrace();

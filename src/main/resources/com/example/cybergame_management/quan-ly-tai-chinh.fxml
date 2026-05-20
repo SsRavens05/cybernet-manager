@@ -79,6 +79,8 @@
                 <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
                     <children>
                         <Label text="Lịch Sử Giao Dịch" styleClass="header-title" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
                     </children>
                 </HBox>
 

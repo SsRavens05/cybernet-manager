@@ -17,21 +17,21 @@
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-blue" HBox.hgrow="ALWAYS">
                     <children>
                         <Label layoutX="60.0" layoutY="20.0" text="Tổng Nhân Viên" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <Label layoutX="20.0" layoutY="50.0" text="5" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Label fx:id="lblTongNV" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" AnchorPane.rightAnchor="20.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-green" HBox.hgrow="ALWAYS">
                     <children>
                         <Label layoutX="60.0" layoutY="20.0" text="Đang Làm Việc" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <Label layoutX="20.0" layoutY="50.0" text="3" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Label fx:id="lblNhanVienDangLam" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" AnchorPane.rightAnchor="20.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-purple" HBox.hgrow="ALWAYS">
                     <children>
                         <Label layoutX="60.0" layoutY="20.0" text="Đang Nghỉ Phép" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <Label layoutX="20.0" layoutY="50.0" text="1" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Label fx:id="lblNhanVienNghiPhep" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" AnchorPane.rightAnchor="20.0" />
                     </children>
                 </AnchorPane>
@@ -47,7 +47,7 @@
 
                         <Region HBox.hgrow="ALWAYS" />
 
-                        <TextField promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
+                        <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
 
                         <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
                         <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">

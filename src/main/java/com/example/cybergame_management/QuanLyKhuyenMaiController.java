@@ -76,12 +76,10 @@ public class QuanLyKhuyenMaiController {
     }
 
     private boolean matchesFilter(KhuyenMai item) {
-        String keyword = txtSearch.getText() == null ? "" : txtSearch.getText().trim().toLowerCase();
-        boolean matchText = keyword.isEmpty()
-                || item.maKMProperty().get().toLowerCase().contains(keyword)
-                || item.tenKMProperty().get().toLowerCase().contains(keyword)
-                || item.loaiProperty().get().toLowerCase().contains(keyword);
-        return matchText;
+        return SearchMatcher.containsKeyword(txtSearch.getText(),
+                item.maKMProperty().get(), item.tenKMProperty().get(), item.loaiProperty().get(),
+                item.giaTriProperty().get(), item.dieuKienProperty().get(),
+                item.ngayBDProperty().get(), item.ngayKTProperty().get(), item.trangThaiProperty().get());
     }
 
     private void updateStats() {

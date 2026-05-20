@@ -2,6 +2,7 @@ package com.example.cybergame_management;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -17,6 +18,9 @@ import javafx.stage.StageStyle;
 
 public class QuanLyKhuVucController {
 
+    @FXML private Label lblTongKV;
+    @FXML private Label lblTongSoMay;
+    @FXML private Label lblKhuVucHoatDong;
     @FXML private TableView<KhuVuc> tbKhuVuc;
     @FXML private TableColumn<KhuVuc, String> colMaKV;
     @FXML private TableColumn<KhuVuc, String> colTenKV;
@@ -24,8 +28,10 @@ public class QuanLyKhuVucController {
     @FXML private TableColumn<KhuVuc, String> colGiaThue;
     @FXML private TableColumn<KhuVuc, String> colTrangThai;
     @FXML private TableColumn<KhuVuc, String> colMoTa;
+    @FXML private TextField txtSearch;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
+    private final ObservableList<KhuVuc> data = DatabaseSeedData.khuVuc();
 
     @FXML
     public void initialize() {
@@ -63,8 +69,24 @@ public class QuanLyKhuVucController {
         });
 
         // Dữ liệu giả y hệt thiết kế
-        tbKhuVuc.setItems(DatabaseSeedData.khuVuc());
+        FilteredList<KhuVuc> filtered = new FilteredList<>(data, item -> true);
+        tbKhuVuc.setItems(filtered);
+        txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
         bindActionButtons();
+        updateStats();
+    }
+
+    private boolean matchesFilter(KhuVuc item) {
+        return SearchMatcher.containsKeyword(txtSearch.getText(),
+                item.getMaKV(), item.getTenKV(), item.getSoMay(), item.getGiaThue(), item.getTrangThai(), item.getMoTa());
+    }
+
+    private void updateStats() {
+        lblTongKV.setText(String.valueOf(data.size()));
+        lblTongSoMay.setText(String.valueOf(data.stream().mapToInt(kv -> DisplayFormat.parseInt(kv.getSoMay())).sum()));
+        lblKhuVucHoatDong.setText(String.valueOf(data.stream()
+                .filter(kv -> "HOATDONG".equalsIgnoreCase(kv.getTrangThai()))
+                .count()));
     }
 
     private void bindActionButtons() {
@@ -126,14 +148,15 @@ public class QuanLyKhuVucController {
         bLuu.getStyleClass().add("btn-save"); // Ăn CSS màu Xanh Lá
         bLuu.setOnAction(e -> {
             // Tự động sinh mã KV mới
-            String maMoi = "KV" + String.format("%03d", tbKhuVuc.getItems().size() + 1);
+            String maMoi = "KV" + String.format("%03d", data.size() + 1);
 
             // Xử lý thêm chữ "đ" vào giá thuê nếu người dùng gõ số không
             String gia = txtGiaThue.getText();
             if(!gia.endsWith("đ")) gia += "đ";
 
             // Thêm vào bảng
-            tbKhuVuc.getItems().add(new KhuVuc(maMoi, txtTenKV.getText(), txtSoMay.getText(), gia, cbTrangThai.getValue(), txtMoTa.getText()));
+            data.add(new KhuVuc(maMoi, txtTenKV.getText(), txtSoMay.getText(), gia, cbTrangThai.getValue(), txtMoTa.getText()));
+            updateStats();
             stage.close();
         });
 
@@ -197,7 +220,8 @@ public class QuanLyKhuVucController {
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
             // THỰC HIỆN XÓA KHỎI BẢNG (Và sau này là xóa khỏi Database)
-            tbKhuVuc.getItems().remove(selectedItem);
+            data.remove(selectedItem);
+            updateStats();
             stage.close(); // Xóa xong thì đóng popup
         });
 
@@ -234,6 +258,7 @@ public class QuanLyKhuVucController {
             stage.showAndWait();
 
             tbKhuVuc.refresh();
+            updateStats();
         } catch (Exception e) {
             e.printStackTrace();
         }

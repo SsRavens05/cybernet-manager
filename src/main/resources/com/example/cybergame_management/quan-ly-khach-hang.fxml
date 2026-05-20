@@ -20,7 +20,7 @@
                         <Label layoutX="60.0" layoutY="20.0" text="Tổng Khách Hàng" textFill="WHITE">
                             <font><Font name="System Bold" size="16.0" /></font>
                         </Label>
-                        <Label layoutX="20.0" layoutY="50.0" text="5" textFill="WHITE">
+                        <Label fx:id="lblTongKH" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
                             <font><Font name="System Bold" size="48.0" /></font>
                         </Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" stroke="TRANSPARENT" strokeType="INSIDE" AnchorPane.rightAnchor="20.0" />
@@ -32,7 +32,7 @@
                         <Label layoutX="60.0" layoutY="20.0" text="Đang Hoạt Động" textFill="WHITE">
                             <font><Font name="System Bold" size="16.0" /></font>
                         </Label>
-                        <Label layoutX="20.0" layoutY="50.0" text="3" textFill="WHITE">
+                        <Label fx:id="lblKhachActive" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
                             <font><Font name="System Bold" size="48.0" /></font>
                         </Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" stroke="TRANSPARENT" strokeType="INSIDE" AnchorPane.rightAnchor="20.0" />
@@ -44,7 +44,7 @@
                         <Label layoutX="60.0" layoutY="20.0" text="Bị Cấm" textFill="WHITE">
                             <font><Font name="System Bold" size="16.0" /></font>
                         </Label>
-                        <Label layoutX="20.0" layoutY="50.0" text="1" textFill="WHITE">
+                        <Label fx:id="lblKhachInactive" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
                             <font><Font name="System Bold" size="48.0" /></font>
                         </Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" stroke="TRANSPARENT" strokeType="INSIDE" AnchorPane.rightAnchor="20.0" />
@@ -63,7 +63,7 @@
 
                         <Region HBox.hgrow="ALWAYS" />
 
-                        <TextField promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
+                        <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
 
                         <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
                         <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">

@@ -2,6 +2,7 @@ package com.example.cybergame_management;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -18,6 +19,12 @@ import javafx.stage.StageStyle;
 public class QuanLyThietBiController {
 
     @FXML
+    private Label lblTongTB;
+    @FXML
+    private Label lblTBHong;
+    @FXML
+    private Label lblTBDangDung;
+    @FXML
     private TableView<ThietBi> tbThietBi;
     @FXML
     private TableColumn<ThietBi, String> colMaTB;
@@ -30,9 +37,12 @@ public class QuanLyThietBiController {
     @FXML
     private TableColumn<ThietBi, String> colNgayMua;
     @FXML
+    private TextField txtSearch;
+    @FXML
     private Button btnDelete;
     @FXML
     private Button btnUpdate;
+    private final ObservableList<ThietBi> data = DatabaseSeedData.thietBi();
 
     @FXML
     public void initialize() {
@@ -71,8 +81,26 @@ public class QuanLyThietBiController {
         });
 
         // 3. Dữ liệu giả
-        tbThietBi.setItems(DatabaseSeedData.thietBi());
+        FilteredList<ThietBi> filtered = new FilteredList<>(data, item -> true);
+        tbThietBi.setItems(filtered);
+        txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
         bindActionButtons();
+        updateStats();
+    }
+
+    private boolean matchesFilter(ThietBi item) {
+        return SearchMatcher.containsKeyword(txtSearch.getText(),
+                item.getMaTB(), item.getTenTB(), item.getLoaiTB(), item.getTrangThai(), item.getNgayMua());
+    }
+
+    private void updateStats() {
+        lblTongTB.setText(String.valueOf(data.size()));
+        lblTBHong.setText(String.valueOf(data.stream()
+                .filter(tb -> "HONG".equalsIgnoreCase(tb.getTrangThai()))
+                .count()));
+        lblTBDangDung.setText(String.valueOf(data.stream()
+                .filter(tb -> "HOATDONG".equalsIgnoreCase(tb.getTrangThai()))
+                .count()));
     }
 
     private void bindActionButtons() {
@@ -147,7 +175,8 @@ public class QuanLyThietBiController {
         Button bLuu = new Button("Thêm mới"); // Nút ghi chữ "Thêm mới" như ảnh
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
-            tbThietBi.getItems().add(new ThietBi(txtMaTB.getText(), txtTenTB.getText(), cbLoai.getValue(), cbTrangThai.getValue(), txtNgayMua.getText()));
+            data.add(new ThietBi(txtMaTB.getText(), txtTenTB.getText(), cbLoai.getValue(), cbTrangThai.getValue(), txtNgayMua.getText()));
+            updateStats();
             stage.close();
         });
 
@@ -210,7 +239,8 @@ public class QuanLyThietBiController {
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
             // THỰC HIỆN XÓA KHỎI BẢNG (Và sau này là xóa khỏi Database)
-            tbThietBi.getItems().remove(selectedItem);
+            data.remove(selectedItem);
+            updateStats();
             stage.close(); // Xóa xong thì đóng popup
         });
 
@@ -251,6 +281,7 @@ public class QuanLyThietBiController {
 
             // Cập nhật lại UI bảng Thiết Bị
             tbThietBi.refresh();
+            updateStats();
 
         } catch (Exception e) {
             e.printStackTrace();

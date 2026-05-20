@@ -3,6 +3,7 @@ package com.example.cybergame_management;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
@@ -12,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -36,16 +38,25 @@ public class QuanLyTaiChinhController {
     @FXML private TableColumn<GiaoDich, String> colLoai;
     @FXML private TableColumn<GiaoDich, String> colSoTien;
     @FXML private TableColumn<GiaoDich, String> colGhiChu;
+    @FXML private TextField txtSearch;
 
     private final ObservableList<GiaoDich> giaoDichList = DatabaseSeedData.giaoDich();
 
     @FXML
     public void initialize() {
         setupTable();
-        tbGiaoDich.setItems(giaoDichList);
+        FilteredList<GiaoDich> filtered = new FilteredList<>(giaoDichList, item -> true);
+        tbGiaoDich.setItems(filtered);
+        txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
         updateSummaryCards();
         loadChartsFromTransactions();
         showTongQuan();
+    }
+
+    private boolean matchesFilter(GiaoDich item) {
+        return SearchMatcher.containsKeyword(txtSearch.getText(),
+                item.maGDProperty().get(), item.ngayProperty().get(), item.khachHangProperty().get(),
+                item.loaiProperty().get(), formatSignedMoney(item.getSoTien()), item.ghiChuProperty().get());
     }
 
     private void setupTable() {

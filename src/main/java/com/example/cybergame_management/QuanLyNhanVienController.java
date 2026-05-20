@@ -2,6 +2,7 @@ package com.example.cybergame_management;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,9 @@ import javafx.stage.StageStyle;
 
 public class QuanLyNhanVienController {
 
+    @FXML private Label lblTongNV;
+    @FXML private Label lblNhanVienDangLam;
+    @FXML private Label lblNhanVienNghiPhep;
     @FXML private TableView<NhanVien> tbNhanVien;
     @FXML private TableColumn<NhanVien, String> colMaNV;
     @FXML private TableColumn<NhanVien, String> colHoTen;
@@ -27,8 +31,10 @@ public class QuanLyNhanVienController {
     @FXML private TableColumn<NhanVien, String> colCaLam;
     @FXML private TableColumn<NhanVien, String> colTrangThai;
     @FXML private TableColumn<NhanVien, String> colNgayVao;
+    @FXML private TextField txtSearch;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
+    private final ObservableList<NhanVien> data = DatabaseSeedData.nhanVien();
 
     @FXML
     public void initialize() {
@@ -68,8 +74,27 @@ public class QuanLyNhanVienController {
             }
         });
 
-        tbNhanVien.setItems(DatabaseSeedData.nhanVien());
+        FilteredList<NhanVien> filtered = new FilteredList<>(data, item -> true);
+        tbNhanVien.setItems(filtered);
+        txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
         bindActionButtons();
+        updateStats();
+    }
+
+    private boolean matchesFilter(NhanVien item) {
+        return SearchMatcher.containsKeyword(txtSearch.getText(),
+                item.getMaNV(), item.getHoTen(), item.getChucVu(), item.getSdt(),
+                item.getLuong(), item.getCaLam(), item.getTrangThai(), item.getNgayVao());
+    }
+
+    private void updateStats() {
+        lblTongNV.setText(String.valueOf(data.size()));
+        lblNhanVienDangLam.setText(String.valueOf(data.stream()
+                .filter(nv -> nv.getTrangThai().equalsIgnoreCase("DANG_LAM") || nv.getTrangThai().equalsIgnoreCase("Đang làm"))
+                .count()));
+        lblNhanVienNghiPhep.setText(String.valueOf(data.stream()
+                .filter(nv -> nv.getTrangThai().equalsIgnoreCase("NGHI_PHEP") || nv.getTrangThai().equalsIgnoreCase("Nghỉ phép"))
+                .count()));
     }
 
     private void bindActionButtons() {
@@ -100,7 +125,7 @@ public class QuanLyNhanVienController {
         TextField txtSDT = new TextField();
         ComboBox<String> cbCa = new ComboBox<>(FXCollections.observableArrayList("Sáng", "Chiều", "Tối")); cbCa.setValue("Sáng");
 
-        grid.add(new Label("Mã NV (Tự động)"), 0, 0); grid.add(new TextField("NV" + String.format("%03d", tbNhanVien.getItems().size()+1)), 0, 1);
+        grid.add(new Label("Mã NV (Tự động)"), 0, 0); grid.add(new TextField("NV" + String.format("%03d", data.size()+1)), 0, 1);
         grid.add(new Label("Họ Tên *"), 0, 2); grid.add(txtTen, 0, 3);
         grid.add(new Label("Chức Vụ"), 0, 4); grid.add(cbCV, 0, 5);
         grid.add(new Label("Số Điện Thoại"), 0, 6); grid.add(txtSDT, 0, 7);
@@ -110,7 +135,8 @@ public class QuanLyNhanVienController {
         Button bHuy = new Button("Hủy"); bHuy.getStyleClass().add("btn-cancel"); bHuy.setOnAction(e->stage.close());
         Button bLuu = new Button("Lưu"); bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
-            tbNhanVien.getItems().add(new NhanVien("NV" + String.format("%03d", tbNhanVien.getItems().size()+1), txtTen.getText(), cbCV.getValue(), txtSDT.getText(), "5.000.000đ", cbCa.getValue(), "DANG_LAM", java.time.LocalDate.now().toString()));
+            data.add(new NhanVien("NV" + String.format("%03d", data.size()+1), txtTen.getText(), cbCV.getValue(), txtSDT.getText(), "5.000.000đ", cbCa.getValue(), "DANG_LAM", java.time.LocalDate.now().toString()));
+            updateStats();
             stage.close();
         });
         footer.getChildren().addAll(bHuy, bLuu);
@@ -170,7 +196,8 @@ public class QuanLyNhanVienController {
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
             // THỰC HIỆN XÓA KHỎI BẢNG (Và sau này là xóa khỏi Database)
-            tbNhanVien.getItems().remove(selectedItem);
+            data.remove(selectedItem);
+            updateStats();
             stage.close(); // Xóa xong thì đóng popup
         });
 
@@ -213,7 +240,8 @@ public class QuanLyNhanVienController {
             stage.showAndWait();
 
             // TODO: Refresh lại bảng tableNhanVien sau khi tắt popup
-            // tableNhanVien.refresh();
+            tbNhanVien.refresh();
+            updateStats();
 
         } catch (Exception e) {
             e.printStackTrace();

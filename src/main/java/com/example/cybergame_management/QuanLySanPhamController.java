@@ -2,6 +2,7 @@ package com.example.cybergame_management;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,6 +17,9 @@ import javafx.stage.StageStyle;
 
 public class QuanLySanPhamController {
 
+    @FXML private Label lblTongSP;
+    @FXML private Label lblConHang;
+    @FXML private Label lblHetHang;
     @FXML private TableView<SanPham> tbSanPham;
     @FXML private TableColumn<SanPham, String> colMaSP;
     @FXML private TableColumn<SanPham, String> colTenSP;
@@ -24,8 +28,10 @@ public class QuanLySanPhamController {
     @FXML private TableColumn<SanPham, String> colSoLuong;
     @FXML private TableColumn<SanPham, String> colDonVi;
     @FXML private TableColumn<SanPham, String> colTrangThai;
+    @FXML private TextField txtSearch;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
+    private final ObservableList<SanPham> data = DatabaseSeedData.sanPham();
 
     @FXML
     public void initialize() {
@@ -67,8 +73,28 @@ public class QuanLySanPhamController {
         });
 
         // Đổ dữ liệu giả y như hình Figma
-        tbSanPham.setItems(DatabaseSeedData.sanPham());
+        FilteredList<SanPham> filtered = new FilteredList<>(data, item -> true);
+        tbSanPham.setItems(filtered);
+        txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
         bindActionButtons();
+        updateStats();
+    }
+
+    private boolean matchesFilter(SanPham item) {
+        return SearchMatcher.containsKeyword(txtSearch.getText(),
+                item.maSPProperty().get(), item.tenSPProperty().get(), item.loaiProperty().get(),
+                item.giaProperty().get(), item.soLuongProperty().get(), item.donViProperty().get(),
+                item.trangThaiProperty().get());
+    }
+
+    private void updateStats() {
+        lblTongSP.setText(String.valueOf(data.size()));
+        lblConHang.setText(String.valueOf(data.stream()
+                .filter(sp -> DisplayFormat.parseInt(sp.soLuongProperty().get()) > 0)
+                .count()));
+        lblHetHang.setText(String.valueOf(data.stream()
+                .filter(sp -> DisplayFormat.parseInt(sp.soLuongProperty().get()) <= 0)
+                .count()));
     }
 
     private void bindActionButtons() {
@@ -131,9 +157,10 @@ public class QuanLySanPhamController {
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
             // Tự động sinh mã SP mới
-            String maMoi = "SP" + String.format("%03d", tbSanPham.getItems().size() + 1);
+            String maMoi = "SP" + String.format("%03d", data.size() + 1);
             // Ném dữ liệu vào bảng
-            tbSanPham.getItems().add(new SanPham(maMoi, txtTen.getText(), txtLoai.getText(), txtGia.getText(), txtSL.getText(), txtDonVi.getText(), cbTT.getValue()));
+            data.add(new SanPham(maMoi, txtTen.getText(), txtLoai.getText(), txtGia.getText(), txtSL.getText(), txtDonVi.getText(), cbTT.getValue()));
+            updateStats();
             stage.close();
         });
 
@@ -196,7 +223,8 @@ public class QuanLySanPhamController {
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
             // THỰC HIỆN XÓA KHỎI BẢNG (Và sau này là xóa khỏi Database)
-            tbSanPham.getItems().remove(selectedItem);
+            data.remove(selectedItem);
+            updateStats();
             stage.close(); // Xóa xong thì đóng popup
         });
 

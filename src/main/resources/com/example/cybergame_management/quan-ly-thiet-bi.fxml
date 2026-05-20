@@ -17,21 +17,21 @@
                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
                     <children>
                         <Label text="Tổng TB" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <Label text="7" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Label fx:id="lblTongTB" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
                     </children>
                 </VBox>
                 <VBox prefHeight="130.0" prefWidth="280.0" styleClass="stat-card-purple" HBox.hgrow="ALWAYS">
                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
                     <children>
                         <Label text="TB hỏng" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <Label text="2" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Label fx:id="lblTBHong" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
                     </children>
                 </VBox>
                 <VBox prefHeight="130.0" prefWidth="280.0" styleClass="stat-card-yellow" HBox.hgrow="ALWAYS">
                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
                     <children>
                         <Label text="Đang dùng" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <Label text="4" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Label fx:id="lblTBDangDung" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
                     </children>
                 </VBox>
             </children>
@@ -46,7 +46,7 @@
 
                         <Region HBox.hgrow="ALWAYS" />
 
-                        <TextField promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
+                        <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
 
                         <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
                         <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">
