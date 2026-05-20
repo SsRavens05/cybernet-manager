@@ -63,13 +63,7 @@ public class QuanLyKhuVucController {
         });
 
         // Dữ liệu giả y hệt thiết kế
-        ObservableList<KhuVuc> list = FXCollections.observableArrayList(
-                new KhuVuc("KV001", "Khu VIP", "10", "15.000đ", "HOATDONG", "Phòng VIP cao cấp"),
-                new KhuVuc("KV002", "Khu Thường", "20", "10.000đ", "HOATDONG", "Phòng thường"),
-                new KhuVuc("KV003", "Khu Esport", "8", "20.000đ", "HOATDONG", "Máy cấu hình cao cho game"),
-                new KhuVuc("KV004", "Khu Offline", "5", "8.000đ", "BAOTRI", "Đang bảo trì")
-        );
-        tbKhuVuc.setItems(list);
+        tbKhuVuc.setItems(DatabaseSeedData.khuVuc());
         bindActionButtons();
     }
 

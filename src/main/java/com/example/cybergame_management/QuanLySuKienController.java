@@ -31,11 +31,7 @@ public class QuanLySuKienController {
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
-    private final ObservableList<SuKien> data = FXCollections.observableArrayList(
-            new SuKien("SK001", "Giải Tốc Độ Gõ Phím", "2025-05-15", "09:00", "12:00", "24", "500.000đ", "SAP_DIEN_RA"),
-            new SuKien("SK002", "Giải PUBG Tháng 5", "2025-05-10", "18:00", "22:00", "16", "1.000.000đ", "DANG_DIEN_RA"),
-            new SuKien("SK003", "Liên Minh Huyền Thoại Cup", "2025-04-20", "14:00", "20:00", "30", "2.000.000đ", "DA_KET_THUC")
-    );
+    private final ObservableList<SuKien> data = DatabaseSeedData.caLam();
 
     @FXML
     public void initialize() {

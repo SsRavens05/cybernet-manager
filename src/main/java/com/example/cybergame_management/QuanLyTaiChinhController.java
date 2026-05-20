@@ -37,13 +37,7 @@ public class QuanLyTaiChinhController {
     @FXML private TableColumn<GiaoDich, String> colSoTien;
     @FXML private TableColumn<GiaoDich, String> colGhiChu;
 
-    private final ObservableList<GiaoDich> giaoDichList = FXCollections.observableArrayList(
-            new GiaoDich("GD001", "2025-05-06 09:15:00", "Nguyen Van An", "NAP_TIEN", 200000, "Nap tien tai khoan"),
-            new GiaoDich("GD002", "2025-05-06 10:30:00", "Tran Thi Binh", "THANH_TOAN", -50000, "Thanh toan gio choi"),
-            new GiaoDich("GD003", "2025-05-06 11:00:00", "Le Minh Cuong", "NAP_TIEN", 500000, "Nap tien tai khoan"),
-            new GiaoDich("GD004", "2025-05-06 13:45:00", "Pham Thu Dung", "THANH_TOAN", -80000, "Thanh toan dich vu"),
-            new GiaoDich("GD005", "2025-05-06 15:20:00", "Admin", "CHI_PHI", -150000, "Tien dien thang 5")
-    );
+    private final ObservableList<GiaoDich> giaoDichList = DatabaseSeedData.giaoDich();
 
     @FXML
     public void initialize() {

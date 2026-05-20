@@ -71,13 +71,7 @@ public class QuanLyThietBiController {
         });
 
         // 3. Dữ liệu giả
-        ObservableList<ThietBi> list = FXCollections.observableArrayList(
-                new ThietBi("TB1778342880001", "Chuột Logitech G102", "Chuột", "HOATDONG", "2025-05-09"),
-                new ThietBi("TB1778342880002", "Bàn phím cơ DareU", "Bàn Phím", "HOATDONG", "2025-05-09"),
-                new ThietBi("TB1778342880003", "Màn hình Samsung 27 inch", "Màn Hình", "BAOTRI", "2025-01-10"),
-                new ThietBi("TB1778342880004", "Tai nghe DareU EH722X", "Tai Nghe", "HONG", "2024-11-20")
-        );
-        tbThietBi.setItems(list);
+        tbThietBi.setItems(DatabaseSeedData.thietBi());
         bindActionButtons();
     }
 

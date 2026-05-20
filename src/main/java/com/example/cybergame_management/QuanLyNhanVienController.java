@@ -68,14 +68,7 @@ public class QuanLyNhanVienController {
             }
         });
 
-        ObservableList<NhanVien> list = FXCollections.observableArrayList(
-                new NhanVien("NV001", "Nguyễn Thành Long", "Quản lý", "0901111222", "8.000.000đ", "Sáng", "Đang làm", "2024-01-15"),
-                new NhanVien("NV002", "Trần Minh Khoa", "Nhân viên", "0912222333", "5.000.000đ", "Chiều", "Đang làm", "2024-03-20"),
-                new NhanVien("NV003", "Lê Thị Hoa", "Thu Ngân", "0923333444", "5.500.000đ", "Tối", "Nghỉ phép", "2024-06-01"),
-                new NhanVien("NV004", "Phạm Văn Tú", "Kỹ Thuật", "0934444555", "6.000.000đ", "Sáng", "Đang làm", "2024-09-10"),
-                new NhanVien("NV005", "Hoàng Thị Mai", "Nhân viên", "0945555666", "4.800.000đ", "Toàn ca", "Nghỉ việc", "2023-11-05")
-        );
-        tbNhanVien.setItems(list);
+        tbNhanVien.setItems(DatabaseSeedData.nhanVien());
         bindActionButtons();
     }
 

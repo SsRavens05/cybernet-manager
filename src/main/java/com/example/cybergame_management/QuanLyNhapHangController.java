@@ -72,13 +72,7 @@ public class QuanLyNhapHangController {
         });
 
         // Dữ liệu giả y hệt thiết kế
-        ObservableList<NhapHang> list = FXCollections.observableArrayList(
-                new NhapHang("NH001", "Pepsi Lon (thùng)", "Coca-Cola VN", "5", "240.000đ", "1.200.000đ", "2025-05-06 08:30:00", "NV001", "DA_NHAP"),
-                new NhapHang("NH002", "Mì Hảo Hảo (thùng)", "Acecook", "10", "80.000đ", "800.000đ", "2025-05-06 09:00:00", "NV001", "DA_NHAP"),
-                new NhapHang("NH003", "Tai nghe Gaming", "Logitech", "2", "800.000đ", "1.600.000đ", "2025-05-07 10:00:00", "NV002", "CHO_DUYET"),
-                new NhapHang("NH004", "Cáp HDMI", "Ugreen", "5", "80.000đ", "400.000đ", "2025-05-07 11:00:00", "NV002", "DA_NHAP")
-        );
-        tbNhapHang.setItems(list);
+        tbNhapHang.setItems(DatabaseSeedData.nhapHang());
         bindActionButtons();
     }
 

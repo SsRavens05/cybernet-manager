@@ -67,15 +67,7 @@ public class QuanLySanPhamController {
         });
 
         // Đổ dữ liệu giả y như hình Figma
-        ObservableList<SanPham> list = FXCollections.observableArrayList(
-                new SanPham("SP001", "Mì Hảo Hảo", "Đồ ăn", "5.000đ", "120", "Gói", "Còn Hàng"),
-                new SanPham("SP002", "Pepsi Lon", "Đồ uống", "12.000đ", "60", "Lon", "Còn Hàng"),
-                new SanPham("SP003", "Snack Oishi", "Đồ ăn", "10.000đ", "0", "Gói", "Hết Hàng"),
-                new SanPham("SP004", "Trà Sữa", "Đồ uống", "25.000đ", "30", "Ly", "Còn Hàng"),
-                new SanPham("SP005", "Bánh Mì", "Đồ ăn", "15.000đ", "20", "Cái", "Còn Hàng"),
-                new SanPham("SP006", "Cà Phê Đen", "Đồ uống", "20.000đ", "50", "Ly", "Còn Hàng")
-        );
-        tbSanPham.setItems(list);
+        tbSanPham.setItems(DatabaseSeedData.sanPham());
         bindActionButtons();
     }
 

@@ -31,12 +31,7 @@ public class QuanLyKhuyenMaiController {
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
-    private final ObservableList<KhuyenMai> data = FXCollections.observableArrayList(
-            new KhuyenMai("KM001", "Giảm 20% cuối tuần", "GIAM_GIA", "20%", "Chơi từ 3 giờ trở lên", "2025-05-01", "2025-05-31", "DANG_AP_DUNG"),
-            new KhuyenMai("KM002", "Nạp 200k tặng 50k", "TANG_QUA", "50.000đ", "Nạp tối thiểu 200.000đ", "2025-05-01", "2025-06-30", "DANG_AP_DUNG"),
-            new KhuyenMai("KM003", "Tặng 1h chơi sinh nhật", "TANG_GIO", "1h", "Khách hàng có sinh nhật trong tháng", "2025-01-01", "2025-12-31", "DANG_AP_DUNG"),
-            new KhuyenMai("KM004", "Tết Giảm 30%", "GIAM_GIA", "30%", "Dịp Tết Nguyên Đán", "2025-01-25", "2025-02-05", "HET_HAN")
-    );
+    private final ObservableList<KhuyenMai> data = DatabaseSeedData.khuyenMai();
 
     @FXML
     public void initialize() {

@@ -66,13 +66,7 @@ public class QuanLyKhachHangController {
             }
         });
 
-        // Dữ liệu giả y hệt Figma
-        ObservableList<KhachHang> list = FXCollections.observableArrayList(
-                new KhachHang("KH001", "Nguyễn Văn An", "0901234567", "an@email.com", "510.000đ", "Vàng", "ACTIVE", "2025-01-10"),
-                new KhachHang("KH002", "Trần Thị Bình", "0912345678", "binh@email.com", "200.000đ", "Bạc", "ACTIVE", "2025-02-15"),
-                new KhachHang("KH003", "Lê Minh Cường", "0923456789", "cuong@email.com", "0đ", "Thường", "INACTIVE", "2025-03-20")
-        );
-        tbKhachHang.setItems(list);
+        tbKhachHang.setItems(DatabaseSeedData.khachHang());
         bindActionButtons();
     }
 
