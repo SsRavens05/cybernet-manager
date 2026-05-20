@@ -11,6 +11,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,6 +24,9 @@ public class MainController {
 
     @FXML private AnchorPane btnThietBi;
     @FXML private AnchorPane btnKhachHang;
+    @FXML private AnchorPane btnSubKhachHang;
+    @FXML private AnchorPane btnNapTien;
+    @FXML private AnchorPane btnLichSuChoi;
     @FXML private AnchorPane btnNhanVien;
     @FXML private AnchorPane btnSanPham;
     @FXML private AnchorPane btnTaiChinh;
@@ -30,6 +34,8 @@ public class MainController {
     @FXML private AnchorPane btnKhuyenMai;
     @FXML private AnchorPane btnSuKien;
     @FXML private AnchorPane btnNhapHang;
+    @FXML private VBox customerSubMenu;
+    @FXML private Label lblKhachHangArrow;
 
     @FXML
     public void initialize() {
@@ -54,6 +60,24 @@ public class MainController {
         }
         if (activeBtn != null) {
             activeBtn.getStyleClass().add("sidebar-btn-active");
+        }
+        if (activeBtn != btnKhachHang) {
+            setActiveCustomerSub(null);
+        }
+    }
+
+    private void setActiveCustomerSub(AnchorPane activeSubBtn) {
+        AnchorPane[] customerBtns = {btnSubKhachHang, btnNapTien, btnLichSuChoi};
+        for (AnchorPane btn : customerBtns) {
+            if (btn != null) {
+                btn.getStyleClass().remove("sidebar-sub-btn-active");
+                if (!btn.getStyleClass().contains("sidebar-sub-btn")) {
+                    btn.getStyleClass().add("sidebar-sub-btn");
+                }
+            }
+        }
+        if (activeSubBtn != null) {
+            activeSubBtn.getStyleClass().add("sidebar-sub-btn-active");
         }
     }
 
@@ -90,14 +114,31 @@ public class MainController {
 
     @FXML
     public void onKhachHangMenuClick() {
-        setActiveMenu(btnKhachHang);
-        try {
-            Parent fxml = FXMLLoader.load(getClass().getResource("quan-ly-khach-hang.fxml"));
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(fxml);
-        } catch (IOException e) {
-            e.printStackTrace();
+        boolean visible = !customerSubMenu.isVisible();
+        customerSubMenu.setVisible(visible);
+        customerSubMenu.setManaged(visible);
+        lblKhachHangArrow.setText(visible ? "⌄" : "›");
+        if (visible) {
+            onSubKhachHangClick();
         }
+    }
+
+    @FXML
+    public void onSubKhachHangClick() {
+        loadContent("quan-ly-khach-hang.fxml", btnKhachHang);
+        setActiveCustomerSub(btnSubKhachHang);
+    }
+
+    @FXML
+    public void onNapTienMenuClick() {
+        loadContent("quan-ly-nap-tien.fxml", btnKhachHang);
+        setActiveCustomerSub(btnNapTien);
+    }
+
+    @FXML
+    public void onLichSuChoiMenuClick() {
+        loadContent("quan-ly-lich-su-choi.fxml", btnKhachHang);
+        setActiveCustomerSub(btnLichSuChoi);
     }
 
     @FXML

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyNapTienController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <VBox styleClass="topup-card">
+            <children>
+                <VBox spacing="6.0">
+                    <padding>
+                        <Insets bottom="20.0" left="22.0" right="22.0" top="22.0" />
+                    </padding>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <children>
+                                <Label styleClass="topup-title-icon" text="▣" />
+                                <Label styleClass="topup-title" text="Nạp Tiền - Cộng Điểm Tích Lũy">
+                                    <font><Font name="System Bold" size="18.0" /></font>
+                                </Label>
+                            </children>
+                        </HBox>
+                        <Label styleClass="topup-subtitle" text="Quy đổi: 1.000đ = 1 điểm tích lũy (SODIEMTICHLUY)" />
+                    </children>
+                </VBox>
+
+                <Separator />
+
+                <VBox spacing="24.0">
+                    <padding>
+                        <Insets bottom="24.0" left="22.0" right="22.0" top="24.0" />
+                    </padding>
+                    <children>
+                        <HBox spacing="20.0">
+                            <children>
+                                <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="field-label" text="Khách Hàng (MAKH - Tên) *" />
+                                        <ComboBox fx:id="cbKhachHang" maxWidth="Infinity" prefHeight="46.0" promptText="Chọn khách hàng..." styleClass="form-control" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="field-label" text="Số Tiền Nạp (VNĐ) *" />
+                                        <TextField fx:id="txtSoTien" prefHeight="46.0" promptText="0" styleClass="form-control" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="field-label" text="Gói Khuyến Mãi" />
+                                        <ComboBox fx:id="cbKhuyenMai" maxWidth="Infinity" prefHeight="46.0" styleClass="form-control" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="field-label" text="Phương Thức Thanh Toán" />
+                                        <ComboBox fx:id="cbPhuongThuc" maxWidth="Infinity" prefHeight="46.0" styleClass="form-control" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_RIGHT">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#onNapTienClick" prefHeight="50.0" styleClass="btn-topup" text="+  Thực Hiện Nạp Tiền" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+
+        <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="topup-history-header">
+                    <children>
+                        <Label styleClass="topup-title-icon" text="↺" />
+                        <Label styleClass="topup-title" text="Lịch Sử Giao Dịch">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="lblTongGiaoDich" styleClass="topup-count" text="Tổng: 0 giao dịch" />
+                    </children>
+                </HBox>
+
+                <TableView fx:id="tbNapTien" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colMaGD" prefWidth="90.0" text="Mã GD" />
+                        <TableColumn fx:id="colThoiGian" prefWidth="150.0" text="Thời Gian" />
+                        <TableColumn fx:id="colMaKH" prefWidth="90.0" text="MAKH" />
+                        <TableColumn fx:id="colKhachHang" prefWidth="180.0" text="Khách Hàng" />
+                        <TableColumn fx:id="colSoTien" prefWidth="130.0" text="Số Tiền (đ)" />
+                        <TableColumn fx:id="colDiemCong" prefWidth="120.0" text="Điểm Cộng" />
+                        <TableColumn fx:id="colPhuongThuc" prefWidth="150.0" text="Phương Thức" />
+                        <TableColumn fx:id="colKhuyenMai" prefWidth="130.0" text="Khuyến Mãi" />
+                        <TableColumn fx:id="colNguoiThucHien" prefWidth="140.0" text="Người Thực Hiện" />
+                    </columns>
+                    <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</VBox>

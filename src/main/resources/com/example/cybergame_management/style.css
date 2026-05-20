@@ -65,6 +65,17 @@
 .sidebar-btn-active {
     -fx-background-color: rgba(255, 255, 255, 0.18);
 }
+.sidebar-sub-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+.sidebar-sub-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+}
+.sidebar-sub-btn-active {
+    -fx-background-color: rgba(255, 255, 255, 0.16);
+}
 .user-profile-area {
     -fx-background-color: #ffffff;
     -fx-border-color: #e5e7eb;
@@ -376,4 +387,101 @@
 .search-box:focused {
     -fx-border-color: #8b0000; /* Đổi viền sang đỏ đô khi user click vào gõ phím */
     -fx-border-width: 1.5px;
+}
+
+/* --- NAP TIEN --- */
+.topup-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.12), 10, 0, 0, 2);
+}
+
+.topup-title {
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.topup-title-icon {
+    -fx-text-fill: #0f6bff;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.topup-subtitle,
+.topup-count {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 14px;
+}
+
+.field-label {
+    -fx-text-fill: #334155;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.form-control {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d8dee7;
+    -fx-border-radius: 9;
+    -fx-background-radius: 9;
+    -fx-padding: 8 14;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #94a3b8;
+}
+
+.form-control:focused {
+    -fx-border-color: #8b0000;
+    -fx-border-width: 1.5px;
+}
+
+.btn-topup {
+    -fx-background-color: #9f0719;
+    -fx-background-radius: 9;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 28;
+    -fx-cursor: hand;
+}
+
+.btn-topup:hover {
+    -fx-background-color: #7f0614;
+}
+
+.topup-history-header {
+    -fx-padding: 22 22 20 22;
+}
+
+.point-badge {
+    -fx-background-color: #fff7e6;
+    -fx-background-radius: 12;
+    -fx-text-fill: #c2410c;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 11;
+}
+
+.promo-badge {
+    -fx-background-color: #eaf2ff;
+    -fx-background-radius: 12;
+    -fx-border-color: #cfe0ff;
+    -fx-border-radius: 12;
+    -fx-text-fill: #0f6bff;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 11;
+}
+
+.promo-badge-muted {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 11;
 }

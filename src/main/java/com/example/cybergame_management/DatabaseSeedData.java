@@ -9,10 +9,10 @@ final class DatabaseSeedData {
 
     static ObservableList<KhachHang> khachHang() {
         return FXCollections.observableArrayList(
-                // KHACHHANG joined with APP_USER: MAKH, HOTEN, SODT, SODIEMTICHLUY, IS_DELETE, CREATE_AT
-                new KhachHang("KH001", "Nguyen Van An", "0901234567", "USER_KH001", "1250 diem", "Thanh vien", "ACTIVE", "2026-05-01"),
-                new KhachHang("KH002", "Tran Thi Binh", "0912345678", "USER_KH002", "820 diem", "Thanh vien", "ACTIVE", "2026-05-03"),
-                new KhachHang("KH003", "Le Minh Cuong", "0923456789", "USER_KH003", "0 diem", "Thanh vien", "INACTIVE", "2026-05-08")
+                // KHACHHANG: MAKH, HOTEN, SODU, SODIEMTICHLUY, TRANGTHAI, CREATE_AT
+                new KhachHang("KH001", "Nguyen Van An", "250000", "1250", "ACTIVE", "2026-05-01"),
+                new KhachHang("KH002", "Tran Thi Binh", "82000", "820", "ACTIVE", "2026-05-03"),
+                new KhachHang("KH003", "Le Minh Cuong", "0", "0", "INACTIVE", "2026-05-08")
         );
     }
 
