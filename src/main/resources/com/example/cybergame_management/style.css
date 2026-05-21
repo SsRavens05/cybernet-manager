@@ -65,16 +65,23 @@
 .sidebar-btn-active {
     -fx-background-color: rgba(255, 255, 255, 0.18);
 }
+/* =========================================================================
+   [HỌC TẬP - GIẢI THÍCH CHO SINH VIÊN]
+   Nút Menu Con (Submenu Items) trên thanh Sidebar:
+   - .sidebar-sub-btn: Trạng thái bình thường (trong suốt, bo góc, chuột hình bàn tay)
+   - :hover: Hiệu ứng đổi màu nền nhè nhẹ khi di chuột qua
+   - -active: Lớp CSS do Controller (MainController.java) thêm/bớt để làm nổi bật trang đang chọn
+   ========================================================================= */
 .sidebar-sub-btn {
-    -fx-background-color: transparent;
-    -fx-background-radius: 8;
-    -fx-cursor: hand;
+    -fx-background-color: transparent; /* Nền trong suốt khi bình thường */
+    -fx-background-radius: 8;           /* Bo tròn góc nền 8px cho mềm mại */
+    -fx-cursor: hand;                  /* Biến con trỏ chuột thành hình bàn tay để báo hiệu click được */
 }
 .sidebar-sub-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.10);
+    -fx-background-color: rgba(255, 255, 255, 0.10); /* Màu nền trắng mờ 10% khi di chuột qua */
 }
 .sidebar-sub-btn-active {
-    -fx-background-color: rgba(255, 255, 255, 0.16);
+    -fx-background-color: rgba(255, 255, 255, 0.16); /* Màu nền trắng mờ 16% để đánh dấu menu đang hoạt động */
 }
 .user-profile-area {
     -fx-background-color: #ffffff;
@@ -88,43 +95,52 @@
 .stats-row {
     -fx-spacing: 20;
 }
+/* =========================================================================
+   [HỌC TẬP - GIẢI THÍCH CHO SINH VIÊN]
+   Thẻ Thống Kê Chỉ Số (Stat Cards):
+   - Nhóm card dùng chung bo góc (16px) và đổ bóng nhẹ (dropshadow) giúp giao diện nổi bật dạng 3D.
+   - Mỗi card được áp dụng một dải màu gradient mượt mà (từ góc trên bên trái xuống góc dưới bên phải).
+   - .stat-title: Tiêu đề thống kê (chữ đậm, size 16px, màu trắng).
+   - .stat-value: Số liệu thống kê lớn nổi bật (chữ đậm, size 46px, màu trắng).
+   - .stat-ring: Vòng tròn trang trí mờ màu trắng phía sau (rỗng ruột - transparent, viền mờ 20% màu trắng, độ rộng viền 10px).
+   ========================================================================= */
 .stat-card-blue,
 .stat-card-purple,
 .stat-card-yellow,
 .stat-card-green,
 .stat-card-red {
-    -fx-background-radius: 16;
-    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.10), 12, 0, 0, 4);
+    -fx-background-radius: 16;                                                  /* Bo góc card 16px cực mềm mại */
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.10), 12, 0, 0, 4); /* Đổ bóng 3D hiện đại */
 }
 .stat-card-blue {
-    -fx-background-color: linear-gradient(to right bottom, #47bee8, #078ed7);
+    -fx-background-color: linear-gradient(to right bottom, #47bee8, #078ed7);   /* Màu xanh dương Gradient */
 }
 .stat-card-purple {
-    -fx-background-color: linear-gradient(to right bottom, #c17ad8, #861ab3);
+    -fx-background-color: linear-gradient(to right bottom, #c17ad8, #861ab3);   /* Màu tím Gradient */
 }
 .stat-card-yellow {
-    -fx-background-color: linear-gradient(to right bottom, #ffd36b, #ffad1f);
+    -fx-background-color: linear-gradient(to right bottom, #ffd36b, #ffad1f);   /* Màu vàng cam Gradient */
 }
 .stat-card-green {
-    -fx-background-color: linear-gradient(to right bottom, #47c978, #16a34a);
+    -fx-background-color: linear-gradient(to right bottom, #47c978, #16a34a);   /* Màu xanh lá Gradient */
 }
 .stat-card-red {
-    -fx-background-color: linear-gradient(to right bottom, #ff6b6b, #ef4444);
+    -fx-background-color: linear-gradient(to right bottom, #ff6b6b, #ef4444);   /* Màu đỏ Gradient */
 }
 .stat-title {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
+    -fx-font-size: 16px;       /* Cỡ chữ 16px cho tiêu đề nhỏ */
+    -fx-font-weight: bold;     /* In đậm chữ */
+    -fx-text-fill: white;      /* Chữ màu trắng */
 }
 .stat-value {
-    -fx-font-size: 46px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
+    -fx-font-size: 46px;       /* Cỡ chữ 46px siêu to khổng lồ cho số liệu nổi bật */
+    -fx-font-weight: bold;     /* In đậm chữ */
+    -fx-text-fill: white;      /* Chữ màu trắng */
 }
 .stat-ring {
-    -fx-fill: transparent;
-    -fx-stroke: rgba(255, 255, 255, 0.20);
-    -fx-stroke-width: 10;
+    -fx-fill: transparent;                  /* Trong suốt bên trong vòng tròn */
+    -fx-stroke: rgba(255, 255, 255, 0.20); /* Màu viền trắng mờ 20% */
+    -fx-stroke-width: 10;                  /* Độ dày viền 10px */
 }
 .table-panel {
     -fx-background-color: #ffffff;

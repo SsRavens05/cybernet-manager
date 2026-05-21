@@ -16,23 +16,26 @@
             <children>
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-blue" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Dịch Vụ" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
-                        <Label fx:id="lblTongDichVu" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
-                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
+                        <Label layoutX="20.0" layoutY="18.0" text="🍔" textFill="WHITE"><font><Font size="22.0" /></font></Label>
+                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Dịch Vụ" styleClass="stat-title" />
+                        <Label fx:id="lblTongDichVu" layoutX="20.0" layoutY="50.0" text="0" styleClass="stat-value" />
+                        <Circle layoutX="250.0" layoutY="65.0" radius="40.0" styleClass="stat-ring" AnchorPane.rightAnchor="20.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-green" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Đã Phục Vụ (Serviced)" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
-                        <Label fx:id="lblDaPhucVu" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
-                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
+                        <Label layoutX="20.0" layoutY="18.0" text="✔️" textFill="WHITE"><font><Font size="22.0" /></font></Label>
+                        <Label layoutX="60.0" layoutY="20.0" text="Đã Phục Vụ" styleClass="stat-title" />
+                        <Label fx:id="lblDaPhucVu" layoutX="20.0" layoutY="50.0" text="0" styleClass="stat-value" />
+                        <Circle layoutX="250.0" layoutY="65.0" radius="40.0" styleClass="stat-ring" AnchorPane.rightAnchor="20.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-purple" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Số Lượng" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
-                        <Label fx:id="lblTongSoLuong" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
-                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
+                        <Label layoutX="20.0" layoutY="18.0" text="📦" textFill="WHITE"><font><Font size="22.0" /></font></Label>
+                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Số Lượng" styleClass="stat-title" />
+                        <Label fx:id="lblTongSoLuong" layoutX="20.0" layoutY="50.0" text="0" styleClass="stat-value" />
+                        <Circle layoutX="250.0" layoutY="65.0" radius="40.0" styleClass="stat-ring" AnchorPane.rightAnchor="20.0" />
                     </children>
                 </AnchorPane>
             </children>
