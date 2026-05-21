@@ -65,7 +65,7 @@
 
                 <VBox spacing="8.0">
                     <children>
-                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Ngày Mua" />
+                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Mã PC" />
                         <TextField fx:id="txtNgayMua" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
                     </children>
                 </VBox>

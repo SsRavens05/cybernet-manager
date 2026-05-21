@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -27,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class QuanLyKhachHangController {
@@ -83,6 +85,8 @@ public class QuanLyKhachHangController {
             }
         });
 
+        loadData();
+
         FilteredList<KhachHang> filtered = new FilteredList<>(data, item -> true);
         tbKhachHang.setItems(filtered);
         txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
@@ -93,6 +97,18 @@ public class QuanLyKhachHangController {
     private boolean matchesFilter(KhachHang item) {
         return SearchMatcher.containsKeyword(txtSearch.getText(),
                 item.getMaKH(), item.getHoTen(), item.getSoDu(), item.getSoDiemTichLuy(), item.getTrangThai(), item.getNgayDK());
+    }
+
+    private void loadData() {
+        if (!KhachHangRepository.isDatabaseEnabled()) {
+            return;
+        }
+        try {
+            data.setAll(KhachHangRepository.findAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Không thể tải danh sách khách hàng từ database. Ứng dụng sẽ dùng dữ liệu mẫu.");
+        }
     }
 
     private void updateStats() {
@@ -215,6 +231,15 @@ public class QuanLyKhachHangController {
         Button btnXoa = new Button("Xóa");
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
+            if (KhachHangRepository.isDatabaseEnabled()) {
+                try {
+                    KhachHangRepository.softDelete(selectedItem.getMaKH());
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    showError("Không thể xóa khách hàng trong database.");
+                    return;
+                }
+            }
             data.remove(selectedItem);
             updateStats();
             stage.close();
@@ -247,10 +272,22 @@ public class QuanLyKhachHangController {
             stage.setScene(new Scene(root));
             stage.showAndWait();
 
+            if (KhachHangRepository.isDatabaseEnabled()) {
+                KhachHangRepository.update(selectedItem);
+            }
             tbKhachHang.refresh();
             updateStats();
         } catch (Exception e) {
             e.printStackTrace();
+            showError("Không thể cập nhật khách hàng trong database.");
         }
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Lỗi database");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

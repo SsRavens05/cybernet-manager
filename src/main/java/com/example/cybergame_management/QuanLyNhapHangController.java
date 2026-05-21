@@ -22,14 +22,12 @@ public class QuanLyNhapHangController {
     @FXML private Label lblTongChiNhap;
     @FXML private Label lblChoDuyet;
     @FXML private TableView<NhapHang> tbNhapHang;
-    @FXML private TableColumn<NhapHang, String> colMaNH;
-    @FXML private TableColumn<NhapHang, String> colTenSP;
-    @FXML private TableColumn<NhapHang, String> colNhaCC;
-    @FXML private TableColumn<NhapHang, String> colSoLuong;
-    @FXML private TableColumn<NhapHang, String> colDonGia;
-    @FXML private TableColumn<NhapHang, String> colTongTien;
+    @FXML private TableColumn<NhapHang, String> colMaPN;
     @FXML private TableColumn<NhapHang, String> colNgayNhap;
-    @FXML private TableColumn<NhapHang, String> colNguoiNhap;
+    @FXML private TableColumn<NhapHang, String> colSoLuong;
+    @FXML private TableColumn<NhapHang, String> colTongTienNhap;
+    @FXML private TableColumn<NhapHang, String> colLoaiHang;
+    @FXML private TableColumn<NhapHang, String> colNhaCC;
     @FXML private TableColumn<NhapHang, String> colTrangThai;
     @FXML private TextField txtSearch;
     @FXML private Button btnDelete;
@@ -39,14 +37,12 @@ public class QuanLyNhapHangController {
     @FXML
     public void initialize() {
         // Ánh xạ dữ liệu
-        colMaNH.setCellValueFactory(cellData -> cellData.getValue().maNHProperty());
-        colTenSP.setCellValueFactory(cellData -> cellData.getValue().tenSPProperty());
-        colNhaCC.setCellValueFactory(cellData -> cellData.getValue().nhaCCProperty());
-        colSoLuong.setCellValueFactory(cellData -> cellData.getValue().soLuongProperty());
-        colDonGia.setCellValueFactory(cellData -> cellData.getValue().donGiaProperty());
-        colTongTien.setCellValueFactory(cellData -> cellData.getValue().tongTienProperty());
+        colMaPN.setCellValueFactory(cellData -> cellData.getValue().maPNProperty());
         colNgayNhap.setCellValueFactory(cellData -> cellData.getValue().ngayNhapProperty());
-        colNguoiNhap.setCellValueFactory(cellData -> cellData.getValue().nguoiNhapProperty());
+        colSoLuong.setCellValueFactory(cellData -> cellData.getValue().soLuongProperty());
+        colTongTienNhap.setCellValueFactory(cellData -> cellData.getValue().tongTienNhapProperty());
+        colLoaiHang.setCellValueFactory(cellData -> cellData.getValue().loaiHangProperty());
+        colNhaCC.setCellValueFactory(cellData -> cellData.getValue().nhaCCProperty());
         colTrangThai.setCellValueFactory(cellData -> cellData.getValue().trangThaiProperty());
 
         // Tạo huy hiệu cho cột Trạng Thái
@@ -87,14 +83,14 @@ public class QuanLyNhapHangController {
 
     private boolean matchesFilter(NhapHang item) {
         return SearchMatcher.containsKeyword(txtSearch.getText(),
-                item.getMaNH(), item.getTenSP(), item.getNhaCC(), item.getSoLuong(),
-                item.getDonGia(), item.getTongTien(), item.getNgayNhap(), item.getNguoiNhap(), item.getTrangThai());
+                item.getMaPN(), item.getLoaiHang(), item.getNhaCC(), item.getSoLuong(),
+                item.getDonGia(), item.getTongTienNhap(), item.getNgayNhap(), item.getNguoiNhap(), item.getTrangThai());
     }
 
     private void updateStats() {
         lblTongPhieuNhap.setText(String.valueOf(data.size()));
         lblTongChiNhap.setText(DisplayFormat.money(data.stream()
-                .mapToLong(nh -> DisplayFormat.parseMoney(nh.getTongTien()))
+                .mapToLong(nh -> DisplayFormat.parseMoney(nh.getTongTienNhap()))
                 .sum()));
         lblChoDuyet.setText(String.valueOf(data.stream()
                 .filter(nh -> "CHO_DUYET".equalsIgnoreCase(nh.getTrangThai()))
@@ -133,7 +129,7 @@ public class QuanLyNhapHangController {
         grid.setHgap(15);
         grid.setVgap(15);
 
-        TextField txtTenSP = new TextField(); txtTenSP.setPrefWidth(400);
+        TextField txtLoaiHang = new TextField(); txtLoaiHang.setPrefWidth(400);
         TextField txtNCC = new TextField();
         TextField txtSL = new TextField("0");
         TextField txtDonGia = new TextField("0");
@@ -142,7 +138,7 @@ public class QuanLyNhapHangController {
         // Ô TỔNG TIỀN (Nền xám giống thiết kế)
         HBox boxTongTien = new HBox();
         boxTongTien.setStyle("-fx-background-color: #f8f9fa; -fx-padding: 10; -fx-background-radius: 5;");
-        Label lblTongTien = new Label("Tổng tiền: 0đ");
+        Label lblTongTien = new Label("Tổng tiền nhập: 0đ");
         lblTongTien.setStyle("-fx-text-fill: #4b5563; -fx-font-weight: bold;");
         boxTongTien.getChildren().add(lblTongTien);
 
@@ -152,9 +148,9 @@ public class QuanLyNhapHangController {
                 long sl = Long.parseLong(txtSL.getText().trim());
                 long dg = Long.parseLong(txtDonGia.getText().trim());
                 // Format số có dấu chấm cho đẹp (VD: 1.200.000đ)
-                lblTongTien.setText(String.format("Tổng tiền: %,dđ", sl * dg).replace(",", "."));
+                lblTongTien.setText(String.format("Tổng tiền nhập: %,dđ", sl * dg).replace(",", "."));
             } catch (NumberFormatException e) {
-                lblTongTien.setText("Tổng tiền: 0đ"); // Gõ bậy chữ cái thì về 0
+                lblTongTien.setText("Tổng tiền nhập: 0đ"); // Gõ bậy chữ cái thì về 0
             }
         };
         txtSL.textProperty().addListener(calcTotal);
@@ -164,7 +160,7 @@ public class QuanLyNhapHangController {
         cbTrangThai.setValue("CHO_DUYET");
         cbTrangThai.setPrefWidth(400);
 
-        grid.add(new Label("Tên Sản Phẩm *"), 0, 0); grid.add(txtTenSP, 0, 1);
+        grid.add(new Label("Loại Hàng *"), 0, 0); grid.add(txtLoaiHang, 0, 1);
         grid.add(new Label("Nhà Cung Cấp"), 0, 2); grid.add(txtNCC, 0, 3);
         grid.add(new Label("Số Lượng"), 0, 4); grid.add(txtSL, 0, 5);
         grid.add(new Label("Đơn Giá"), 0, 6); grid.add(txtDonGia, 0, 7);
@@ -183,12 +179,12 @@ public class QuanLyNhapHangController {
         Button bLuu = new Button("Lưu");
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
-            String maMoi = "NH" + String.format("%03d", data.size() + 1);
+            String maMoi = "PN" + String.format("%03d", data.size() + 1);
 
             // Tách lấy con số tổng tiền từ cái Label để lưu vào bảng
-            String tongTienStr = lblTongTien.getText().replace("Tổng tiền: ", "");
+            String tongTienStr = lblTongTien.getText().replace("Tổng tiền nhập: ", "");
 
-            data.add(new NhapHang(maMoi, txtTenSP.getText(), txtNCC.getText(), txtSL.getText(), txtDonGia.getText() + "đ", tongTienStr, java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), txtNguoiNhap.getText(), cbTrangThai.getValue()));
+            data.add(new NhapHang(maMoi, txtLoaiHang.getText(), txtNCC.getText(), txtSL.getText(), txtDonGia.getText() + "đ", tongTienStr, java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), txtNguoiNhap.getText(), cbTrangThai.getValue()));
             updateStats();
             stage.close();
         });

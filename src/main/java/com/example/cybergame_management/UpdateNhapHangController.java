@@ -9,14 +9,14 @@ import javafx.stage.Stage;
 
 public class UpdateNhapHangController {
 
-    @FXML private TextField txtMaNH;
-    @FXML private TextField txtTenSP;
+    @FXML private TextField txtMaPN;
+    @FXML private TextField txtLoaiHang;
     @FXML private TextField txtNhaCC;
     @FXML private TextField txtSoLuong;
     @FXML private TextField txtDonGia;
     @FXML private TextField txtNgayNhap;
     @FXML private TextField txtNguoiNhap;
-    @FXML private Label lblTongTien;
+    @FXML private Label lblTongTienNhap;
     @FXML private ComboBox<String> cbTrangThai;
 
     private NhapHang nhapHangDangSua;
@@ -24,14 +24,14 @@ public class UpdateNhapHangController {
     public void setNhapHangData(NhapHang nh) {
         this.nhapHangDangSua = nh;
 
-        txtMaNH.setText(nh.getMaNH());
-        txtTenSP.setText(nh.getTenSP());
+        txtMaPN.setText(nh.getMaPN());
+        txtLoaiHang.setText(nh.getLoaiHang());
         txtNhaCC.setText(nh.getNhaCC());
         txtSoLuong.setText(nh.getSoLuong());
         txtDonGia.setText(boDonViTien(nh.getDonGia()));
         txtNgayNhap.setText(nh.getNgayNhap());
         txtNguoiNhap.setText(nh.getNguoiNhap());
-        lblTongTien.setText("Tổng tiền: " + nh.getTongTien());
+        lblTongTienNhap.setText("Tổng tiền nhập: " + nh.getTongTienNhap());
 
         cbTrangThai.getItems().setAll("CHO_DUYET", "DA_NHAP", "HUY");
         cbTrangThai.setValue(nh.getTrangThai());
@@ -44,17 +44,17 @@ public class UpdateNhapHangController {
 
     @FXML
     public void onLuuClick() {
-        nhapHangDangSua.setTenSP(txtTenSP.getText());
+        nhapHangDangSua.setLoaiHang(txtLoaiHang.getText());
         nhapHangDangSua.setNhaCC(txtNhaCC.getText());
         nhapHangDangSua.setSoLuong(txtSoLuong.getText());
         nhapHangDangSua.setDonGia(chuanHoaTien(txtDonGia.getText()));
-        nhapHangDangSua.setTongTien(lblTongTien.getText().replace("Tổng tiền: ", ""));
+        nhapHangDangSua.setTongTienNhap(lblTongTienNhap.getText().replace("Tổng tiền nhập: ", ""));
         nhapHangDangSua.setNgayNhap(txtNgayNhap.getText());
         nhapHangDangSua.setNguoiNhap(txtNguoiNhap.getText());
         nhapHangDangSua.setTrangThai(cbTrangThai.getValue());
 
         // TODO: Gọi lệnh Update xuống CSDL Oracle ở đây.
-        System.out.println("Đã lưu cập nhật cho Mã NH: " + nhapHangDangSua.getMaNH());
+        System.out.println("Đã lưu cập nhật cho Mã PN: " + nhapHangDangSua.getMaPN());
 
         dongForm();
     }
@@ -68,9 +68,9 @@ public class UpdateNhapHangController {
         try {
             long soLuong = Long.parseLong(txtSoLuong.getText().trim());
             long donGia = Long.parseLong(boDonViTien(txtDonGia.getText()).replace(".", "").trim());
-            lblTongTien.setText(String.format("Tổng tiền: %,dđ", soLuong * donGia).replace(",", "."));
+            lblTongTienNhap.setText(String.format("Tổng tiền nhập: %,dđ", soLuong * donGia).replace(",", "."));
         } catch (NumberFormatException e) {
-            lblTongTien.setText("Tổng tiền: 0đ");
+            lblTongTienNhap.setText("Tổng tiền nhập: 0đ");
         }
     }
 
@@ -90,7 +90,7 @@ public class UpdateNhapHangController {
     }
 
     private void dongForm() {
-        Stage stage = (Stage) txtMaNH.getScene().getWindow();
+        Stage stage = (Stage) txtMaPN.getScene().getWindow();
         stage.close();
     }
 }

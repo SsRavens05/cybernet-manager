@@ -18,11 +18,32 @@ final class DatabaseSeedData {
 
     static ObservableList<NhanVien> nhanVien() {
         return FXCollections.observableArrayList(
-                // NHAN_VIEN joined with APP_USER, LOAI_NHAN_VIEN and CHI_TIET_CA_LAM
-                new NhanVien("NV001", "Nguyen Thanh Long", "Quan ly ca", "0901111222", "8000000", "CA_SANG", "DANG_LAM", "2025-01-15"),
-                new NhanVien("NV002", "Tran Minh Khoa", "Thu ngan", "0912222333", "5500000", "CA_CHIEU", "DANG_LAM", "2025-03-20"),
-                new NhanVien("NV003", "Le Thi Hoa", "Ky thuat", "0923333444", "6500000", "CA_TOI", "NGHI_PHEP", "2025-06-01"),
-                new NhanVien("NV004", "Pham Van Tu", "Bao tri PC", "0934444555", "6000000", "CA_SANG", "DANG_LAM", "2025-09-10")
+                new NhanVien("NV001", "Nguyễn Thành Long", "Quản Lý", "0901111222", "12.000.000đ", "Ca Sáng (6h-14h)", "Đang làm", "2024-01-15", "8201234567", "DN4020123456789", "—"),
+                new NhanVien("NV002", "Trần Minh Khoa", "Kỹ Thuật", "0912222333", "8.000.000đ", "Ca Chiều (14h-22h)", "Đang làm", "2024-03-20", "8209876543", "DN4020987654321", "—"),
+                new NhanVien("NV003", "Lê Thị Hoa", "Nhân Viên", "0923333444", "7.000.000đ", "Ca Đêm (22h-6h)", "Nghỉ phép", "2024-06-01", "8201122334", "DN4021122334455", "—"),
+                new NhanVien("NV004", "Phạm Văn Tú", "Bảo Vệ", "0934444555", "6.000.000đ", "Ca Sáng (6h-14h)", "Đang làm", "2024-09-10", "8205544332", "DN402554432211", "—"),
+                new NhanVien("NV005", "Hoàng Thị Mai", "Phục Vụ", "0945555666", "6.500.000đ", "Ca Chiều (14h-22h)", "Nghỉ việc", "2023-11-05", "8206677889", "DN402667788900", "2025-11-05")
+        );
+    }
+
+    static ObservableList<LoaiNhanVien> loaiNhanVien() {
+        return FXCollections.observableArrayList(
+                new LoaiNhanVien("LNV001", "Quản Lý", "12.000.000 đ"),
+                new LoaiNhanVien("LNV002", "Kỹ Thuật", "8.000.000 đ"),
+                new LoaiNhanVien("LNV003", "Nhân Viên", "7.000.000 đ"),
+                new LoaiNhanVien("LNV004", "Bảo Vệ", "6.000.000 đ"),
+                new LoaiNhanVien("LNV005", "Phục Vụ", "6.500.000 đ")
+        );
+    }
+
+    static ObservableList<CaLam> caLamShifts() {
+        return FXCollections.observableArrayList(
+                new CaLam("CA001", "06:00", "12:00", "6h", "Đã kết thúc", "—"),
+                new CaLam("CA002", "12:00", "18:00", "6h", "Đang làm", "—"),
+                new CaLam("CA003", "18:00", "24:00", "6h", "Sắp tới", "+1h"),
+                new CaLam("CA004", "06:00", "12:00", "6h", "Sắp tới", "—"),
+                new CaLam("CA005", "00:00", "06:00", "6h", "Đã kết thúc", "+2h"),
+                new CaLam("CA006", "08:00", "20:00", "12h", "Đã kết thúc", "—")
         );
     }
 
@@ -36,23 +57,32 @@ final class DatabaseSeedData {
         );
     }
 
+    static ObservableList<LoaiKhuVuc> loaiKhuVuc() {
+        return FXCollections.observableArrayList(
+                new LoaiKhuVuc("LKV001", "VIP", "10", "15000", "2025-01-01 08:00:00"),
+                new LoaiKhuVuc("LKV002", "Thường", "20", "10000", "2025-01-01 08:00:00"),
+                new LoaiKhuVuc("LKV003", "Esport", "8", "20000", "2025-01-01 08:00:00"),
+                new LoaiKhuVuc("LKV004", "Offline", "5", "8000", "2025-03-15 10:30:00")
+        );
+    }
+
     static ObservableList<SanPham> sanPham() {
         return FXCollections.observableArrayList(
-                // SAN_PHAM: MASP, TENSP, LOAISP, DONGIABQ, SOLUONGTK, DVT
-                new SanPham("SP001", "Mi Hao Hao", "Do an", "5000", "120", "Goi", "CON_HANG"),
-                new SanPham("SP002", "Pepsi Lon", "Do uong", "12000", "60", "Lon", "CON_HANG"),
-                new SanPham("SP003", "Snack Oishi", "Do an", "10000", "0", "Goi", "HET_HANG"),
-                new SanPham("SP004", "Tra sua", "Do uong", "25000", "30", "Ly", "CON_HANG"),
-                new SanPham("SP005", "Banh mi", "Do an", "15000", "20", "Cai", "CON_HANG")
+                // SAN_PHAM: MASP, TENSP, LOAISP, DONGIABQ, SOLUONGTK, DVT, SODIEMTICHLUY
+                new SanPham("SP001", "Mi Hao Hao", "Do an", "5000", "120", "Goi", "5"),
+                new SanPham("SP002", "Pepsi Lon", "Do uong", "12000", "60", "Lon", "12"),
+                new SanPham("SP003", "Snack Oishi", "Do an", "10000", "0", "Goi", "10"),
+                new SanPham("SP004", "Tra sua", "Do uong", "25000", "30", "Ly", "25"),
+                new SanPham("SP005", "Banh mi", "Do an", "15000", "20", "Cai", "15")
         );
     }
 
     static ObservableList<NhapHang> nhapHang() {
         return FXCollections.observableArrayList(
-                // NHAP_HANG joined with CHI_TIET_NHAP_HANG, NHA_CUNG_CAP and SAN_PHAM
-                new NhapHang("NH001", "Pepsi Lon", "NCC001 - Suntory PepsiCo", "50", "12000", "600000", "2026-05-06", "NV001", "DA_NHAP"),
-                new NhapHang("NH002", "Mi Hao Hao", "NCC002 - Acecook", "100", "5000", "500000", "2026-05-06", "NV001", "DA_NHAP"),
-                new NhapHang("NH003", "Tai nghe Gaming", "NCC003 - Logitech", "10", "800000", "8000000", "2026-05-07", "NV002", "CHO_DUYET")
+                // NHAP_HANG: MAPN, LOAIHANG, NHACC, SOLUONG, DONGIA, TONGTIENNHAP, NGAYNHAP, NGUOINHAP, TRANGTHAI
+                new NhapHang("PN001", "Nước uống", "NCC001 - Suntory PepsiCo", "50", "12.000đ", "600.000đ", "2026-05-06", "NV001", "DA_NHAP"),
+                new NhapHang("PN002", "Đồ ăn", "NCC002 - Acecook", "100", "5.000đ", "500.000đ", "2026-05-06", "NV001", "DA_NHAP"),
+                new NhapHang("PN003", "Thiết bị", "NCC003 - Logitech", "10", "800.000đ", "8.000.000đ", "2026-05-07", "NV002", "CHO_DUYET")
         );
     }
 
@@ -68,10 +98,10 @@ final class DatabaseSeedData {
 
     static ObservableList<KhuyenMai> khuyenMai() {
         return FXCollections.observableArrayList(
-                // CHUONG_TRINH_KHUYEN_MAI: MACTR, TENCTR, LOAICTR, CHIETKHAU, NGBD, NGKT
-                new KhuyenMai("CTR001", "Giam gia cuoi tuan", "GIAM_GIA", "20%", "SAN_PHAM", "2026-05-01", "2026-05-31", "DANG_AP_DUNG"),
-                new KhuyenMai("CTR002", "Khuyen mai do uong", "GIAM_GIA", "10%", "SAN_PHAM", "2026-05-01", "2026-06-30", "DANG_AP_DUNG"),
-                new KhuyenMai("CTR003", "Tet giam gia", "GIAM_GIA", "30%", "SAN_PHAM", "2026-02-01", "2026-02-10", "HET_HAN")
+                new KhuyenMai("CTR001", "Giảm 20% cuối tuần", "GIAM_GIA", "20%", "2025-05-01", "2025-05-31", "DANG_AP_DUNG"),
+                new KhuyenMai("CTR002", "Nạp 200k tặng 50k", "TANG_QUA", "50.000đ", "2025-05-01", "2025-06-30", "DANG_AP_DUNG"),
+                new KhuyenMai("CTR003", "Tặng 1h chơi sinh nhật", "TANG_GIO", "1h", "2025-01-01", "2025-12-31", "DANG_AP_DUNG"),
+                new KhuyenMai("CTR004", "Tết Giảm 30%", "GIAM_GIA", "30%", "2025-01-25", "2025-02-05", "HET_HAN")
         );
     }
 
@@ -92,5 +122,18 @@ final class DatabaseSeedData {
                 new QuanLyTaiChinhController.GiaoDich("PNK001", "2026-05-06 14:00:00", "NV001 - Nguyen Thanh Long", "NHAP_KHO", -1100000, "Nhap san pham kho"),
                 new QuanLyTaiChinhController.GiaoDich("NH001", "2026-05-07 10:00:00", "NCC003 - Logitech", "NHAP_HANG", -8000000, "Nhap thiet bi")
         );
+    }
+
+    private static final ObservableList<DichVuDaDung> dichVuDaDungData = FXCollections.observableArrayList(
+            new DichVuDaDung("DVSD20250508090714", "SP001", "1", "Serviced", "2025-05-08 09:07:14.0"),
+            new DichVuDaDung("DVSD20250508090714", "SP002", "1", "Serviced", "2025-05-08 09:07:14.0"),
+            new DichVuDaDung("DVSD20250508090714", "SP003", "1", "Serviced", "2025-05-08 09:07:14.0"),
+            new DichVuDaDung("DVSD20250508091208", "SP001", "1", "Serviced", "2025-05-08 09:12:08.0"),
+            new DichVuDaDung("DVSD20250504162043", "SP002", "1", "Serviced", "2025-05-04 16:20:43.0"),
+            new DichVuDaDung("DVSD20250504162510", "SP001", "2", "Serviced", "2025-05-04 16:25:10.0")
+    );
+
+    static ObservableList<DichVuDaDung> dichVuDaDung() {
+        return dichVuDaDungData;
     }
 }

@@ -31,11 +31,24 @@ public class MainController {
     @FXML private AnchorPane btnSanPham;
     @FXML private AnchorPane btnTaiChinh;
     @FXML private AnchorPane btnKhuVuc;
+    @FXML private AnchorPane btnSubKhuVuc;
+    @FXML private AnchorPane btnLoaiKhuVuc;
     @FXML private AnchorPane btnKhuyenMai;
     @FXML private AnchorPane btnSuKien;
     @FXML private AnchorPane btnNhapHang;
     @FXML private VBox customerSubMenu;
+    @FXML private VBox khuVucSubMenu;
+    @FXML private VBox nhanVienSubMenu;
+    @FXML private VBox sanPhamSubMenu;
     @FXML private Label lblKhachHangArrow;
+    @FXML private Label lblKhuVucArrow;
+    @FXML private Label lblNhanVienArrow;
+    @FXML private Label lblSanPhamArrow;
+    @FXML private AnchorPane btnSubNhanVien;
+    @FXML private AnchorPane btnLoaiNhanVien;
+    @FXML private AnchorPane btnCaLam;
+    @FXML private AnchorPane btnSubSanPham;
+    @FXML private AnchorPane btnSubDichVu;
 
     @FXML
     public void initialize() {
@@ -63,6 +76,61 @@ public class MainController {
         }
         if (activeBtn != btnKhachHang) {
             setActiveCustomerSub(null);
+            if (customerSubMenu != null) {
+                customerSubMenu.setVisible(false);
+                customerSubMenu.setManaged(false);
+                lblKhachHangArrow.setText("›");
+            }
+        }
+        if (activeBtn != btnKhuVuc) {
+            setActiveKhuVucSub(null);
+            if (khuVucSubMenu != null) {
+                khuVucSubMenu.setVisible(false);
+                khuVucSubMenu.setManaged(false);
+                lblKhuVucArrow.setText("›");
+            }
+        }
+        if (activeBtn != btnNhanVien) {
+            setActiveNhanVienSub(null);
+            if (nhanVienSubMenu != null) {
+                nhanVienSubMenu.setVisible(false);
+                nhanVienSubMenu.setManaged(false);
+                lblNhanVienArrow.setText("›");
+            }
+        }
+        if (activeBtn != btnSanPham) {
+            setActiveSanPhamSub(null);
+            if (sanPhamSubMenu != null) {
+                sanPhamSubMenu.setVisible(false);
+                sanPhamSubMenu.setManaged(false);
+                lblSanPhamArrow.setText("›");
+            }
+        }
+    }
+
+    private void setActiveSanPhamSub(AnchorPane activeSubBtn) {
+        AnchorPane[] sanPhamBtns = {btnSubSanPham, btnSubDichVu};
+        for (AnchorPane btn : sanPhamBtns) {
+            if (btn != null) {
+                btn.getStyleClass().remove("sidebar-sub-btn-active");
+                if (!btn.getStyleClass().contains("sidebar-sub-btn")) {
+                    btn.getStyleClass().add("sidebar-sub-btn");
+                }
+                // Cập nhật màu chữ nhãn động
+                for (javafx.scene.Node node : btn.getChildren()) {
+                    if (node instanceof Label) {
+                        Label lbl = (Label) node;
+                        if (btn == activeSubBtn) {
+                            lbl.setTextFill(javafx.scene.paint.Color.WHITE);
+                        } else {
+                            lbl.setTextFill(javafx.scene.paint.Color.web("#f0a3ad"));
+                        }
+                    }
+                }
+            }
+        }
+        if (activeSubBtn != null) {
+            activeSubBtn.getStyleClass().add("sidebar-sub-btn-active");
         }
     }
 
@@ -73,6 +141,69 @@ public class MainController {
                 btn.getStyleClass().remove("sidebar-sub-btn-active");
                 if (!btn.getStyleClass().contains("sidebar-sub-btn")) {
                     btn.getStyleClass().add("sidebar-sub-btn");
+                }
+                // Cập nhật màu chữ nhãn động
+                for (javafx.scene.Node node : btn.getChildren()) {
+                    if (node instanceof Label) {
+                        Label lbl = (Label) node;
+                        if (btn == activeSubBtn) {
+                            lbl.setTextFill(javafx.scene.paint.Color.WHITE);
+                        } else {
+                            lbl.setTextFill(javafx.scene.paint.Color.web("#f0a3ad"));
+                        }
+                    }
+                }
+            }
+        }
+        if (activeSubBtn != null) {
+            activeSubBtn.getStyleClass().add("sidebar-sub-btn-active");
+        }
+    }
+
+    private void setActiveKhuVucSub(AnchorPane activeSubBtn) {
+        AnchorPane[] khuVucBtns = {btnSubKhuVuc, btnLoaiKhuVuc};
+        for (AnchorPane btn : khuVucBtns) {
+            if (btn != null) {
+                btn.getStyleClass().remove("sidebar-sub-btn-active");
+                if (!btn.getStyleClass().contains("sidebar-sub-btn")) {
+                    btn.getStyleClass().add("sidebar-sub-btn");
+                }
+                // Cập nhật màu chữ nhãn động
+                for (javafx.scene.Node node : btn.getChildren()) {
+                    if (node instanceof Label) {
+                        Label lbl = (Label) node;
+                        if (btn == activeSubBtn) {
+                            lbl.setTextFill(javafx.scene.paint.Color.WHITE);
+                        } else {
+                            lbl.setTextFill(javafx.scene.paint.Color.web("#f0a3ad"));
+                        }
+                    }
+                }
+            }
+        }
+        if (activeSubBtn != null) {
+            activeSubBtn.getStyleClass().add("sidebar-sub-btn-active");
+        }
+    }
+
+    private void setActiveNhanVienSub(AnchorPane activeSubBtn) {
+        AnchorPane[] nhanVienBtns = {btnSubNhanVien, btnLoaiNhanVien, btnCaLam};
+        for (AnchorPane btn : nhanVienBtns) {
+            if (btn != null) {
+                btn.getStyleClass().remove("sidebar-sub-btn-active");
+                if (!btn.getStyleClass().contains("sidebar-sub-btn")) {
+                    btn.getStyleClass().add("sidebar-sub-btn");
+                }
+                // Cập nhật màu chữ nhãn động
+                for (javafx.scene.Node node : btn.getChildren()) {
+                    if (node instanceof Label) {
+                        Label lbl = (Label) node;
+                        if (btn == activeSubBtn) {
+                            lbl.setTextFill(javafx.scene.paint.Color.WHITE);
+                        } else {
+                            lbl.setTextFill(javafx.scene.paint.Color.web("#f0a3ad"));
+                        }
+                    }
                 }
             }
         }
@@ -143,34 +274,54 @@ public class MainController {
 
     @FXML
     public void onNhanVienMenuClick() {
-        setActiveMenu(btnNhanVien);
-        try {
-            // Nạp file giao diện nhân viên
-            Parent fxml = FXMLLoader.load(getClass().getResource("quan-ly-nhan-vien.fxml"));
-
-            // Dọn dẹp chỗ trống ở giữa và nhét trang nhân viên vào
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(fxml);
-        } catch (IOException e) {
-            System.out.println("Lỗi rồi: Không tìm thấy file quan-ly-nhan-vien.fxml");
-            e.printStackTrace();
+        boolean visible = !nhanVienSubMenu.isVisible();
+        nhanVienSubMenu.setVisible(visible);
+        nhanVienSubMenu.setManaged(visible);
+        lblNhanVienArrow.setText(visible ? "⌄" : "›");
+        if (visible) {
+            onSubNhanVienClick();
         }
     }
 
     @FXML
-    public void onSanPhamMenuClick() {
-        setActiveMenu(btnSanPham);
-        try {
-            // Nạp file giao diện nhân viên
-            Parent fxml = FXMLLoader.load(getClass().getResource("quan-ly-san-pham.fxml"));
+    public void onSubNhanVienClick() {
+        loadContent("quan-ly-nhan-vien.fxml", btnNhanVien);
+        setActiveNhanVienSub(btnSubNhanVien);
+    }
 
-            // Dọn dẹp chỗ trống ở giữa và nhét trang nhân viên vào
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(fxml);
-        } catch (IOException e) {
-            System.out.println("Lỗi rồi: Không tìm thấy file quan-ly-san-pham.fxml");
-            e.printStackTrace();
+    @FXML
+    public void onLoaiNhanVienMenuClick() {
+        loadContent("quan-ly-loai-nhan-vien.fxml", btnNhanVien);
+        setActiveNhanVienSub(btnLoaiNhanVien);
+    }
+
+    @FXML
+    public void onCaLamMenuClick() {
+        loadContent("quan-ly-ca-lam.fxml", btnNhanVien);
+        setActiveNhanVienSub(btnCaLam);
+    }
+
+    @FXML
+    public void onSanPhamMenuClick() {
+        boolean visible = !sanPhamSubMenu.isVisible();
+        sanPhamSubMenu.setVisible(visible);
+        sanPhamSubMenu.setManaged(visible);
+        lblSanPhamArrow.setText(visible ? "⌄" : "›");
+        if (visible) {
+            onSubSanPhamClick();
         }
+    }
+
+    @FXML
+    public void onSubSanPhamClick() {
+        loadContent("quan-ly-san-pham.fxml", btnSanPham);
+        setActiveSanPhamSub(btnSubSanPham);
+    }
+
+    @FXML
+    public void onSubDichVuClick() {
+        loadContent("quan-ly-dich-vu-da-dung.fxml", btnSanPham);
+        setActiveSanPhamSub(btnSubDichVu);
     }
 
     @FXML
@@ -191,18 +342,25 @@ public class MainController {
 
     @FXML
     public void onKhuVucMenuClick() {
-        setActiveMenu(btnKhuVuc);
-        try {
-            // Nạp file giao diện nhân viên
-            Parent fxml = FXMLLoader.load(getClass().getResource("quan-ly-khu-vuc.fxml"));
-
-            // Dọn dẹp chỗ trống ở giữa và nhét trang nhân viên vào
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(fxml);
-        } catch (IOException e) {
-            System.out.println("Lỗi rồi: Không tìm thấy file quan-ly-khu-vuc.fxml");
-            e.printStackTrace();
+        boolean visible = !khuVucSubMenu.isVisible();
+        khuVucSubMenu.setVisible(visible);
+        khuVucSubMenu.setManaged(visible);
+        lblKhuVucArrow.setText(visible ? "⌄" : "›");
+        if (visible) {
+            onSubKhuVucClick();
         }
+    }
+
+    @FXML
+    public void onSubKhuVucClick() {
+        loadContent("quan-ly-khu-vuc.fxml", btnKhuVuc);
+        setActiveKhuVucSub(btnSubKhuVuc);
+    }
+
+    @FXML
+    public void onLoaiKhuVucMenuClick() {
+        loadContent("quan-ly-loai-khu-vuc.fxml", btnKhuVuc);
+        setActiveKhuVucSub(btnLoaiKhuVuc);
     }
 
     @FXML

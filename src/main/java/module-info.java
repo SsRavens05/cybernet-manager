@@ -2,6 +2,8 @@ module com.example.cybergame_management {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
+    requires java.sql;
+    requires com.oracle.database.jdbc;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;

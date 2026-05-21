@@ -42,6 +42,9 @@ class FxmlLoadTest {
         load("quan-ly-nap-tien.fxml");
         load("quan-ly-khach-hang.fxml");
         load("update-khach-hang.fxml");
+        load("quan-ly-nhap-hang.fxml");
+        load("update-nhap-hang.fxml");
+        load("quan-ly-dich-vu-da-dung.fxml");
     }
 
     private void load(String fxml) throws Exception {

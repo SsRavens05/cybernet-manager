@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyNhanVienController">
+<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyLoaiNhanVienController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -17,24 +17,24 @@
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-blue" HBox.hgrow="ALWAYS">
                     <children>
                         <Label layoutX="20.0" layoutY="18.0" text="👥" textFill="WHITE"><font><Font size="22.0" /></font></Label>
-                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Nhân Viên" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <Label fx:id="lblTongNV" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Loại NV" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
+                        <Label fx:id="lblTongLoaiNV" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" AnchorPane.rightAnchor="20.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-green" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label layoutX="20.0" layoutY="18.0" text="⚙️" textFill="WHITE"><font><Font size="22.0" /></font></Label>
-                        <Label layoutX="60.0" layoutY="20.0" text="Đang Làm Việc" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <Label fx:id="lblNhanVienDangLam" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Label layoutX="20.0" layoutY="18.0" text="💵" textFill="WHITE"><font><Font size="22.0" /></font></Label>
+                        <Label layoutX="60.0" layoutY="20.0" text="Lương Trung Bình" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
+                        <Label fx:id="lblLuongTrungBinh" layoutX="20.0" layoutY="50.0" text="0 đ" textFill="WHITE"><font><Font name="System Bold" size="36.0" /></font></Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" AnchorPane.rightAnchor="20.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-purple" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label layoutX="20.0" layoutY="18.0" text="⏱️" textFill="WHITE"><font><Font size="22.0" /></font></Label>
-                        <Label layoutX="60.0" layoutY="20.0" text="Đang Nghỉ Phép" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <Label fx:id="lblNhanVienNghiPhep" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Label layoutX="20.0" layoutY="18.0" text="💼" textFill="WHITE"><font><Font size="22.0" /></font></Label>
+                        <Label layoutX="60.0" layoutY="20.0" text="Lương Cao Nhất" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
+                        <Label fx:id="lblLuongCaoNhat" layoutX="20.0" layoutY="50.0" text="0 đ" textFill="WHITE"><font><Font name="System Bold" size="36.0" /></font></Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" AnchorPane.rightAnchor="20.0" />
                     </children>
                 </AnchorPane>
@@ -46,13 +46,11 @@
             <children>
                 <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
                     <children>
-                        <Label text="Danh Sách Nhân Viên" styleClass="header-title" />
+                        <Label text="Danh Sách Loại Nhân Viên" styleClass="header-title" />
 
                         <Region HBox.hgrow="ALWAYS" />
 
-                        <ComboBox fx:id="cbTrangThaiFilter" prefHeight="35.0" prefWidth="170.0" promptText="Tất cả trạng thái" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13px;" />
-
-                        <TextField fx:id="txtSearch" promptText="Tìm tên, mã, MST, BHYT..." prefHeight="35.0" prefWidth="220.0" styleClass="search-box" />
+                        <TextField fx:id="txtSearch" promptText="Tìm vị trí, mã loại NV..." prefHeight="35.0" prefWidth="220.0" styleClass="search-box" />
 
                         <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
                         <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">
@@ -71,15 +69,11 @@
                         </Button>
                     </children>
                 </HBox>
-                <TableView fx:id="tbNhanVien" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tbLoaiNhanVien" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colMaNV" prefWidth="90.0" text="Mã NV" />
-                        <TableColumn fx:id="colHoTen" prefWidth="180.0" text="Họ Tên" />
-                        <TableColumn fx:id="colMaSoThue" prefWidth="130.0" text="Mã số thuế" />
-                        <TableColumn fx:id="colSoBHYT" prefWidth="180.0" text="Số BHYT" />
-                        <TableColumn fx:id="colNgayVao" prefWidth="130.0" text="Ngày vào làm" />
-                        <TableColumn fx:id="colNgayThoiViec" prefWidth="130.0" text="Ngày thôi việc" />
-                        <TableColumn fx:id="colTrangThai" prefWidth="120.0" text="Trạng Thái" />
+                        <TableColumn fx:id="colMaLoaiNV" prefWidth="200.0" text="Mã LoạiNV" />
+                        <TableColumn fx:id="colViTri" prefWidth="350.0" text="Vị trí" />
+                        <TableColumn fx:id="colMucLuong" prefWidth="300.0" text="Mức lương" />
                     </columns>
                     <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
                 </TableView>

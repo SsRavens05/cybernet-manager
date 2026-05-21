@@ -3,7 +3,6 @@ package com.example.cybergame_management;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -17,43 +16,42 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class QuanLyNhanVienController {
+public class QuanLyCaLamController {
 
-    @FXML private Label lblTongNV;
-    @FXML private Label lblNhanVienDangLam;
-    @FXML private Label lblNhanVienNghiPhep;
-    @FXML private TableView<NhanVien> tbNhanVien;
-    @FXML private TableColumn<NhanVien, String> colMaNV;
-    @FXML private TableColumn<NhanVien, String> colHoTen;
-    @FXML private TableColumn<NhanVien, String> colMaSoThue;
-    @FXML private TableColumn<NhanVien, String> colSoBHYT;
-    @FXML private TableColumn<NhanVien, String> colNgayVao;
-    @FXML private TableColumn<NhanVien, String> colNgayThoiViec;
-    @FXML private TableColumn<NhanVien, String> colTrangThai;
+    @FXML private Label lblTongCa;
+    @FXML private Label lblDangTrongCa;
+    @FXML private Label lblCaSapToi;
+
+    @FXML private TableView<CaLam> tbCaLam;
+    @FXML private TableColumn<CaLam, String> colMaCa;
+    @FXML private TableColumn<CaLam, String> colThoiGianBD;
+    @FXML private TableColumn<CaLam, String> colThoiGianKT;
+    @FXML private TableColumn<CaLam, String> colSoGioLam;
+    @FXML private TableColumn<CaLam, String> colTrangThai;
+    @FXML private TableColumn<CaLam, String> colSoGioTangCa;
 
     @FXML private TextField txtSearch;
     @FXML private ComboBox<String> cbTrangThaiFilter;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
-    private final ObservableList<NhanVien> data = DatabaseSeedData.nhanVien();
+    private final ObservableList<CaLam> data = DatabaseSeedData.caLamShifts();
 
     @FXML
     public void initialize() {
-        colMaNV.setCellValueFactory(cellData -> cellData.getValue().maNVProperty());
-        colHoTen.setCellValueFactory(cellData -> cellData.getValue().hoTenProperty());
-        colMaSoThue.setCellValueFactory(cellData -> cellData.getValue().maSoThueProperty());
-        colSoBHYT.setCellValueFactory(cellData -> cellData.getValue().soBHYTProperty());
-        colNgayVao.setCellValueFactory(cellData -> cellData.getValue().ngayVaoProperty());
-        colNgayThoiViec.setCellValueFactory(cellData -> cellData.getValue().ngayThoiViecProperty());
+        colMaCa.setCellValueFactory(cellData -> cellData.getValue().maCaProperty());
+        colThoiGianBD.setCellValueFactory(cellData -> cellData.getValue().thoiGianBDProperty());
+        colThoiGianKT.setCellValueFactory(cellData -> cellData.getValue().thoiGianKTProperty());
+        colSoGioLam.setCellValueFactory(cellData -> cellData.getValue().soGioLamProperty());
         colTrangThai.setCellValueFactory(cellData -> cellData.getValue().trangThaiProperty());
+        colSoGioTangCa.setCellValueFactory(cellData -> cellData.getValue().soGioTangCaProperty());
 
         // Setup filter choices
-        cbTrangThaiFilter.getItems().setAll("Tất cả trạng thái", "Đang làm", "Nghỉ phép", "Nghỉ việc");
+        cbTrangThaiFilter.getItems().setAll("Tất cả trạng thái", "Đang làm", "Sắp tới", "Đã kết thúc");
         cbTrangThaiFilter.setValue("Tất cả trạng thái");
 
         // Custom badges for TrangThai Column
-        colTrangThai.setCellFactory(column -> new TableCell<NhanVien, String>() {
+        colTrangThai.setCellFactory(column -> new TableCell<CaLam, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -65,9 +63,9 @@ public class QuanLyNhanVienController {
 
                     if (item.equals("Đang làm") || item.equals("DANG_LAM")) {
                         badge.getStyleClass().add("badge-active");
-                    } else if (item.equals("Nghỉ việc") || item.equals("NGHI_VIEC")) {
-                        badge.getStyleClass().add("badge-banned");
-                    } else if (item.equals("Nghỉ phép") || item.equals("NGHI_PHEP")) {
+                    } else if (item.equals("Đã kết thúc") || item.equals("DA_KET_THUC")) {
+                        badge.getStyleClass().add("badge-default");
+                    } else if (item.equals("Sắp tới") || item.equals("SAP_TOI")) {
                         badge.getStyleClass().add("badge-warning");
                     } else {
                         badge.getStyleClass().add("badge-default");
@@ -79,10 +77,28 @@ public class QuanLyNhanVienController {
             }
         });
 
-        FilteredList<NhanVien> filtered = new FilteredList<>(data, item -> true);
-        tbNhanVien.setItems(filtered);
+        // Custom styling for Overtime Hours column: "+1h", "+2h" render in bold red/orange
+        colSoGioTangCa.setCellFactory(column -> new TableCell<CaLam, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    if (item.contains("+")) {
+                        setStyle("-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-alignment: CENTER;");
+                    } else {
+                        setStyle("-fx-alignment: CENTER;");
+                    }
+                }
+            }
+        });
 
-        // Bind filter change events
+        FilteredList<CaLam> filtered = new FilteredList<>(data, item -> true);
+        tbCaLam.setItems(filtered);
+
         txtSearch.textProperty().addListener((obs, oldValue, newValue) -> applyFilters(filtered));
         cbTrangThaiFilter.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters(filtered));
 
@@ -90,12 +106,12 @@ public class QuanLyNhanVienController {
         updateStats();
     }
 
-    private void applyFilters(FilteredList<NhanVien> filtered) {
+    private void applyFilters(FilteredList<CaLam> filtered) {
         filtered.setPredicate(item -> {
             // Text Filter
             String text = txtSearch.getText();
             boolean matchesText = SearchMatcher.containsKeyword(text,
-                    item.getMaNV(), item.getHoTen(), item.getMaSoThue(), item.getSoBHYT());
+                    item.getMaCa(), item.getThoiGianBD(), item.getThoiGianKT(), item.getSoGioLam(), item.getSoGioTangCa());
 
             // Status Filter
             String status = cbTrangThaiFilter.getValue();
@@ -107,18 +123,18 @@ public class QuanLyNhanVienController {
     }
 
     private void updateStats() {
-        lblTongNV.setText(String.valueOf(data.size()));
-        lblNhanVienDangLam.setText(String.valueOf(data.stream()
-                .filter(nv -> nv.getTrangThai().equalsIgnoreCase("DANG_LAM") || nv.getTrangThai().equalsIgnoreCase("Đang làm"))
+        lblTongCa.setText(String.valueOf(data.size()));
+        lblDangTrongCa.setText(String.valueOf(data.stream()
+                .filter(c -> c.getTrangThai().equalsIgnoreCase("Đang làm") || c.getTrangThai().equalsIgnoreCase("DANG_LAM"))
                 .count()));
-        lblNhanVienNghiPhep.setText(String.valueOf(data.stream()
-                .filter(nv -> nv.getTrangThai().equalsIgnoreCase("NGHI_PHEP") || nv.getTrangThai().equalsIgnoreCase("Nghỉ phép"))
+        lblCaSapToi.setText(String.valueOf(data.stream()
+                .filter(c -> c.getTrangThai().equalsIgnoreCase("Sắp tới") || c.getTrangThai().equalsIgnoreCase("SAP_TOI"))
                 .count()));
     }
 
     private void bindActionButtons() {
-        btnDelete.disableProperty().bind(tbNhanVien.getSelectionModel().selectedItemProperty().isNull());
-        btnUpdate.disableProperty().bind(tbNhanVien.getSelectionModel().selectedItemProperty().isNull());
+        btnDelete.disableProperty().bind(tbCaLam.getSelectionModel().selectedItemProperty().isNull());
+        btnUpdate.disableProperty().bind(tbCaLam.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML
@@ -132,30 +148,27 @@ public class QuanLyNhanVienController {
         root.setPadding(new Insets(20));
 
         BorderPane header = new BorderPane();
-        Label lblTitle = new Label("Thêm Nhân Viên");
+        Label lblTitle = new Label("Thêm Ca Làm Việc");
         lblTitle.getStyleClass().add("dialog-header-text");
         Button btnX = new Button("✕"); btnX.getStyleClass().add("dialog-close-btn");
         btnX.setOnAction(e -> stage.close());
         header.setLeft(lblTitle); header.setRight(btnX);
 
         GridPane grid = new GridPane(); grid.setHgap(15); grid.setVgap(15);
-        TextField txtTen = new TextField(); txtTen.setPromptText("Nhập họ tên...");
-        TextField txtMST = new TextField(); txtMST.setPromptText("Nhập mã số thuế...");
-        TextField txtBHYT = new TextField(); txtBHYT.setPromptText("Nhập số BHYT...");
-        TextField txtNgayVao = new TextField(java.time.LocalDate.now().toString());
-        TextField txtNgayThoi = new TextField("—");
-        ComboBox<String> cbTrangThai = new ComboBox<>(FXCollections.observableArrayList("Đang làm", "Nghỉ phép", "Nghỉ việc"));
-        cbTrangThai.setValue("Đang làm");
+        TextField txtBD = new TextField(); txtBD.setPromptText("Ví dụ: 08:00");
+        TextField txtKT = new TextField(); txtKT.setPromptText("Ví dụ: 14:00");
+        TextField txtSoGio = new TextField("6h");
+        TextField txtTangCa = new TextField("—");
+        ComboBox<String> cbTrangThai = new ComboBox<>(FXCollections.observableArrayList("Đang làm", "Sắp tới", "Đã kết thúc"));
+        cbTrangThai.setValue("Sắp tới");
 
-        grid.add(new Label("Mã NV (Tự động)"), 0, 0); grid.add(new TextField("NV" + String.format("%03d", data.size()+1)), 0, 1);
-        grid.add(new Label("Họ Tên *"), 0, 2); grid.add(txtTen, 0, 3);
-        grid.add(new Label("Mã số thuế"), 0, 4); grid.add(txtMST, 0, 5);
-        grid.add(new Label("Số BHYT"), 0, 6); grid.add(txtBHYT, 0, 7);
-        grid.add(new Label("Ngày vào làm"), 0, 8); grid.add(txtNgayVao, 0, 9);
-        grid.add(new Label("Ngày thôi việc"), 0, 10); grid.add(txtNgayThoi, 0, 11);
-        grid.add(new Label("Trạng thái"), 0, 12); grid.add(cbTrangThai, 0, 13);
+        grid.add(new Label("Mã Ca (Tự động)"), 0, 0); grid.add(new TextField("CA" + String.format("%03d", data.size()+1)), 0, 1);
+        grid.add(new Label("Giờ Bắt Đầu *"), 0, 2); grid.add(txtBD, 0, 3);
+        grid.add(new Label("Giờ Kết Thúc *"), 0, 4); grid.add(txtKT, 0, 5);
+        grid.add(new Label("Số Giờ Làm"), 0, 6); grid.add(txtSoGio, 0, 7);
+        grid.add(new Label("Số Giờ Tăng Ca"), 0, 8); grid.add(txtTangCa, 0, 9);
+        grid.add(new Label("Trạng thái"), 0, 10); grid.add(cbTrangThai, 0, 11);
 
-        // Styling elements in popup
         for (javafx.scene.Node n : grid.getChildren()) {
             if (n instanceof Label) {
                 ((Label) n).setStyle("-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 12px;");
@@ -179,12 +192,15 @@ public class QuanLyNhanVienController {
         Button bHuy = new Button("Hủy"); bHuy.getStyleClass().add("btn-cancel"); bHuy.setOnAction(e->stage.close());
         Button bLuu = new Button("Lưu"); bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
-            String mst = txtMST.getText() == null || txtMST.getText().trim().isEmpty() ? "—" : txtMST.getText().trim();
-            String bhyt = txtBHYT.getText() == null || txtBHYT.getText().trim().isEmpty() ? "—" : txtBHYT.getText().trim();
-            String ngayV = txtNgayVao.getText() == null || txtNgayVao.getText().trim().isEmpty() ? java.time.LocalDate.now().toString() : txtNgayVao.getText().trim();
-            String ngayT = txtNgayThoi.getText() == null || txtNgayThoi.getText().trim().isEmpty() ? "—" : txtNgayThoi.getText().trim();
+            if (txtBD.getText().trim().isEmpty() || txtKT.getText().trim().isEmpty()) {
+                return;
+            }
+            String bd = txtBD.getText().trim();
+            String kt = txtKT.getText().trim();
+            String sg = txtSoGio.getText().trim().isEmpty() ? "6h" : txtSoGio.getText().trim();
+            String tc = txtTangCa.getText().trim().isEmpty() ? "—" : txtTangCa.getText().trim();
 
-            data.add(new NhanVien("NV" + String.format("%03d", data.size()+1), txtTen.getText(), mst, bhyt, ngayV, ngayT, cbTrangThai.getValue()));
+            data.add(new CaLam("CA" + String.format("%03d", data.size()+1), bd, kt, sg, cbTrangThai.getValue(), tc));
             updateStats();
             stage.close();
         });
@@ -198,7 +214,7 @@ public class QuanLyNhanVienController {
 
     @FXML
     public void onDeleteClick() {
-        NhanVien selectedItem = tbNhanVien.getSelectionModel().getSelectedItem();
+        CaLam selectedItem = tbCaLam.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
             return;
         }
@@ -222,7 +238,7 @@ public class QuanLyNhanVienController {
         VBox textCtn = new VBox(5);
         Label lblTitle = new Label("Xác nhận xóa");
         lblTitle.getStyleClass().add("text-title");
-        Label lblMessage = new Label("Bạn có chắc muốn xóa nhân viên này?");
+        Label lblMessage = new Label("Bạn có chắc muốn xóa ca làm này?");
         lblMessage.getStyleClass().add("text-message");
         textCtn.getChildren().addAll(lblTitle, lblMessage);
 
@@ -254,29 +270,28 @@ public class QuanLyNhanVienController {
     }
 
     @FXML
-    void onUpdateClick(ActionEvent event) {
-        NhanVien selectedNV = tbNhanVien.getSelectionModel().getSelectedItem();
-        if (selectedNV == null) {
+    public void onUpdateClick() {
+        CaLam selectedItem = tbCaLam.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) {
             return;
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("update-nhan-vien.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("update-ca-lam.fxml"));
             Parent root = loader.load();
 
-            UpdateNhanVienController controller = loader.getController();
-            controller.setNhanVienData(selectedNV);
+            UpdateCaLamController updateCtrl = loader.getController();
+            updateCtrl.setCaLamData(selectedItem);
 
             Stage stage = new Stage();
-            stage.setTitle("Cập Nhật Nhân Viên - CyberNet Manager");
+            stage.setTitle("Cập Nhật Ca Làm - CyberNet Manager");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
+            stage.initStyle(StageStyle.TRANSPARENT);
             stage.showAndWait();
 
-            tbNhanVien.refresh();
+            tbCaLam.refresh();
             updateStats();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

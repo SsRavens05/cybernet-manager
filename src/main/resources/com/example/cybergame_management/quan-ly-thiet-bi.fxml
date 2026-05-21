@@ -72,7 +72,7 @@
                         <TableColumn fx:id="colTenTB" prefWidth="200.0" text="Tên TB" />
                         <TableColumn fx:id="colLoaiTB" prefWidth="150.0" text="Loại TB" />
                         <TableColumn fx:id="colTrangThai" prefWidth="150.0" text="Trạng Thái" />
-                        <TableColumn fx:id="colNgayMua" prefWidth="200.0" text="Ngày Mua" />
+                        <TableColumn fx:id="colNgayMua" prefWidth="200.0" text="Mã PC" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

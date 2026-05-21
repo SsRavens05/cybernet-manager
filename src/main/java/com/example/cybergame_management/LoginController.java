@@ -14,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class LoginController {
 
@@ -51,6 +52,22 @@ public class LoginController {
         }
 
         // Truyền thẳng cái username vào hàm loadMainScene luôn
+        if (AuthRepository.isDatabaseLoginEnabled()) {
+            try {
+                AuthRepository.LoginResult loginResult = AuthRepository.authenticate(username, password);
+                if (!loginResult.success()) {
+                    showAlert(Alert.AlertType.ERROR, "Đăng nhập thất bại", "Sai tài khoản hoặc mật khẩu.");
+                    return;
+                }
+                loadMainScene(loginResult.displayName() == null ? username : loginResult.displayName());
+                return;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Lỗi database", "Không thể kết nối hoặc kiểm tra tài khoản trong database.");
+                return;
+            }
+        }
+
         loadMainScene(username);
     }
 

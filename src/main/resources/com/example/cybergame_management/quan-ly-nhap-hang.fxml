@@ -72,15 +72,13 @@
 
                 <TableView fx:id="tbNhapHang" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colMaNH" prefWidth="70.0" text="Mã NH" />
-                        <TableColumn fx:id="colTenSP" prefWidth="160.0" text="Tên SP" />
-                        <TableColumn fx:id="colNhaCC" prefWidth="100.0" text="Nhà CC" />
-                        <TableColumn fx:id="colSoLuong" prefWidth="70.0" text="Số Lượng" />
-                        <TableColumn fx:id="colDonGia" prefWidth="100.0" text="Đơn Giá" />
-                        <TableColumn fx:id="colTongTien" prefWidth="110.0" text="Tổng Tiền" />
-                        <TableColumn fx:id="colNgayNhap" prefWidth="120.0" text="Ngày Nhập" />
-                        <TableColumn fx:id="colNguoiNhap" prefWidth="90.0" text="Người Nhập" />
-                        <TableColumn fx:id="colTrangThai" prefWidth="110.0" text="Trạng Thái" />
+                        <TableColumn fx:id="colMaPN" prefWidth="90.0" text="Mã PN" />
+                        <TableColumn fx:id="colNgayNhap" prefWidth="140.0" text="Ngày Nhập" />
+                        <TableColumn fx:id="colSoLuong" prefWidth="90.0" text="Số Lượng" />
+                        <TableColumn fx:id="colTongTienNhap" prefWidth="140.0" text="Tổng Tiền Nhập" />
+                        <TableColumn fx:id="colLoaiHang" prefWidth="140.0" text="Loại Hàng" />
+                        <TableColumn fx:id="colNhaCC" prefWidth="160.0" text="Nhà Cung Cấp" />
+                        <TableColumn fx:id="colTrangThai" prefWidth="120.0" text="Trạng Thái" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

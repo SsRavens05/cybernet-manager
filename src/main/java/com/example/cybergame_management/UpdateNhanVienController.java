@@ -9,10 +9,11 @@ public class UpdateNhanVienController {
 
     @FXML private TextField txtMaNV;
     @FXML private TextField txtHoTen;
-    @FXML private TextField txtSdt;
+    @FXML private TextField txtMaSoThue;
+    @FXML private TextField txtSoBHYT;
+    @FXML private TextField txtNgayVao;
+    @FXML private TextField txtNgayThoiViec;
 
-    @FXML private ComboBox<String> cbChucVu;
-    @FXML private ComboBox<String> cbCaLam;
     @FXML private ComboBox<String> cbTrangThai;
 
     private NhanVien nhanVienDangSua;
@@ -23,18 +24,13 @@ public class UpdateNhanVienController {
         // Đổ data text
         txtMaNV.setText(nv.getMaNV());
         txtHoTen.setText(nv.getHoTen());
-        txtSdt.setText(nv.getSdt());
-
-        // Setup và đổ data cho ComboBox Chức Vụ
-        cbChucVu.getItems().setAll("Quản Lý", "Thu Ngân", "Pha Chế", "Bảo Vệ");
-        cbChucVu.setValue(nv.getChucVu());
-
-        // Setup và đổ data cho ComboBox Ca Làm
-        cbCaLam.getItems().setAll("Ca Sáng (6h-14h)", "Ca Chiều (14h-22h)", "Ca Đêm (22h-6h)");
-        cbCaLam.setValue(nv.getCaLam());
+        txtMaSoThue.setText(nv.getMaSoThue());
+        txtSoBHYT.setText(nv.getSoBHYT());
+        txtNgayVao.setText(nv.getNgayVao());
+        txtNgayThoiViec.setText(nv.getNgayThoiViec());
 
         // Setup và đổ data cho ComboBox Trạng Thái
-        cbTrangThai.getItems().setAll("Đang Làm Việc", "Đang Nghỉ Phép", "Đã Nghỉ Việc");
+        cbTrangThai.getItems().setAll("Đang làm", "Nghỉ phép", "Nghỉ việc");
         cbTrangThai.setValue(nv.getTrangThai());
     }
 
@@ -42,12 +38,11 @@ public class UpdateNhanVienController {
     public void onLuuClick() {
         // Cập nhật lại object NhanVien từ giao diện
         nhanVienDangSua.setHoTen(txtHoTen.getText());
-        nhanVienDangSua.setSdt(txtSdt.getText());
-        nhanVienDangSua.setChucVu(cbChucVu.getValue());
-        nhanVienDangSua.setCaLam(cbCaLam.getValue());
+        nhanVienDangSua.setMaSoThue(txtMaSoThue.getText());
+        nhanVienDangSua.setSoBHYT(txtSoBHYT.getText());
+        nhanVienDangSua.setNgayVao(txtNgayVao.getText());
+        nhanVienDangSua.setNgayThoiViec(txtNgayThoiViec.getText());
         nhanVienDangSua.setTrangThai(cbTrangThai.getValue());
-
-        // TODO: Gắn lệnh gọi trigger/procedure dưới Oracle để update bảng NHANVIEN ở đây
 
         dongForm();
     }

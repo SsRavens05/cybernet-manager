@@ -1,19 +1,25 @@
 package com.example.cybergame_management;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 
 public class QuanLySanPhamController {
 
@@ -27,52 +33,23 @@ public class QuanLySanPhamController {
     @FXML private TableColumn<SanPham, String> colGia;
     @FXML private TableColumn<SanPham, String> colSoLuong;
     @FXML private TableColumn<SanPham, String> colDonVi;
-    @FXML private TableColumn<SanPham, String> colTrangThai;
+    @FXML private TableColumn<SanPham, String> colSoDiemTichLuy;
     @FXML private TextField txtSearch;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
+
     private final ObservableList<SanPham> data = DatabaseSeedData.sanPham();
 
     @FXML
     public void initialize() {
-        // Ánh xạ dữ liệu
         colMaSP.setCellValueFactory(cellData -> cellData.getValue().maSPProperty());
         colTenSP.setCellValueFactory(cellData -> cellData.getValue().tenSPProperty());
         colLoai.setCellValueFactory(cellData -> cellData.getValue().loaiProperty());
         colGia.setCellValueFactory(cellData -> cellData.getValue().giaProperty());
         colSoLuong.setCellValueFactory(cellData -> cellData.getValue().soLuongProperty());
         colDonVi.setCellValueFactory(cellData -> cellData.getValue().donViProperty());
-        colTrangThai.setCellValueFactory(cellData -> cellData.getValue().trangThaiProperty());
+        colSoDiemTichLuy.setCellValueFactory(cellData -> cellData.getValue().soDiemTichLuyProperty());
 
-        // CUSTOM CSS CHO CỘT SỐ LƯỢNG (Xanh / Đỏ)
-        // Tối ưu CSS Huy hiệu cho cột Trạng Thái (Sản Phẩm)
-        colTrangThai.setCellFactory(column -> new TableCell<SanPham, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setGraphic(null);
-                } else {
-                    Label badge = new Label(item);
-                    badge.getStyleClass().add("badge"); // Gọi class cha
-
-                    if (item.equals("Còn Hàng")) {
-                        badge.getStyleClass().add("badge-active"); // Xanh lá
-                    } else if (item.equals("Hết Hàng")) {
-                        badge.getStyleClass().add("badge-warning"); // Cam
-                    } else if (item.equals("Ngừng Bán")) {
-                        badge.getStyleClass().add("badge-banned"); // Đỏ
-                    } else {
-                        badge.getStyleClass().add("badge-default"); // Xám
-                    }
-
-                    setGraphic(badge);
-                    setText(null);
-                }
-            }
-        });
-
-        // Đổ dữ liệu giả y như hình Figma
         FilteredList<SanPham> filtered = new FilteredList<>(data, item -> true);
         tbSanPham.setItems(filtered);
         txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
@@ -84,7 +61,7 @@ public class QuanLySanPhamController {
         return SearchMatcher.containsKeyword(txtSearch.getText(),
                 item.maSPProperty().get(), item.tenSPProperty().get(), item.loaiProperty().get(),
                 item.giaProperty().get(), item.soLuongProperty().get(), item.donViProperty().get(),
-                item.trangThaiProperty().get());
+                item.soDiemTichLuyProperty().get());
     }
 
     private void updateStats() {
@@ -108,44 +85,45 @@ public class QuanLySanPhamController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.TRANSPARENT);
 
-        // Khung nền popup
         VBox root = new VBox(20);
         root.getStyleClass().add("custom-dialog");
         root.setPadding(new Insets(20));
-        root.setPrefWidth(450); // Set độ rộng cho nó thoáng giống Figma
+        root.setPrefWidth(450);
 
-        // Header (Tiêu đề + Nút X)
         BorderPane header = new BorderPane();
         Label lblTitle = new Label("Thêm Sản Phẩm");
         lblTitle.getStyleClass().add("dialog-header-text");
-        Button btnX = new Button("✕");
+        Button btnX = new Button("X");
         btnX.getStyleClass().add("dialog-close-btn");
         btnX.setOnAction(e -> stage.close());
         header.setLeft(lblTitle);
         header.setRight(btnX);
 
-        // Body (Các ô nhập liệu 1 cột thẳng hàng)
         GridPane grid = new GridPane();
         grid.setHgap(15);
         grid.setVgap(15);
 
-        TextField txtTen = new TextField(); txtTen.setPrefWidth(400);
+        TextField txtTen = new TextField();
+        txtTen.setPrefWidth(400);
         TextField txtLoai = new TextField();
         TextField txtGia = new TextField("0");
         TextField txtSL = new TextField("0");
         TextField txtDonVi = new TextField("Cái");
-        ComboBox<String> cbTT = new ComboBox<>(FXCollections.observableArrayList("Còn Hàng", "Hết Hàng", "Ngừng Bán"));
-        cbTT.setValue("Còn Hàng");
-        cbTT.setPrefWidth(400);
+        TextField txtDiem = new TextField("0");
 
-        grid.add(new Label("Tên SP *"), 0, 0); grid.add(txtTen, 0, 1);
-        grid.add(new Label("Loại"), 0, 2); grid.add(txtLoai, 0, 3);
-        grid.add(new Label("Giá"), 0, 4); grid.add(txtGia, 0, 5);
-        grid.add(new Label("Số Lượng Tồn Kho"), 0, 6); grid.add(txtSL, 0, 7);
-        grid.add(new Label("Đơn Vị"), 0, 8); grid.add(txtDonVi, 0, 9);
-        grid.add(new Label("Trạng Thái"), 0, 10); grid.add(cbTT, 0, 11);
+        grid.add(new Label("Tên SP *"), 0, 0);
+        grid.add(txtTen, 0, 1);
+        grid.add(new Label("Loại SP"), 0, 2);
+        grid.add(txtLoai, 0, 3);
+        grid.add(new Label("Đơn giá"), 0, 4);
+        grid.add(txtGia, 0, 5);
+        grid.add(new Label("Số Lượng Tồn Kho"), 0, 6);
+        grid.add(txtSL, 0, 7);
+        grid.add(new Label("Đơn Vị"), 0, 8);
+        grid.add(txtDonVi, 0, 9);
+        grid.add(new Label("Số Điểm Tích Lũy"), 0, 10);
+        grid.add(txtDiem, 0, 11);
 
-        // Footer (Nút Hủy - Lưu)
         HBox footer = new HBox(10);
         footer.setAlignment(Pos.CENTER_RIGHT);
 
@@ -156,17 +134,15 @@ public class QuanLySanPhamController {
         Button bLuu = new Button("Lưu");
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
-            // Tự động sinh mã SP mới
             String maMoi = "SP" + String.format("%03d", data.size() + 1);
-            // Ném dữ liệu vào bảng
-            data.add(new SanPham(maMoi, txtTen.getText(), txtLoai.getText(), txtGia.getText(), txtSL.getText(), txtDonVi.getText(), cbTT.getValue()));
+            data.add(new SanPham(maMoi, txtTen.getText(), txtLoai.getText(), txtGia.getText(),
+                    txtSL.getText(), txtDonVi.getText(), txtDiem.getText()));
             updateStats();
             stage.close();
         });
 
         footer.getChildren().addAll(bHuy, bLuu);
 
-        // Ghép mọi thứ lại và show
         root.getChildren().addAll(header, grid, footer);
         Scene scene = new Scene(root);
         scene.setFill(Color.TRANSPARENT);
@@ -177,13 +153,11 @@ public class QuanLySanPhamController {
 
     @FXML
     public void onDeleteClick() {
-        // 1. KIỂM TRA ĐIỀU KIỆN: Chỉ kích hoạt khi có 1 dòng đang được chọn
         SanPham selectedItem = tbSanPham.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
-            return; // Nếu chưa chọn gì thì im lặng thoát, không hiện popup
+            return;
         }
 
-        // 2. VẼ UI POPUP THEO FIGMA
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.TRANSPARENT);
@@ -192,12 +166,10 @@ public class QuanLySanPhamController {
         root.getStyleClass().add("delete-dialog");
         root.setPrefWidth(420);
 
-        // --- Phần trên: Icon Thùng rác + Text ---
         HBox topBox = new HBox(15);
         topBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Vẽ vòng tròn đỏ nhạt chứa icon thùng rác
-        Label lblIcon = new Label("🗑");
+        Label lblIcon = new Label("X");
         lblIcon.getStyleClass().add("icon-trash");
         StackPane iconCircle = new StackPane(lblIcon);
         iconCircle.getStyleClass().add("icon-circle");
@@ -211,7 +183,6 @@ public class QuanLySanPhamController {
 
         topBox.getChildren().addAll(iconCircle, textCtn);
 
-        // --- Phần dưới: Nút bấm ---
         HBox bottomBox = new HBox(10);
         bottomBox.setAlignment(Pos.CENTER_RIGHT);
 
@@ -222,15 +193,13 @@ public class QuanLySanPhamController {
         Button btnXoa = new Button("Xóa");
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
-            // THỰC HIỆN XÓA KHỎI BẢNG (Và sau này là xóa khỏi Database)
             data.remove(selectedItem);
             updateStats();
-            stage.close(); // Xóa xong thì đóng popup
+            stage.close();
         });
 
         bottomBox.getChildren().addAll(btnHuy, btnXoa);
 
-        // Lắp ráp & Hiển thị
         root.getChildren().addAll(topBox, bottomBox);
         Scene scene = new Scene(root);
         scene.setFill(Color.TRANSPARENT);

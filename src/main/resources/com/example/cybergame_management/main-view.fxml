@@ -71,10 +71,7 @@
                                  <children>
                                     <AnchorPane fx:id="btnSubKhachHang" onMouseClicked="#onSubKhachHangClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
                                        <children>
-                                          <Label layoutX="46.0" layoutY="10.0" text="⚭" textFill="#f8fafc">
-                                             <font><Font name="System" size="14.0" /></font>
-                                          </Label>
-                                          <Label layoutX="75.0" layoutY="10.0" text="Khách Hàng" textFill="WHITE">
+                                          <Label layoutX="46.0" layoutY="10.0" text="Khách Hàng" textFill="WHITE">
                                              <font><Font name="System Bold" size="13.0" /></font>
                                           </Label>
                                           <Label layoutX="217.0" layoutY="10.0" text="›" textFill="#e5e7eb">
@@ -84,21 +81,15 @@
                                     </AnchorPane>
                                     <AnchorPane fx:id="btnNapTien" onMouseClicked="#onNapTienMenuClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
                                        <children>
-                                          <Label layoutX="54.0" layoutY="10.0" text="\$" textFill="#f0a3ad">
-                                             <font><Font name="System" size="14.0" /></font>
-                                          </Label>
-                                          <Label layoutX="75.0" layoutY="10.0" text="Nạp Tiền" textFill="#f0a3ad">
-                                             <font><Font name="System" size="13.0" /></font>
+                                          <Label layoutX="46.0" layoutY="10.0" text="Nạp Tiền" textFill="#f0a3ad">
+                                             <font><Font name="System Bold" size="13.0" /></font>
                                           </Label>
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane fx:id="btnLichSuChoi" onMouseClicked="#onLichSuChoiMenuClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
                                        <children>
-                                          <Label layoutX="52.0" layoutY="10.0" text="↺" textFill="#f0a3ad">
-                                             <font><Font name="System" size="14.0" /></font>
-                                          </Label>
-                                          <Label layoutX="75.0" layoutY="10.0" text="Lịch Sử Chơi" textFill="#f0a3ad">
-                                             <font><Font name="System" size="13.0" /></font>
+                                          <Label layoutX="46.0" layoutY="10.0" text="Lịch Sử Chơi" textFill="#f0a3ad">
+                                             <font><Font name="System Bold" size="13.0" /></font>
                                           </Label>
                                        </children>
                                     </AnchorPane>
@@ -107,31 +98,88 @@
                            </children>
                         </VBox>
 
-                        <AnchorPane fx:id="btnNhanVien" styleClass="sidebar-btn" onMouseClicked="#onNhanVienMenuClick" prefHeight="45.0" prefWidth="235.0">
+                        <VBox fx:id="nhanVienMenuGroup" spacing="4.0">
                            <children>
-                              <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" >
-                              <image>
-                                 <Image url="@icons/nhan_vien.png"/>
-                              </image>
-                           </ImageView>
-                              <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Nhân Viên" textFill="#e0e0e0">
-                                 <font><Font name="System Bold" size="14.0" /></font>
-                              </Label>
+                              <AnchorPane fx:id="btnNhanVien" styleClass="sidebar-btn" onMouseClicked="#onNhanVienMenuClick" prefHeight="45.0" prefWidth="235.0">
+                                 <children>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" >
+                                       <image>
+                                          <Image url="@icons/nhan_vien.png"/>
+                                       </image>
+                                    </ImageView>
+                                    <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Nhân Viên" textFill="#e0e0e0">
+                                       <font><Font name="System Bold" size="14.0" /></font>
+                                    </Label>
+                                    <Label fx:id="lblNhanVienArrow" layoutX="214.0" layoutY="12.0" text="›" textFill="#e0e0e0">
+                                       <font><Font name="System Bold" size="14.0" /></font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                              <VBox fx:id="nhanVienSubMenu" spacing="4.0" visible="false" managed="false">
+                                 <children>
+                                    <AnchorPane fx:id="btnSubNhanVien" onMouseClicked="#onSubNhanVienClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
+                                       <children>
+                                          <Label layoutX="46.0" layoutY="10.0" text="Nhân Viên" textFill="WHITE">
+                                             <font><Font name="System Bold" size="13.0" /></font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane fx:id="btnLoaiNhanVien" onMouseClicked="#onLoaiNhanVienMenuClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
+                                       <children>
+                                          <Label layoutX="46.0" layoutY="10.0" text="Loại Nhân Viên" textFill="#f0a3ad">
+                                             <font><Font name="System Bold" size="13.0" /></font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane fx:id="btnCaLam" onMouseClicked="#onCaLamMenuClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
+                                       <children>
+                                          <Label layoutX="46.0" layoutY="10.0" text="Ca Làm" textFill="#f0a3ad">
+                                             <font><Font name="System Bold" size="13.0" /></font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </VBox>
                            </children>
-                        </AnchorPane>
+                        </VBox>
 
-                        <AnchorPane fx:id="btnSanPham" styleClass="sidebar-btn" onMouseClicked="#onSanPhamMenuClick" prefHeight="45.0" prefWidth="235.0">
+                        <VBox fx:id="sanPhamMenuGroup" spacing="4.0">
                            <children>
-                              <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" >
-                                 <image>
-                                    <Image url="@icons/san_pham.png"/>
-                                 </image>
-                              </ImageView>
-                              <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Sản Phẩm" textFill="#e0e0e0">
-                                 <font><Font name="System Bold" size="14.0" /></font>
-                              </Label>
+                              <AnchorPane fx:id="btnSanPham" styleClass="sidebar-btn" onMouseClicked="#onSanPhamMenuClick" prefHeight="45.0" prefWidth="235.0">
+                                 <children>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" >
+                                       <image>
+                                          <Image url="@icons/san_pham.png"/>
+                                       </image>
+                                    </ImageView>
+                                    <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Sản Phẩm" textFill="#e0e0e0">
+                                       <font><Font name="System Bold" size="14.0" /></font>
+                                    </Label>
+                                    <Label fx:id="lblSanPhamArrow" layoutX="214.0" layoutY="12.0" text="›" textFill="#e0e0e0">
+                                       <font><Font name="System Bold" size="14.0" /></font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                              <VBox fx:id="sanPhamSubMenu" spacing="4.0" visible="false" managed="false">
+                                 <children>
+                                    <AnchorPane fx:id="btnSubSanPham" onMouseClicked="#onSubSanPhamClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
+                                       <children>
+                                          <Label layoutX="46.0" layoutY="10.0" text="Sản Phẩm" textFill="WHITE">
+                                             <font><Font name="System Bold" size="13.0" /></font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane fx:id="btnSubDichVu" onMouseClicked="#onSubDichVuClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
+                                       <children>
+                                          <Label layoutX="46.0" layoutY="10.0" text="Dịch Vụ Đã Dùng" textFill="#f0a3ad">
+                                             <font><Font name="System Bold" size="13.0" /></font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </VBox>
                            </children>
-                        </AnchorPane>
+                        </VBox>
 
                         <AnchorPane fx:id="btnTaiChinh" styleClass="sidebar-btn" onMouseClicked="#onTaiChinhMenuClick" prefHeight="45.0" prefWidth="235.0">
                            <children>
@@ -146,18 +194,47 @@
                            </children>
                         </AnchorPane>
 
-                        <AnchorPane fx:id="btnKhuVuc" styleClass="sidebar-btn" onMouseClicked="#onKhuVucMenuClick" prefHeight="45.0" prefWidth="235.0">
+                        <VBox fx:id="khuVucMenuGroup" spacing="4.0">
                            <children>
-                              <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" >
-                                 <image>
-                                    <Image url="@icons/khu_vuc.png"/>
-                                 </image>
-                              </ImageView>
-                              <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Khu Vực" textFill="#e0e0e0">
-                                 <font><Font name="System Bold" size="14.0" /></font>
-                              </Label>
+                              <AnchorPane fx:id="btnKhuVuc" styleClass="sidebar-btn" onMouseClicked="#onKhuVucMenuClick" prefHeight="45.0" prefWidth="235.0">
+                                 <children>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" >
+                                       <image>
+                                          <Image url="@icons/khu_vuc.png"/>
+                                       </image>
+                                    </ImageView>
+                                    <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Khu Vực" textFill="#e0e0e0">
+                                       <font><Font name="System Bold" size="14.0" /></font>
+                                    </Label>
+                                    <Label fx:id="lblKhuVucArrow" layoutX="214.0" layoutY="12.0" text="›" textFill="#e0e0e0">
+                                       <font><Font name="System Bold" size="14.0" /></font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+
+                              <VBox fx:id="khuVucSubMenu" spacing="4.0" visible="false" managed="false">
+                                 <children>
+                                    <AnchorPane fx:id="btnSubKhuVuc" onMouseClicked="#onSubKhuVucClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
+                                       <children>
+                                          <Label layoutX="46.0" layoutY="10.0" text="Khu Vực" textFill="WHITE">
+                                             <font><Font name="System Bold" size="13.0" /></font>
+                                          </Label>
+                                          <Label layoutX="217.0" layoutY="10.0" text="›" textFill="#e5e7eb">
+                                             <font><Font name="System Bold" size="14.0" /></font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane fx:id="btnLoaiKhuVuc" onMouseClicked="#onLoaiKhuVucMenuClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
+                                       <children>
+                                          <Label layoutX="46.0" layoutY="10.0" text="Loại Khu Vực" textFill="#f0a3ad">
+                                             <font><Font name="System Bold" size="13.0" /></font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </VBox>
                            </children>
-                        </AnchorPane>
+                        </VBox>
 
                         <AnchorPane fx:id="btnKhuyenMai" onMouseClicked="#onKhuyenMaiMenuClick" prefHeight="45.0" prefWidth="235.0" styleClass="sidebar-btn">
                            <children>
