@@ -14,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import javafx.scene.image.ImageView;
 import java.io.IOException;
 
 public class MainController {
@@ -49,16 +50,133 @@ public class MainController {
     @FXML private AnchorPane btnCaLam;
     @FXML private AnchorPane btnSubSanPham;
     @FXML private AnchorPane btnSubDichVu;
+    @FXML private Label lblProfileName;
+    @FXML private Label lblProfileBadge;
+    @FXML private AnchorPane btnTaiKhoan;
+    @FXML private Label lblRolePill;
+    @FXML private ImageView imgNhanVienIcon;
+    @FXML private Label lblNhanVienTitle;
+    @FXML private Label lblSuKienArrow;
+
 
     @FXML
     public void initialize() {
-        loadContent("quan-ly-thiet-bi.fxml", btnThietBi);
+        // Cập nhật thông tin profile
+        lblProfileName.setText(UserSession.getUsername());
+        lblProfileBadge.setText(UserSession.getRole());
+        lblProfileBadge.getStyleClass().clear();
+        lblProfileBadge.getStyleClass().add("badge");
+        if (UserSession.isAdmin()) {
+            lblProfileBadge.getStyleClass().add("badge-admin");
+        } else {
+            lblProfileBadge.getStyleClass().add("badge-staff");
+        }
+
+        // Áp dụng bộ lọc sidebar
+        if (!UserSession.isAdmin()) {
+            if (lblRolePill != null) {
+                lblRolePill.setText("🛡  Nhân viên");
+            }
+
+            btnThietBi.setVisible(false);
+            btnThietBi.setManaged(false);
+
+            btnTaiChinh.setVisible(false);
+            btnTaiChinh.setManaged(false);
+
+            btnNhapHang.setVisible(false);
+            btnNhapHang.setManaged(false);
+
+            btnTaiKhoan.setVisible(false);
+            btnTaiKhoan.setManaged(false);
+
+            // Ẩn lịch sử chơi hoàn toàn đối với nhân viên
+            if (btnLichSuChoi != null) {
+                btnLichSuChoi.setVisible(false);
+                btnLichSuChoi.setManaged(false);
+            }
+
+            // Submenus cho nhân viên
+            btnSubNhanVien.setVisible(false);
+            btnSubNhanVien.setManaged(false);
+            btnLoaiNhanVien.setVisible(false);
+            btnLoaiNhanVien.setManaged(false);
+            if (lblNhanVienArrow != null) {
+                lblNhanVienArrow.setVisible(false);
+                lblNhanVienArrow.setManaged(false);
+            }
+
+            // Tái cấu trúc menu Nhân viên thành "Ca Làm" (nhưng giữ nguyên icon đồ họa và lề chữ)
+            if (imgNhanVienIcon != null) {
+                imgNhanVienIcon.setVisible(true);
+                imgNhanVienIcon.setManaged(true);
+            }
+            if (lblNhanVienTitle != null) {
+                lblNhanVienTitle.setText("Ca Làm");
+                lblNhanVienTitle.setLayoutX(45.0);
+            }
+
+            // Submenus cho khu vực: ẩn Loại Khu Vực
+            btnLoaiKhuVuc.setVisible(false);
+            btnLoaiKhuVuc.setManaged(false);
+
+            // Mở rộng mặc định tất cả các menu con cho nhân viên
+            if (customerSubMenu != null) {
+                customerSubMenu.setVisible(true);
+                customerSubMenu.setManaged(true);
+            }
+            if (lblKhachHangArrow != null) {
+                lblKhachHangArrow.setText("⌄");
+            }
+
+            if (sanPhamSubMenu != null) {
+                sanPhamSubMenu.setVisible(true);
+                sanPhamSubMenu.setManaged(true);
+            }
+            if (lblSanPhamArrow != null) {
+                lblSanPhamArrow.setText("⌄");
+            }
+
+            if (khuVucSubMenu != null) {
+                khuVucSubMenu.setVisible(true);
+                khuVucSubMenu.setManaged(true);
+            }
+            if (lblKhuVucArrow != null) {
+                lblKhuVucArrow.setText("⌄");
+            }
+
+            // Load màn hình khách hàng mặc định cho nhân viên
+            loadContent("quan-ly-khach-hang.fxml", btnKhachHang);
+        } else {
+            if (lblRolePill != null) {
+                lblRolePill.setText("🛡  Admin");
+            }
+            if (imgNhanVienIcon != null) {
+                imgNhanVienIcon.setVisible(true);
+                imgNhanVienIcon.setManaged(true);
+            }
+            if (lblNhanVienTitle != null) {
+                lblNhanVienTitle.setText("Quản Lý Nhân Viên");
+                lblNhanVienTitle.setLayoutX(45.0);
+            }
+            if (lblNhanVienArrow != null) {
+                lblNhanVienArrow.setVisible(true);
+                lblNhanVienArrow.setManaged(true);
+            }
+            if (lblKhuVucArrow != null) {
+                lblKhuVucArrow.setVisible(true);
+                lblKhuVucArrow.setManaged(true);
+            }
+
+            // Load màn hình thiết bị mặc định cho admin
+            loadContent("quan-ly-thiet-bi.fxml", btnThietBi);
+        }
     }
 
     private void setActiveMenu(AnchorPane activeBtn) {
         // Gom tất cả các nút vào 1 mảng để xử lý cho lẹ
         AnchorPane[] allBtns = {btnThietBi, btnKhachHang, btnNhanVien, btnSanPham,
-                btnTaiChinh, btnKhuVuc, btnKhuyenMai, btnSuKien, btnNhapHang};
+                btnTaiChinh, btnKhuVuc, btnKhuyenMai, btnSuKien, btnNhapHang, btnTaiKhoan};
 
         for (AnchorPane btn : allBtns) {
             if (btn != null) {
@@ -76,35 +194,15 @@ public class MainController {
         }
         if (activeBtn != btnKhachHang) {
             setActiveCustomerSub(null);
-            if (customerSubMenu != null) {
-                customerSubMenu.setVisible(false);
-                customerSubMenu.setManaged(false);
-                lblKhachHangArrow.setText("›");
-            }
         }
         if (activeBtn != btnKhuVuc) {
             setActiveKhuVucSub(null);
-            if (khuVucSubMenu != null) {
-                khuVucSubMenu.setVisible(false);
-                khuVucSubMenu.setManaged(false);
-                lblKhuVucArrow.setText("›");
-            }
         }
         if (activeBtn != btnNhanVien) {
             setActiveNhanVienSub(null);
-            if (nhanVienSubMenu != null) {
-                nhanVienSubMenu.setVisible(false);
-                nhanVienSubMenu.setManaged(false);
-                lblNhanVienArrow.setText("›");
-            }
         }
         if (activeBtn != btnSanPham) {
             setActiveSanPhamSub(null);
-            if (sanPhamSubMenu != null) {
-                sanPhamSubMenu.setVisible(false);
-                sanPhamSubMenu.setManaged(false);
-                lblSanPhamArrow.setText("›");
-            }
         }
     }
 
@@ -274,6 +372,10 @@ public class MainController {
 
     @FXML
     public void onNhanVienMenuClick() {
+        if (!UserSession.isAdmin()) {
+            onCaLamMenuClick();
+            return;
+        }
         boolean visible = !nhanVienSubMenu.isVisible();
         nhanVienSubMenu.setVisible(visible);
         nhanVienSubMenu.setManaged(visible);
@@ -406,6 +508,19 @@ public class MainController {
     }
 
     @FXML
+    public void onTaiKhoanMenuClick() {
+        setActiveMenu(btnTaiKhoan);
+        try {
+            Parent fxml = FXMLLoader.load(getClass().getResource("quan-ly-tai-khoan.fxml"));
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(fxml);
+        } catch (IOException e) {
+            System.out.println("Lỗi rồi: Không tìm thấy file quan-ly-tai-khoan.fxml");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private AnchorPane btnUserProfile; // Khai báo id của vùng User
 
     @FXML
@@ -451,10 +566,12 @@ public class MainController {
 
     // Hàm này sẽ được gọi từ màn hình Login để truyền tên qua
     public void setGreeting(String username) {
-        if (username != null && !username.trim().isEmpty()) {
-            lblGreeting.setText("Hello, " + username + "!");
-        } else {
-            lblGreeting.setText("Hello, Admin!"); // Phòng hờ nếu bị rỗng
+        if (lblGreeting != null) {
+            if (username != null && !username.trim().isEmpty()) {
+                lblGreeting.setText("Hello, " + username + "!");
+            } else {
+                lblGreeting.setText("Hello, Admin!"); // Phòng hờ nếu bị rỗng
+            }
         }
     }
 

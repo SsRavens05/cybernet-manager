@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyTaiKhoanController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <HBox styleClass="stats-row">
+            <children>
+                <AnchorPane prefHeight="130.0" styleClass="stat-card-blue" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label layoutX="20.0" layoutY="18.0" text="🛡️" textFill="WHITE"><font><Font size="22.0" /></font></Label>
+                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Tài Khoản" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
+                        <Label fx:id="lblTongTK" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" AnchorPane.rightAnchor="20.0" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane prefHeight="130.0" styleClass="stat-card-red" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label layoutX="20.0" layoutY="18.0" text="👤⚙️" textFill="WHITE"><font><Font size="22.0" /></font></Label>
+                        <Label layoutX="60.0" layoutY="20.0" text="Admin" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
+                        <Label fx:id="lblAdminCount" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" AnchorPane.rightAnchor="20.0" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane prefHeight="130.0" styleClass="stat-card-green" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label layoutX="20.0" layoutY="18.0" text="👥" textFill="WHITE"><font><Font size="22.0" /></font></Label>
+                        <Label layoutX="60.0" layoutY="20.0" text="Nhân Viên Hoạt Động" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
+                        <Label fx:id="lblNhanVienHoatDongCount" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                        <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" AnchorPane.rightAnchor="20.0" />
+                    </children>
+                </AnchorPane>
+            </children>
+        </HBox>
+
+        <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
+            <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
+                    <children>
+                        <Label text="Danh Sách Tài Khoản" styleClass="header-title" />
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <ComboBox fx:id="cbVaiTroFilter" prefHeight="35.0" prefWidth="150.0" promptText="Tất cả vai trò" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13px;" />
+                        <ComboBox fx:id="cbTrangThaiFilter" prefHeight="35.0" prefWidth="160.0" promptText="Tất cả trạng thái" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13px;" />
+
+                        <TextField fx:id="txtSearch" promptText="Tìm tên đăng nhập..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
+
+                        <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
+                        <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">
+                            <graphic>
+                                <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                                    <image><Image url="@icons/xoa.png" /></image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnUpdate" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onUpdateClick" styleClass="btn-action" text="Update">
+                            <graphic>
+                                <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                                    <image><Image url="@icons/cap-nhat.png" /></image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+                <TableView fx:id="tbTaiKhoan" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colTenDangNhap" prefWidth="180.0" text="Tên đăng nhập" />
+                        <TableColumn fx:id="colMatKhau" prefWidth="180.0" text="Mật khẩu" />
+                        <TableColumn fx:id="colVaiTro" prefWidth="150.0" text="Vai trò" />
+                        <TableColumn fx:id="colTrangThai" prefWidth="150.0" text="Trạng thái" />
+                        <TableColumn fx:id="colNgayTao" prefWidth="180.0" text="Ngày tạo" />
+                    </columns>
+                    <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</VBox>

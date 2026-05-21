@@ -59,6 +59,7 @@ public class LoginController {
                     showAlert(Alert.AlertType.ERROR, "Đăng nhập thất bại", "Sai tài khoản hoặc mật khẩu.");
                     return;
                 }
+                UserSession.setUsername(username);
                 loadMainScene(loginResult.displayName() == null ? username : loginResult.displayName());
                 return;
             } catch (SQLException e) {
@@ -68,6 +69,7 @@ public class LoginController {
             }
         }
 
+        UserSession.setUsername(username);
         loadMainScene(username);
     }
 

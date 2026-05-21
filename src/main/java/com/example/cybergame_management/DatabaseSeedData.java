@@ -136,4 +136,18 @@ final class DatabaseSeedData {
     static ObservableList<DichVuDaDung> dichVuDaDung() {
         return dichVuDaDungData;
     }
+
+    private static final ObservableList<TaiKhoan> taiKhoanData = FXCollections.observableArrayList(
+            new TaiKhoan("admin", "12345678", "Admin", "Hoạt động", "2025-01-01"),
+            new TaiKhoan("ad", "1", "Admin", "Hoạt động", "2026-05-22"),
+            new TaiKhoan("nv", "1", "Nhân viên", "Hoạt động", "2026-05-22"),
+            new TaiKhoan("nv001", "123456", "Nhân viên", "Hoạt động", "2025-03-10"),
+            new TaiKhoan("nv002", "123456", "Nhân viên", "Hoạt động", "2025-04-01"),
+            new TaiKhoan("nv003", "123456", "Nhân viên", "Hoạt động", "2025-05-15"),
+            new TaiKhoan("nv004", "12345", "Nhân viên", "Vô hiệu", "2025-02-20")
+    );
+
+    static ObservableList<TaiKhoan> taiKhoan() {
+        return taiKhoanData;
+    }
 }
