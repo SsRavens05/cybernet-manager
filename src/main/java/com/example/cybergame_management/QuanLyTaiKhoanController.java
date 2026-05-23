@@ -28,8 +28,6 @@ public class QuanLyTaiKhoanController {
     @FXML private TableColumn<TaiKhoan, String> colTrangThai;
     @FXML private TableColumn<TaiKhoan, String> colNgayTao;
 
-    @FXML private ComboBox<String> cbVaiTroFilter;
-    @FXML private ComboBox<String> cbTrangThaiFilter;
     @FXML private TextField txtSearch;
 
     @FXML private Button btnDelete;
@@ -100,20 +98,11 @@ public class QuanLyTaiKhoanController {
             }
         });
 
-        // Setup filter choices
-        cbVaiTroFilter.getItems().setAll("Tất cả vai trò", "Admin", "Nhân viên");
-        cbVaiTroFilter.setValue("Tất cả vai trò");
-
-        cbTrangThaiFilter.getItems().setAll("Tất cả trạng thái", "Hoạt động", "Vô hiệu");
-        cbTrangThaiFilter.setValue("Tất cả trạng thái");
-
         FilteredList<TaiKhoan> filtered = new FilteredList<>(data, item -> true);
         tbTaiKhoan.setItems(filtered);
 
         // Bind filter change events
         txtSearch.textProperty().addListener((obs, oldValue, newValue) -> applyFilters(filtered));
-        cbVaiTroFilter.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters(filtered));
-        cbTrangThaiFilter.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters(filtered));
 
         bindActionButtons();
         updateStats();
@@ -123,19 +112,7 @@ public class QuanLyTaiKhoanController {
         filtered.setPredicate(item -> {
             // Text Search
             String text = txtSearch.getText();
-            boolean matchesText = SearchMatcher.containsKeyword(text, item.getTenDangNhap());
-
-            // Role Filter
-            String roleFilter = cbVaiTroFilter.getValue();
-            boolean matchesRole = roleFilter == null || roleFilter.equals("Tất cả vai trò") ||
-                    item.getVaiTro().equalsIgnoreCase(roleFilter);
-
-            // Status Filter
-            String statusFilter = cbTrangThaiFilter.getValue();
-            boolean matchesStatus = statusFilter == null || statusFilter.equals("Tất cả trạng thái") ||
-                    item.getTrangThai().equalsIgnoreCase(statusFilter);
-
-            return matchesText && matchesRole && matchesStatus;
+            return SearchMatcher.containsKeyword(text, item.getTenDangNhap());
         });
     }
 

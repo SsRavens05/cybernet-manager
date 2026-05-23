@@ -96,6 +96,13 @@
                                            </Label>
                                         </children>
                                      </AnchorPane>
+                                     <AnchorPane fx:id="btnDoiQua" onMouseClicked="#onDoiQuaMenuClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
+                                        <children>
+                                           <Label layoutX="46.0" layoutY="10.0" text="🎁  Đổi Quà" textFill="#f0a3ad">
+                                              <font><Font name="System Bold" size="13.0" /></font>
+                                           </Label>
+                                        </children>
+                                     </AnchorPane>
                                   </children>
                                </VBox>
                             </children>
@@ -249,22 +256,6 @@
                             </children>
                          </AnchorPane>
 
-                         <AnchorPane fx:id="btnSuKien" onMouseClicked="#onSuKienMenuClick" prefHeight="45.0" prefWidth="235.0" styleClass="sidebar-btn">
-                            <children>
-                               <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
-                                  <image>
-                                     <Image url="@icons/su-kien.png"/>
-                                  </image>
-                               </ImageView>
-                               <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Sự Kiện" textFill="#e0e0e0">
-                                  <font><Font name="System Bold" size="14.0" /></font>
-                               </Label>
-                               <Label fx:id="lblSuKienArrow" layoutX="214.0" layoutY="12.0" text="›" textFill="#e0e0e0">
-                                  <font><Font name="System Bold" size="14.0" /></font>
-                               </Label>
-                            </children>
-                         </AnchorPane>
-
                          <AnchorPane fx:id="btnNhapHang" onMouseClicked="#onNhapHangMenuClick" prefHeight="45.0" prefWidth="235.0" styleClass="sidebar-btn">
                             <children>
                                <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" >
@@ -282,7 +273,7 @@
                             <children>
                                <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" >
                                   <image>
-                                     <Image url="@icons/main_user.png"/>
+                                     <Image url="@icons/account.png"/>
                                   </image>
                                </ImageView>
                                <Label layoutX="45.0" layoutY="12.0" text="Quản Lý Tài Khoản" textFill="#e0e0e0">

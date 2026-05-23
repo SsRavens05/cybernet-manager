@@ -28,6 +28,7 @@ public class MainController {
     @FXML private AnchorPane btnSubKhachHang;
     @FXML private AnchorPane btnNapTien;
     @FXML private AnchorPane btnLichSuChoi;
+    @FXML private AnchorPane btnDoiQua;
     @FXML private AnchorPane btnNhanVien;
     @FXML private AnchorPane btnSanPham;
     @FXML private AnchorPane btnTaiChinh;
@@ -35,7 +36,6 @@ public class MainController {
     @FXML private AnchorPane btnSubKhuVuc;
     @FXML private AnchorPane btnLoaiKhuVuc;
     @FXML private AnchorPane btnKhuyenMai;
-    @FXML private AnchorPane btnSuKien;
     @FXML private AnchorPane btnNhapHang;
     @FXML private VBox customerSubMenu;
     @FXML private VBox khuVucSubMenu;
@@ -56,7 +56,6 @@ public class MainController {
     @FXML private Label lblRolePill;
     @FXML private ImageView imgNhanVienIcon;
     @FXML private Label lblNhanVienTitle;
-    @FXML private Label lblSuKienArrow;
 
 
     @FXML
@@ -176,7 +175,7 @@ public class MainController {
     private void setActiveMenu(AnchorPane activeBtn) {
         // Gom tất cả các nút vào 1 mảng để xử lý cho lẹ
         AnchorPane[] allBtns = {btnThietBi, btnKhachHang, btnNhanVien, btnSanPham,
-                btnTaiChinh, btnKhuVuc, btnKhuyenMai, btnSuKien, btnNhapHang, btnTaiKhoan};
+                btnTaiChinh, btnKhuVuc, btnKhuyenMai, btnNhapHang, btnTaiKhoan};
 
         for (AnchorPane btn : allBtns) {
             if (btn != null) {
@@ -233,7 +232,7 @@ public class MainController {
     }
 
     private void setActiveCustomerSub(AnchorPane activeSubBtn) {
-        AnchorPane[] customerBtns = {btnSubKhachHang, btnNapTien, btnLichSuChoi};
+        AnchorPane[] customerBtns = {btnSubKhachHang, btnNapTien, btnLichSuChoi, btnDoiQua};
         for (AnchorPane btn : customerBtns) {
             if (btn != null) {
                 btn.getStyleClass().remove("sidebar-sub-btn-active");
@@ -371,6 +370,12 @@ public class MainController {
     }
 
     @FXML
+    public void onDoiQuaMenuClick() {
+        loadContent("quan-ly-doi-qua.fxml", btnKhachHang);
+        setActiveCustomerSub(btnDoiQua);
+    }
+
+    @FXML
     public void onNhanVienMenuClick() {
         if (!UserSession.isAdmin()) {
             onCaLamMenuClick();
@@ -478,18 +483,7 @@ public class MainController {
         }
     }
 
-    @FXML
-    public void onSuKienMenuClick() {
-        setActiveMenu(btnSuKien);
-        try {
-            Parent fxml = FXMLLoader.load(getClass().getResource("quan-ly-su-kien.fxml"));
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(fxml);
-        } catch (IOException e) {
-            System.out.println("Khong tim thay file quan-ly-su-kien.fxml");
-            e.printStackTrace();
-        }
-    }
+
 
     @FXML
     public void onNhapHangMenuClick() {

@@ -1,6 +1,8 @@
 package com.example.cybergame_management;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -17,9 +19,11 @@ public class UpdateThietBiController {
     @FXML private Button btnHuy;
 
     private ThietBi thietBiĐangSua;
+    private ObservableList<ThietBi> allDevices;
 
-    public void setThietBiData(ThietBi tb) {
+    public void setThietBiData(ThietBi tb, ObservableList<ThietBi> allDevices) {
         this.thietBiĐangSua = tb;
+        this.allDevices = allDevices;
 
         txtMaTB.setText(tb.getMaTB());
         txtTenTB.setText(tb.getTenTB());
@@ -28,17 +32,36 @@ public class UpdateThietBiController {
         cbLoaiTB.getItems().setAll("Loa", "Màn Hình", "Bàn Phím", "Chuột", "Tai Nghe");
         cbLoaiTB.setValue(tb.getLoaiTB());
 
-        cbTrangThai.getItems().setAll("DALAP", "CHUALAP", "BAOTRI", "HONG");
+        cbTrangThai.getItems().setAll("DALAP", "CHUALAP", "BAOTRI", "HONG", "HOATDONG");
         cbTrangThai.setValue(tb.getTrangThai());
     }
 
     @FXML
     public void onLuuClick() {
+        String maPC = txtNgayMua.getText().trim();
+        String trangThai = cbTrangThai.getValue();
+
+        if ("HOATDONG".equals(trangThai) || "DALAP".equals(trangThai)) {
+            if (allDevices != null) {
+                long count = allDevices.stream()
+                        .filter(tb -> tb != thietBiĐangSua && maPC.equalsIgnoreCase(tb.getNgayMua()) && ("HOATDONG".equals(tb.getTrangThai()) || "DALAP".equals(tb.getTrangThai())))
+                        .count();
+                if (count >= 10) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Cảnh báo ràng buộc");
+                    alert.setHeaderText("Vi phạm ràng buộc toàn vẹn R18");
+                    alert.setContentText("Một máy tính đang hoạt động chỉ được gắn tối đa 10 thiết bị!");
+                    alert.showAndWait();
+                    return;
+                }
+            }
+        }
+
         // Cập nhật lại vào Model trong RAM
         thietBiĐangSua.setTenTB(txtTenTB.getText());
         thietBiĐangSua.setLoaiTB(cbLoaiTB.getValue());
-        thietBiĐangSua.setTrangThai(cbTrangThai.getValue());
-        thietBiĐangSua.setNgayMua(txtNgayMua.getText());
+        thietBiĐangSua.setTrangThai(trangThai);
+        thietBiĐangSua.setNgayMua(maPC);
 
         // TODO: Gọi lệnh Update xuống CSDL Oracle ở đây
         System.out.println("Đã lưu cập nhật cho Mã TB: " + thietBiĐangSua.getMaTB());

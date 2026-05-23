@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -35,6 +36,7 @@ public class QuanLySanPhamController {
     @FXML private TableColumn<SanPham, String> colDonVi;
     @FXML private TableColumn<SanPham, String> colSoDiemTichLuy;
     @FXML private TextField txtSearch;
+    @FXML private Button btnInsert;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
@@ -55,6 +57,21 @@ public class QuanLySanPhamController {
         txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
         bindActionButtons();
         updateStats();
+
+        if (!UserSession.isAdmin()) {
+            if (btnInsert != null) {
+                btnInsert.setVisible(false);
+                btnInsert.setManaged(false);
+            }
+            if (btnDelete != null) {
+                btnDelete.setVisible(false);
+                btnDelete.setManaged(false);
+            }
+            if (btnUpdate != null) {
+                btnUpdate.setVisible(false);
+                btnUpdate.setManaged(false);
+            }
+        }
     }
 
     private boolean matchesFilter(SanPham item) {
@@ -134,9 +151,29 @@ public class QuanLySanPhamController {
         Button bLuu = new Button("Lưu");
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
+            String slStr = txtSL.getText().trim();
+            try {
+                long sl = Long.parseLong(slStr);
+                if (sl < 0) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Cảnh báo ràng buộc");
+                    alert.setHeaderText("Vi phạm ràng buộc toàn vẹn R3");
+                    alert.setContentText("Số lượng tồn kho của sản phẩm phải lớn hơn hoặc bằng 0!");
+                    alert.showAndWait();
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Cảnh báo ràng buộc");
+                alert.setHeaderText("Dữ liệu không hợp lệ");
+                alert.setContentText("Số lượng tồn kho phải là một số nguyên hợp lệ!");
+                alert.showAndWait();
+                return;
+            }
+
             String maMoi = "SP" + String.format("%03d", data.size() + 1);
             data.add(new SanPham(maMoi, txtTen.getText(), txtLoai.getText(), txtGia.getText(),
-                    txtSL.getText(), txtDonVi.getText(), txtDiem.getText()));
+                    slStr, txtDonVi.getText(), txtDiem.getText()));
             updateStats();
             stage.close();
         });
@@ -201,6 +238,113 @@ public class QuanLySanPhamController {
         bottomBox.getChildren().addAll(btnHuy, btnXoa);
 
         root.getChildren().addAll(topBox, bottomBox);
+        Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
+
+    @FXML
+    public void onUpdateClick() {
+        SanPham selectedItem = tbSanPham.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) {
+            return;
+        }
+
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.TRANSPARENT);
+
+        VBox root = new VBox(20);
+        root.getStyleClass().add("custom-dialog");
+        root.setPadding(new Insets(20));
+        root.setPrefWidth(450);
+
+        BorderPane header = new BorderPane();
+        Label lblTitle = new Label("Cập Nhật Sản Phẩm");
+        lblTitle.getStyleClass().add("dialog-header-text");
+        Button btnX = new Button("X");
+        btnX.getStyleClass().add("dialog-close-btn");
+        btnX.setOnAction(e -> stage.close());
+        header.setLeft(lblTitle);
+        header.setRight(btnX);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(15);
+        grid.setVgap(15);
+
+        TextField txtMa = new TextField(selectedItem.maSPProperty().get());
+        txtMa.setDisable(true);
+        txtMa.setPrefWidth(400);
+
+        TextField txtTen = new TextField(selectedItem.tenSPProperty().get());
+        TextField txtLoai = new TextField(selectedItem.loaiProperty().get());
+        TextField txtGia = new TextField(selectedItem.giaProperty().get());
+        TextField txtSL = new TextField(selectedItem.soLuongProperty().get());
+        TextField txtDonVi = new TextField(selectedItem.donViProperty().get());
+        TextField txtDiem = new TextField(selectedItem.soDiemTichLuyProperty().get());
+
+        grid.add(new Label("Mã SP"), 0, 0);
+        grid.add(txtMa, 0, 1);
+        grid.add(new Label("Tên SP *"), 0, 2);
+        grid.add(txtTen, 0, 3);
+        grid.add(new Label("Loại SP"), 0, 4);
+        grid.add(txtLoai, 0, 5);
+        grid.add(new Label("Đơn giá"), 0, 6);
+        grid.add(txtGia, 0, 7);
+        grid.add(new Label("Số Lượng Tồn Kho"), 0, 8);
+        grid.add(txtSL, 0, 9);
+        grid.add(new Label("Đơn Vị"), 0, 10);
+        grid.add(txtDonVi, 0, 11);
+        grid.add(new Label("Số Điểm Tích Lũy"), 0, 12);
+        grid.add(txtDiem, 0, 13);
+
+        HBox footer = new HBox(10);
+        footer.setAlignment(Pos.CENTER_RIGHT);
+
+        Button bHuy = new Button("Hủy");
+        bHuy.getStyleClass().add("btn-cancel");
+        bHuy.setOnAction(e -> stage.close());
+
+        Button bLuu = new Button("Lưu");
+        bLuu.getStyleClass().add("btn-save");
+        bLuu.setOnAction(e -> {
+            String slStr = txtSL.getText().trim();
+            try {
+                long sl = Long.parseLong(slStr);
+                if (sl < 0) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Cảnh báo ràng buộc");
+                    alert.setHeaderText("Vi phạm ràng buộc toàn vẹn R3");
+                    alert.setContentText("Số lượng tồn kho của sản phẩm phải lớn hơn hoặc bằng 0!");
+                    alert.showAndWait();
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Cảnh báo ràng buộc");
+                alert.setHeaderText("Dữ liệu không hợp lệ");
+                alert.setContentText("Số lượng tồn kho phải là một số nguyên hợp lệ!");
+                alert.showAndWait();
+                return;
+            }
+
+            selectedItem.tenSPProperty().set(txtTen.getText());
+            selectedItem.loaiProperty().set(txtLoai.getText());
+            selectedItem.giaProperty().set(txtGia.getText());
+            selectedItem.soLuongProperty().set(slStr);
+            selectedItem.donViProperty().set(txtDonVi.getText());
+            selectedItem.soDiemTichLuyProperty().set(txtDiem.getText());
+
+            tbSanPham.refresh();
+            updateStats();
+            stage.close();
+        });
+
+        footer.getChildren().addAll(bHuy, bLuu);
+
+        root.getChildren().addAll(header, grid, footer);
         Scene scene = new Scene(root);
         scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());

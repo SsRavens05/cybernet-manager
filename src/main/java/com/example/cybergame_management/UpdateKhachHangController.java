@@ -1,6 +1,7 @@
 package com.example.cybergame_management;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -30,8 +31,28 @@ public class UpdateKhachHangController {
 
     @FXML
     public void onLuuClick() {
+        String diemStr = txtSoDiemTichLuy.getText().trim();
+        try {
+            long diem = Long.parseLong(diemStr);
+            if (diem < 0) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Cảnh báo ràng buộc");
+                alert.setHeaderText("Vi phạm ràng buộc toàn vẹn R2");
+                alert.setContentText("Điểm tích lũy của khách hàng không được âm!");
+                alert.showAndWait();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Cảnh báo ràng buộc");
+            alert.setHeaderText("Dữ liệu không hợp lệ");
+            alert.setContentText("Số điểm tích lũy phải là một số nguyên hợp lệ!");
+            alert.showAndWait();
+            return;
+        }
+
         khachHangDangSua.setHoTen(txtHoTen.getText());
-        khachHangDangSua.setSoDiemTichLuy(txtSoDiemTichLuy.getText());
+        khachHangDangSua.setSoDiemTichLuy(diemStr);
         khachHangDangSua.setTrangThai(cbTrangThai.getValue());
         dongForm();
     }

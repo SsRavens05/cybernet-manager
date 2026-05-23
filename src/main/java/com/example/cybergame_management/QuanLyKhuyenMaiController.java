@@ -18,8 +18,6 @@ public class QuanLyKhuyenMaiController {
     @FXML private Label lblTongKM;
     @FXML private Label lblDangApDung;
     @FXML private Label lblHetHan;
-    @FXML private ComboBox<String> cbLoaiFilter;
-    @FXML private ComboBox<String> cbTrangThaiFilter;
     @FXML private TextField txtSearch;
     @FXML private TableView<KhuyenMai> tbKhuyenMai;
     @FXML private TableColumn<KhuyenMai, String> colMaCTR;
@@ -29,6 +27,7 @@ public class QuanLyKhuyenMaiController {
     @FXML private TableColumn<KhuyenMai, String> colNgayBD;
     @FXML private TableColumn<KhuyenMai, String> colNgayKT;
     @FXML private TableColumn<KhuyenMai, String> colTrangThai;
+    @FXML private Button btnInsert;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
@@ -43,12 +42,6 @@ public class QuanLyKhuyenMaiController {
         colNgayBD.setCellValueFactory(cellData -> cellData.getValue().ngayBDProperty());
         colNgayKT.setCellValueFactory(cellData -> cellData.getValue().ngayKTProperty());
         colTrangThai.setCellValueFactory(cellData -> cellData.getValue().trangThaiProperty());
-
-        // Setup filter combobox options
-        cbLoaiFilter.setItems(FXCollections.observableArrayList("Tất cả loại", "GIAM_GIA", "TANG_QUA", "TANG_GIO"));
-        cbLoaiFilter.setValue("Tất cả loại");
-        cbTrangThaiFilter.setItems(FXCollections.observableArrayList("Tất cả trạng thái", "DANG_AP_DUNG", "HET_HAN"));
-        cbTrangThaiFilter.setValue("Tất cả trạng thái");
 
         // Custom Cell Factory for Types
         colLoaiCTR.setCellFactory(column -> new TableCell<>() {
@@ -99,29 +92,34 @@ public class QuanLyKhuyenMaiController {
         FilteredList<KhuyenMai> filtered = new FilteredList<>(data, item -> true);
         tbKhuyenMai.setItems(filtered);
 
-        Runnable refreshFilter = () -> filtered.setPredicate(this::matchesFilter);
-        txtSearch.textProperty().addListener((obs, oldValue, newValue) -> refreshFilter.run());
-        cbLoaiFilter.valueProperty().addListener((obs, oldValue, newValue) -> refreshFilter.run());
-        cbTrangThaiFilter.valueProperty().addListener((obs, oldValue, newValue) -> refreshFilter.run());
+        txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
 
         btnDelete.disableProperty().bind(tbKhuyenMai.getSelectionModel().selectedItemProperty().isNull());
         btnUpdate.disableProperty().bind(tbKhuyenMai.getSelectionModel().selectedItemProperty().isNull());
         updateStats();
+
+        if (!UserSession.isAdmin()) {
+            if (btnInsert != null) {
+                btnInsert.setVisible(false);
+                btnInsert.setManaged(false);
+            }
+            if (btnDelete != null) {
+                btnDelete.setVisible(false);
+                btnDelete.setManaged(false);
+            }
+            if (btnUpdate != null) {
+                btnUpdate.setVisible(false);
+                btnUpdate.setManaged(false);
+            }
+        }
     }
 
     private boolean matchesFilter(KhuyenMai item) {
         String search = txtSearch.getText();
-        String loai = cbLoaiFilter.getValue();
-        String trangThai = cbTrangThaiFilter.getValue();
 
-        boolean matchSearch = SearchMatcher.containsKeyword(search,
+        return SearchMatcher.containsKeyword(search,
                 item.getMaCTR(), item.getTenCTR(), item.getLoaiCTR(),
                 item.getChietKhau(), item.getNgayBD(), item.getNgayKT(), item.getTrangThai());
-
-        boolean matchLoai = (loai == null || "Tất cả loại".equals(loai) || loai.equals(item.getLoaiCTR()));
-        boolean matchTrangThai = (trangThai == null || "Tất cả trạng thái".equals(trangThai) || trangThai.equals(item.getTrangThai()));
-
-        return matchSearch && matchLoai && matchTrangThai;
     }
 
     private void updateStats() {
@@ -195,12 +193,19 @@ public class QuanLyKhuyenMaiController {
         Button save = new Button("Lưu");
         save.getStyleClass().add("btn-save");
         save.setOnAction(e -> {
+            String nbd = txtNgayBD.getText().trim();
+            String nkt = txtNgayKT.getText().trim();
+
+            if (!validateNgayKhuyenMai(nbd, nkt)) {
+                return;
+            }
+
             if (isUpdate) {
                 item.setTenCTR(txtTen.getText());
                 item.setLoaiCTR(cbLoai.getValue());
                 item.setChietKhau(txtChietKhau.getText());
-                item.setNgayBD(txtNgayBD.getText());
-                item.setNgayKT(txtNgayKT.getText());
+                item.setNgayBD(nbd);
+                item.setNgayKT(nkt);
                 item.setTrangThai(cbTrangThai.getValue());
                 tbKhuyenMai.refresh();
             } else {
@@ -209,7 +214,7 @@ public class QuanLyKhuyenMaiController {
                     ma = "CTR" + String.format("%03d", data.size() + 1);
                 }
                 data.add(new KhuyenMai(ma, txtTen.getText(), cbLoai.getValue(), txtChietKhau.getText(),
-                        txtNgayBD.getText(), txtNgayKT.getText(), cbTrangThai.getValue()));
+                        nbd, nkt, cbTrangThai.getValue()));
             }
             updateStats();
             stage.close();
@@ -223,6 +228,29 @@ public class QuanLyKhuyenMaiController {
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setScene(scene);
         stage.showAndWait();
+    }
+
+    private boolean validateNgayKhuyenMai(String nbd, String nkt) {
+        try {
+            java.time.LocalDate dateBD = java.time.LocalDate.parse(nbd.trim());
+            java.time.LocalDate dateKT = java.time.LocalDate.parse(nkt.trim());
+            if (!dateKT.isAfter(dateBD)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Cảnh báo ràng buộc");
+                alert.setHeaderText("Vi phạm ràng buộc toàn vẹn R8");
+                alert.setContentText("Ngày kết thúc chương trình khuyến mãi phải lớn hơn ngày bắt đầu!");
+                alert.showAndWait();
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Dữ liệu không hợp lệ");
+            alert.setHeaderText("Sai định dạng ngày tháng");
+            alert.setContentText("Ngày tháng phải đúng định dạng YYYY-MM-DD (Ví dụ: 2026-05-24)!");
+            alert.showAndWait();
+            return false;
+        }
     }
 
     private void addRow(GridPane grid, String label, Control control, int row) {

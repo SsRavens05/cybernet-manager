@@ -150,4 +150,16 @@ final class DatabaseSeedData {
     static ObservableList<TaiKhoan> taiKhoan() {
         return taiKhoanData;
     }
+
+    private static final ObservableList<DoiQua> doiQuaData = FXCollections.observableArrayList(
+            new DoiQua("DQ20250512201608", "KH001", "QT01", "2025-05-12", "1", "Completed"),
+            new DoiQua("DQ20250513090345", "KH002", "QT02", "2025-05-13", "2", "Completed"),
+            new DoiQua("DQ20250514112300", "KH003", "QT01", "2025-05-14", "1", "Pending"),
+            new DoiQua("DQ20250515084512", "KH001", "QT03", "2025-05-15", "3", "Completed"),
+            new DoiQua("DQ20250516175030", "KH004", "QT02", "2025-05-16", "1", "Cancelled")
+    );
+
+    static ObservableList<DoiQua> doiQua() {
+        return doiQuaData;
+    }
 }

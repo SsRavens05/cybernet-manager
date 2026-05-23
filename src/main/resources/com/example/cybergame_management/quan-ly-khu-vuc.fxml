@@ -52,7 +52,7 @@
 
                         <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
 
-                        <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
+                        <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
                         <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">
                             <graphic>
                                 <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">

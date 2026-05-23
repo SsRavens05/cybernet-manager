@@ -32,7 +32,6 @@ public class QuanLyNhanVienController {
     @FXML private TableColumn<NhanVien, String> colTrangThai;
 
     @FXML private TextField txtSearch;
-    @FXML private ComboBox<String> cbTrangThaiFilter;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
@@ -47,10 +46,6 @@ public class QuanLyNhanVienController {
         colNgayVao.setCellValueFactory(cellData -> cellData.getValue().ngayVaoProperty());
         colNgayThoiViec.setCellValueFactory(cellData -> cellData.getValue().ngayThoiViecProperty());
         colTrangThai.setCellValueFactory(cellData -> cellData.getValue().trangThaiProperty());
-
-        // Setup filter choices
-        cbTrangThaiFilter.getItems().setAll("Tất cả trạng thái", "Đang làm", "Nghỉ phép", "Nghỉ việc");
-        cbTrangThaiFilter.setValue("Tất cả trạng thái");
 
         // Custom badges for TrangThai Column
         colTrangThai.setCellFactory(column -> new TableCell<NhanVien, String>() {
@@ -84,7 +79,6 @@ public class QuanLyNhanVienController {
 
         // Bind filter change events
         txtSearch.textProperty().addListener((obs, oldValue, newValue) -> applyFilters(filtered));
-        cbTrangThaiFilter.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters(filtered));
 
         bindActionButtons();
         updateStats();
@@ -94,15 +88,8 @@ public class QuanLyNhanVienController {
         filtered.setPredicate(item -> {
             // Text Filter
             String text = txtSearch.getText();
-            boolean matchesText = SearchMatcher.containsKeyword(text,
+            return SearchMatcher.containsKeyword(text,
                     item.getMaNV(), item.getHoTen(), item.getMaSoThue(), item.getSoBHYT());
-
-            // Status Filter
-            String status = cbTrangThaiFilter.getValue();
-            boolean matchesStatus = status == null || status.equals("Tất cả trạng thái") ||
-                    item.getTrangThai().equalsIgnoreCase(status);
-
-            return matchesText && matchesStatus;
         });
     }
 

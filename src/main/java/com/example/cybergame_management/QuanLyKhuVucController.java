@@ -29,6 +29,7 @@ public class QuanLyKhuVucController {
     @FXML private TableColumn<KhuVuc, String> colTrangThai;
     @FXML private TableColumn<KhuVuc, String> colMoTa;
     @FXML private TextField txtSearch;
+    @FXML private Button btnInsert;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
     private final ObservableList<KhuVuc> data = DatabaseSeedData.khuVuc();
@@ -74,6 +75,21 @@ public class QuanLyKhuVucController {
         txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
         bindActionButtons();
         updateStats();
+
+        if (!UserSession.isAdmin()) {
+            if (btnInsert != null) {
+                btnInsert.setVisible(false);
+                btnInsert.setManaged(false);
+            }
+            if (btnDelete != null) {
+                btnDelete.setVisible(false);
+                btnDelete.setManaged(false);
+            }
+            if (btnUpdate != null) {
+                btnUpdate.setVisible(false);
+                btnUpdate.setManaged(false);
+            }
+        }
     }
 
     private boolean matchesFilter(KhuVuc item) {

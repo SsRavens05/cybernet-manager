@@ -50,11 +50,9 @@
 
                         <Region HBox.hgrow="ALWAYS" />
 
-                        <ComboBox fx:id="cbTrangThaiFilter" prefHeight="35.0" prefWidth="170.0" promptText="Tất cả trạng thái" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13px;" />
-
                         <TextField fx:id="txtSearch" promptText="Tìm mã ca, giờ..." prefHeight="35.0" prefWidth="220.0" styleClass="search-box" />
 
-                        <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
+                        <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
                         <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">
                             <graphic>
                                 <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">

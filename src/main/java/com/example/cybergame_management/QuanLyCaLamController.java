@@ -31,7 +31,7 @@ public class QuanLyCaLamController {
     @FXML private TableColumn<CaLam, String> colSoGioTangCa;
 
     @FXML private TextField txtSearch;
-    @FXML private ComboBox<String> cbTrangThaiFilter;
+    @FXML private Button btnInsert;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
@@ -45,10 +45,6 @@ public class QuanLyCaLamController {
         colSoGioLam.setCellValueFactory(cellData -> cellData.getValue().soGioLamProperty());
         colTrangThai.setCellValueFactory(cellData -> cellData.getValue().trangThaiProperty());
         colSoGioTangCa.setCellValueFactory(cellData -> cellData.getValue().soGioTangCaProperty());
-
-        // Setup filter choices
-        cbTrangThaiFilter.getItems().setAll("Tất cả trạng thái", "Đang làm", "Sắp tới", "Đã kết thúc");
-        cbTrangThaiFilter.setValue("Tất cả trạng thái");
 
         // Custom badges for TrangThai Column
         colTrangThai.setCellFactory(column -> new TableCell<CaLam, String>() {
@@ -100,25 +96,32 @@ public class QuanLyCaLamController {
         tbCaLam.setItems(filtered);
 
         txtSearch.textProperty().addListener((obs, oldValue, newValue) -> applyFilters(filtered));
-        cbTrangThaiFilter.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters(filtered));
 
         bindActionButtons();
         updateStats();
+
+        if (!UserSession.isAdmin()) {
+            if (btnInsert != null) {
+                btnInsert.setVisible(false);
+                btnInsert.setManaged(false);
+            }
+            if (btnDelete != null) {
+                btnDelete.setVisible(false);
+                btnDelete.setManaged(false);
+            }
+            if (btnUpdate != null) {
+                btnUpdate.setVisible(false);
+                btnUpdate.setManaged(false);
+            }
+        }
     }
 
     private void applyFilters(FilteredList<CaLam> filtered) {
         filtered.setPredicate(item -> {
             // Text Filter
             String text = txtSearch.getText();
-            boolean matchesText = SearchMatcher.containsKeyword(text,
+            return SearchMatcher.containsKeyword(text,
                     item.getMaCa(), item.getThoiGianBD(), item.getThoiGianKT(), item.getSoGioLam(), item.getSoGioTangCa());
-
-            // Status Filter
-            String status = cbTrangThaiFilter.getValue();
-            boolean matchesStatus = status == null || status.equals("Tất cả trạng thái") ||
-                    item.getTrangThai().equalsIgnoreCase(status);
-
-            return matchesText && matchesStatus;
         });
     }
 
@@ -200,6 +203,33 @@ public class QuanLyCaLamController {
             String sg = txtSoGio.getText().trim().isEmpty() ? "6h" : txtSoGio.getText().trim();
             String tc = txtTangCa.getText().trim().isEmpty() ? "—" : txtTangCa.getText().trim();
 
+            if (!validateThoiGianCaLam(bd, kt)) {
+                return;
+            }
+
+            try {
+                String clean = sg.replaceAll("[^0-9.-]", "").trim();
+                if (clean.isEmpty()) {
+                    throw new NumberFormatException();
+                }
+                double gio = Double.parseDouble(clean);
+                if (gio <= 0) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Cảnh báo ràng buộc");
+                    alert.setHeaderText("Vi phạm ràng buộc toàn vẹn R4");
+                    alert.setContentText("Số giờ làm của ca làm phải lớn hơn 0!");
+                    alert.showAndWait();
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Cảnh báo ràng buộc");
+                alert.setHeaderText("Dữ liệu không hợp lệ");
+                alert.setContentText("Số giờ làm phải là một số hợp lệ!");
+                alert.showAndWait();
+                return;
+            }
+
             data.add(new CaLam("CA" + String.format("%03d", data.size()+1), bd, kt, sg, cbTrangThai.getValue(), tc));
             updateStats();
             stage.close();
@@ -210,6 +240,29 @@ public class QuanLyCaLamController {
         Scene scene = new Scene(root); scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setScene(scene); stage.showAndWait();
+    }
+
+    private boolean validateThoiGianCaLam(String bd, String kt) {
+        try {
+            java.time.LocalTime tBD = java.time.LocalTime.parse(bd);
+            java.time.LocalTime tKT = java.time.LocalTime.parse(kt);
+            if (!tKT.isAfter(tBD)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Cảnh báo ràng buộc");
+                alert.setHeaderText("Vi phạm ràng buộc toàn vẹn R7");
+                alert.setContentText("Thời gian kết thúc ca làm phải lớn hơn thời gian bắt đầu ca làm!");
+                alert.showAndWait();
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Dữ liệu không hợp lệ");
+            alert.setHeaderText("Sai định dạng thời gian");
+            alert.setContentText("Thời gian phải đúng định dạng HH:mm (Ví dụ: 08:00)!");
+            alert.showAndWait();
+            return false;
+        }
     }
 
     @FXML

@@ -4,12 +4,21 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.effect.GaussianBlur?>
 
 <HBox prefHeight="600.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.LoginController">
     <children>
-        <StackPane prefWidth="500.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #1a1a1a;">
+        <StackPane fx:id="leftPane" prefWidth="500.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #111111;">
             <children>
-                <ImageView fitHeight="600.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="false">
+                <ImageView fitHeight="${leftPane.height}" fitWidth="${leftPane.width}" pickOnBounds="true" preserveRatio="false" opacity="0.6">
+                    <image>
+                        <Image url="@icons/login.jpg" />
+                    </image>
+                    <effect>
+                        <GaussianBlur radius="25.0" />
+                    </effect>
+                </ImageView>
+                <ImageView fitHeight="${leftPane.height}" fitWidth="${leftPane.width}" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@icons/login.jpg" />
                     </image>

@@ -92,6 +92,17 @@ public class QuanLyKhachHangController {
         txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
         bindActionButtons();
         updateStats();
+
+        if (!UserSession.isAdmin()) {
+            if (btnDelete != null) {
+                btnDelete.setVisible(false);
+                btnDelete.setManaged(false);
+            }
+            if (btnUpdate != null) {
+                btnUpdate.setVisible(false);
+                btnUpdate.setManaged(false);
+            }
+        }
     }
 
     private boolean matchesFilter(KhachHang item) {
@@ -177,9 +188,30 @@ public class QuanLyKhachHangController {
             if (txtHoTen.getText().isBlank()) {
                 return;
             }
+
+            String diemStr = txtSoDiemTichLuy.getText().trim();
+            try {
+                long diem = Long.parseLong(diemStr);
+                if (diem < 0) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Cảnh báo ràng buộc");
+                    alert.setHeaderText("Vi phạm ràng buộc toàn vẹn R2");
+                    alert.setContentText("Điểm tích lũy của khách hàng không được âm!");
+                    alert.showAndWait();
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Cảnh báo ràng buộc");
+                alert.setHeaderText("Dữ liệu không hợp lệ");
+                alert.setContentText("Số điểm tích lũy phải là một số nguyên hợp lệ!");
+                alert.showAndWait();
+                return;
+            }
+
             String maKH = "KH" + String.format("%03d", data.size() + 1);
             data.add(new KhachHang(maKH, txtHoTen.getText(), String.valueOf(DisplayFormat.parseMoney(txtSoDu.getText())),
-                    txtSoDiemTichLuy.getText(), cbTrangThai.getValue(), LocalDate.now().toString()));
+                    diemStr, cbTrangThai.getValue(), LocalDate.now().toString()));
             updateStats();
             stage.close();
         });

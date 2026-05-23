@@ -175,7 +175,24 @@ public class QuanLyThietBiController {
         Button bLuu = new Button("Thêm mới"); // Nút ghi chữ "Thêm mới" như ảnh
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
-            data.add(new ThietBi(txtMaTB.getText(), txtTenTB.getText(), cbLoai.getValue(), cbTrangThai.getValue(), txtNgayMua.getText()));
+            String maPC = txtNgayMua.getText().trim();
+            String trangThai = cbTrangThai.getValue();
+
+            if ("HOATDONG".equals(trangThai)) {
+                long count = data.stream()
+                        .filter(tb -> maPC.equalsIgnoreCase(tb.getNgayMua()) && "HOATDONG".equals(tb.getTrangThai()))
+                        .count();
+                if (count >= 10) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Cảnh báo ràng buộc");
+                    alert.setHeaderText("Vi phạm ràng buộc toàn vẹn R18");
+                    alert.setContentText("Một máy tính đang hoạt động chỉ được gắn tối đa 10 thiết bị!");
+                    alert.showAndWait();
+                    return;
+                }
+            }
+
+            data.add(new ThietBi(txtMaTB.getText(), txtTenTB.getText(), cbLoai.getValue(), trangThai, maPC));
             updateStats();
             stage.close();
         });
@@ -271,7 +288,7 @@ public class QuanLyThietBiController {
 
             // Lấy Controller và truyền dữ liệu
             UpdateThietBiController updateCtrl = loader.getController();
-            updateCtrl.setThietBiData(selectedItem);
+            updateCtrl.setThietBiData(selectedItem, data);
 
             // Hiện Popup
             Stage stage = new Stage();
