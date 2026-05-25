@@ -73,6 +73,8 @@
                     <columns>
                         <TableColumn fx:id="colMaNV" prefWidth="90.0" text="Mã NV" />
                         <TableColumn fx:id="colHoTen" prefWidth="180.0" text="Họ Tên" />
+                        <TableColumn fx:id="colChucVu" prefWidth="130.0" text="Loại Nhân Viên" />
+                        <TableColumn fx:id="colCaLam" prefWidth="130.0" text="Ca Làm" />
                         <TableColumn fx:id="colMaSoThue" prefWidth="130.0" text="Mã số thuế" />
                         <TableColumn fx:id="colSoBHYT" prefWidth="180.0" text="Số BHYT" />
                         <TableColumn fx:id="colNgayVao" prefWidth="130.0" text="Ngày vào làm" />

@@ -57,6 +57,26 @@ final class DoiQuaRepository {
         }
     }
 
+    static void update(DoiQua dq) throws SQLException {
+        ensureRequiredDataExist(dq.getMaQT(), dq.getMaKH());
+
+        String sql = """
+                UPDATE LICHSUDOIQUA
+                SET MAKH = ?, MAQT = ?, SL = ?, TRANGTHAI = ?
+                WHERE MADQ = ? AND NVL(IS_DELETE, 0) = 0
+                """;
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, dq.getMaKH());
+            statement.setString(2, dq.getMaQT());
+            statement.setLong(3, Long.parseLong(dq.getSoLuong().trim()));
+            statement.setString(4, dq.getTrangThai());
+            statement.setString(5, dq.getMaDQ());
+            statement.executeUpdate();
+        }
+    }
+
     private static void ensureRequiredDataExist(String maqt, String makh) throws SQLException {
         // Đảm bảo quà tặng tồn tại để tránh vi phạm FK_LSDQ_QT
         String sqlQt = "MERGE INTO QUA_TANG USING DUAL ON (MAQT = ?) WHEN NOT MATCHED THEN INSERT (MAQT, SODIEMTIEUHAO, NOIDUNG) VALUES (?, 100, 'Qua tang mac dinh')";

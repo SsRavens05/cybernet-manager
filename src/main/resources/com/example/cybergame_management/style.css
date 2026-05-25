@@ -274,6 +274,7 @@
 .badge-purple { -fx-background-color: #a855f7; -fx-text-fill: white; }
 .badge-info { -fx-background-color: #06b6d4; -fx-text-fill: white; }
 .badge-default { -fx-background-color: #f3f4f6; -fx-text-fill: #4b5563; }  /* Xám */
+.badge-indigo { -fx-background-color: #6366f1; -fx-text-fill: white; }   /* Indigo */
 
 .money-income {
     -fx-text-fill: #22c55e;

@@ -18,6 +18,8 @@ final class KhuyenMaiRepository {
     }
 
     static ObservableList<KhuyenMai> findAll() throws SQLException {
+        checkAndAddTrangThaiColumn();
+
         String sql = """
                 SELECT MACTR, TENCTR, NGBD, NGKT, CHIETKHAU, LOAICTR, TRANGTHAI
                 FROM CHUONG_TRINH_KHUYEN_MAI
@@ -152,5 +154,34 @@ final class KhuyenMaiRepository {
             return (long) chietKhau + "h";
         }
         return String.valueOf(chietKhau);
+    }
+
+    private static void checkAndAddTrangThaiColumn() {
+        if (!isDatabaseEnabled()) {
+            return;
+        }
+        String checkSql = """
+                SELECT COLUMN_NAME 
+                FROM USER_TAB_COLUMNS 
+                WHERE TABLE_NAME = 'CHUONG_TRINH_KHUYEN_MAI' 
+                  AND COLUMN_NAME = 'TRANGTHAI'
+                """;
+        
+        String alterSql = "ALTER TABLE CHUONG_TRINH_KHUYEN_MAI ADD TRANGTHAI VARCHAR2(100)";
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement stmtCheck = connection.prepareStatement(checkSql)) {
+            try (ResultSet rs = stmtCheck.executeQuery()) {
+                if (!rs.next()) {
+                    // Column is missing, let's add it
+                    try (PreparedStatement stmtAlter = connection.prepareStatement(alterSql)) {
+                        stmtAlter.executeUpdate();
+                        System.out.println("Successfully added column TRANGTHAI to CHUONG_TRINH_KHUYEN_MAI!");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Note: could not check or alter CHUONG_TRINH_KHUYEN_MAI: " + e.getMessage());
+        }
     }
 }

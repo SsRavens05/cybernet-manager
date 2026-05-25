@@ -17,9 +17,12 @@ final class KhuVucRepository {
     }
 
     static ObservableList<KhuVuc> findAll() throws SQLException {
-        // Thực hiện JOIN để lấy giá thuê GIA từ bảng LOAIKHUVUC
+        if (DatabaseConnection.isConfigured()) {
+            LoaiKhuVucRepository.findAll();
+        }
+        // Thực hiện JOIN để lấy giá thuê GIA và tên loại TENLOAIKV từ bảng LOAIKHUVUC
         String sql = """
-                SELECT kv.MAKV, kv.TENKV, kv.SOMAYKV, lkv.GIA, kv.TRANGTHAI, nvl(kv.MALOAIKV, 'LKV_DEFAULT') AS MALOAIKV
+                SELECT kv.MAKV, kv.TENKV, kv.SOMAYKV, lkv.GIA, kv.TRANGTHAI, nvl(kv.MALOAIKV, 'LKV_DEFAULT') AS MALOAIKV, lkv.TENLOAIKV
                 FROM KHUVUC kv
                 LEFT JOIN LOAIKHUVUC lkv ON lkv.MALOAIKV = kv.MALOAIKV
                 WHERE NVL(kv.IS_DELETE, 0) = 0
@@ -31,13 +34,22 @@ final class KhuVucRepository {
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
+                String tenLkv = resultSet.getString("TENLOAIKV");
+                if (tenLkv == null || tenLkv.trim().isEmpty()) {
+                    tenLkv = resultSet.getString("MALOAIKV");
+                }
+                if ("LKV001".equalsIgnoreCase(tenLkv)) tenLkv = "VIP";
+                else if ("LKV002".equalsIgnoreCase(tenLkv)) tenLkv = "Thường";
+                else if ("LKV003".equalsIgnoreCase(tenLkv)) tenLkv = "Esport";
+                else if ("LKV004".equalsIgnoreCase(tenLkv)) tenLkv = "Offline";
+
                 result.add(new KhuVuc(
                         resultSet.getString("MAKV"),
                         resultSet.getString("TENKV"),
                         String.valueOf(resultSet.getLong("SOMAYKV")),
                         String.valueOf(resultSet.getLong("GIA")) + "đ",
                         resultSet.getString("TRANGTHAI"),
-                        resultSet.getString("MALOAIKV")
+                        tenLkv
                 ));
             }
         }
@@ -45,93 +57,69 @@ final class KhuVucRepository {
     }
 
     static void insert(KhuVuc kv) throws SQLException {
-        String maloaikv = "LKV_" + kv.getMaKV();
-
-        // 1. Thêm/Merge loại khu vực mới chứa giá tiền
-        String sqlLkv = "MERGE INTO LOAIKHUVUC USING DUAL ON (MALOAIKV = ?) " +
-                "WHEN MATCHED THEN UPDATE SET GIA = ?, TENLOAIKV = ? " +
-                "WHEN NOT MATCHED THEN INSERT (MALOAIKV, TENLOAIKV, GIA) VALUES (?, ?, ?)";
-
-        // 2. Thêm mới khu vực
+        if (DatabaseConnection.isConfigured()) {
+            LoaiKhuVucRepository.findAll();
+        }
         String sqlKv = """
                 INSERT INTO KHUVUC (MAKV, TENKV, SOMAYKV, TRANGTHAI, MALOAIKV, IS_DELETE)
                 VALUES (?, ?, ?, ?, ?, 0)
                 """;
 
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            connection.setAutoCommit(false);
-            try {
-                try (PreparedStatement stmtLkv = connection.prepareStatement(sqlLkv)) {
-                    stmtLkv.setString(1, maloaikv);
-                    stmtLkv.setLong(2, DisplayFormat.parseMoney(kv.getGiaThue()));
-                    stmtLkv.setString(3, kv.getTenKV() + " Type");
-                    stmtLkv.setString(4, maloaikv);
-                    stmtLkv.setString(5, kv.getTenKV() + " Type");
-                    stmtLkv.setLong(6, DisplayFormat.parseMoney(kv.getGiaThue()));
-                    stmtLkv.executeUpdate();
-                }
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement stmtKv = connection.prepareStatement(sqlKv)) {
+            stmtKv.setString(1, kv.getMaKV());
+            stmtKv.setString(2, kv.getTenKV());
+            stmtKv.setLong(3, DisplayFormat.parseInt(kv.getSoMay()));
+            stmtKv.setString(4, kv.getTrangThai());
 
-                try (PreparedStatement stmtKv = connection.prepareStatement(sqlKv)) {
-                    stmtKv.setString(1, kv.getMaKV());
-                    stmtKv.setString(2, kv.getTenKV());
-                    stmtKv.setLong(3, DisplayFormat.parseInt(kv.getSoMay()));
-                    stmtKv.setString(4, kv.getTrangThai());
-                    stmtKv.setString(5, maloaikv);
-                    stmtKv.executeUpdate();
-                }
-                connection.commit();
-            } catch (SQLException e) {
-                connection.rollback();
-                throw e;
-            } finally {
-                connection.setAutoCommit(true);
+            String malnv = kv.getMoTa();
+            if ("VIP".equalsIgnoreCase(malnv) || "LKV001".equalsIgnoreCase(malnv)) {
+                stmtKv.setString(5, "LKV001");
+            } else if ("Thường".equalsIgnoreCase(malnv) || "LKV002".equalsIgnoreCase(malnv)) {
+                stmtKv.setString(5, "LKV002");
+            } else if ("Esport".equalsIgnoreCase(malnv) || "LKV003".equalsIgnoreCase(malnv)) {
+                stmtKv.setString(5, "LKV003");
+            } else if ("Offline".equalsIgnoreCase(malnv) || "LKV004".equalsIgnoreCase(malnv)) {
+                stmtKv.setString(5, "LKV004");
+            } else {
+                stmtKv.setString(5, "LKV002"); // default fallback
             }
+
+            stmtKv.executeUpdate();
         }
     }
 
     static void update(KhuVuc kv) throws SQLException {
-        String maloaikv = "LKV_" + kv.getMaKV();
-
-        // 1. Cập nhật giá tiền trong LOAIKHUVUC
-        String sqlLkv = "MERGE INTO LOAIKHUVUC USING DUAL ON (MALOAIKV = ?) " +
-                "WHEN MATCHED THEN UPDATE SET GIA = ?, TENLOAIKV = ? " +
-                "WHEN NOT MATCHED THEN INSERT (MALOAIKV, TENLOAIKV, GIA) VALUES (?, ?, ?)";
-
-        // 2. Cập nhật thông tin trong KHUVUC
+        if (DatabaseConnection.isConfigured()) {
+            LoaiKhuVucRepository.findAll();
+        }
         String sqlKv = """
                 UPDATE KHUVUC
                 SET TENKV = ?, SOMAYKV = ?, TRANGTHAI = ?, MALOAIKV = ?
                 WHERE MAKV = ?
                 """;
 
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            connection.setAutoCommit(false);
-            try {
-                try (PreparedStatement stmtLkv = connection.prepareStatement(sqlLkv)) {
-                    stmtLkv.setString(1, maloaikv);
-                    stmtLkv.setLong(2, DisplayFormat.parseMoney(kv.getGiaThue()));
-                    stmtLkv.setString(3, kv.getTenKV() + " Type");
-                    stmtLkv.setString(4, maloaikv);
-                    stmtLkv.setString(5, kv.getTenKV() + " Type");
-                    stmtLkv.setLong(6, DisplayFormat.parseMoney(kv.getGiaThue()));
-                    stmtLkv.executeUpdate();
-                }
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement stmtKv = connection.prepareStatement(sqlKv)) {
+            stmtKv.setString(1, kv.getTenKV());
+            stmtKv.setLong(2, DisplayFormat.parseInt(kv.getSoMay()));
+            stmtKv.setString(3, kv.getTrangThai());
 
-                try (PreparedStatement stmtKv = connection.prepareStatement(sqlKv)) {
-                    stmtKv.setString(1, kv.getTenKV());
-                    stmtKv.setLong(2, DisplayFormat.parseInt(kv.getSoMay()));
-                    stmtKv.setString(3, kv.getTrangThai());
-                    stmtKv.setString(4, maloaikv);
-                    stmtKv.setString(5, kv.getMaKV());
-                    stmtKv.executeUpdate();
-                }
-                connection.commit();
-            } catch (SQLException e) {
-                connection.rollback();
-                throw e;
-            } finally {
-                connection.setAutoCommit(true);
+            String malnv = kv.getMoTa();
+            if ("VIP".equalsIgnoreCase(malnv) || "LKV001".equalsIgnoreCase(malnv)) {
+                stmtKv.setString(4, "LKV001");
+            } else if ("Thường".equalsIgnoreCase(malnv) || "LKV002".equalsIgnoreCase(malnv)) {
+                stmtKv.setString(4, "LKV002");
+            } else if ("Esport".equalsIgnoreCase(malnv) || "LKV003".equalsIgnoreCase(malnv)) {
+                stmtKv.setString(4, "LKV003");
+            } else if ("Offline".equalsIgnoreCase(malnv) || "LKV004".equalsIgnoreCase(malnv)) {
+                stmtKv.setString(4, "LKV004");
+            } else {
+                stmtKv.setString(4, "LKV002"); // default fallback
             }
+
+            stmtKv.setString(5, kv.getMaKV());
+            stmtKv.executeUpdate();
         }
     }
 

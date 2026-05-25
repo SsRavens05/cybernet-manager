@@ -53,8 +53,8 @@
 
                         <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                             <children>
-                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Giá Thuê/h" />
-                                <TextField fx:id="txtGiaThue" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Giá Thuê/h (Tự động)" />
+                                <TextField fx:id="txtGiaThue" editable="false" prefHeight="40.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #64748b; -fx-padding: 0 15 0 15;" />
                             </children>
                         </VBox>
                     </children>
@@ -62,15 +62,15 @@
 
                 <VBox spacing="8.0">
                     <children>
-                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Trạng Thái" />
-                        <ComboBox fx:id="cbTrangThai" maxWidth="2000.0" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Loại Khu Vực *" />
+                        <ComboBox fx:id="cbLoaiKV" maxWidth="2000.0" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
                     </children>
                 </VBox>
 
                 <VBox spacing="8.0">
                     <children>
-                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Mô Tả" />
-                        <TextField fx:id="txtMoTa" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Trạng Thái" />
+                        <ComboBox fx:id="cbTrangThai" maxWidth="2000.0" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
                     </children>
                 </VBox>
             </children>

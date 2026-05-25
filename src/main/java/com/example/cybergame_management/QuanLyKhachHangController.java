@@ -164,6 +164,19 @@ public class QuanLyKhachHangController {
         txtHoTen.setPrefWidth(350);
         TextField txtSoDu = new TextField("0");
         TextField txtSoDiemTichLuy = new TextField("0");
+        txtSoDiemTichLuy.setEditable(false);
+        txtSoDiemTichLuy.setStyle("-fx-background-color: #f3f4f6; -fx-text-fill: #6b7280; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6;");
+        
+        txtSoDu.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                long soDu = DisplayFormat.parseMoney(newVal);
+                long points = soDu / 1000;
+                txtSoDiemTichLuy.setText(String.valueOf(points));
+            } catch (Exception e) {
+                txtSoDiemTichLuy.setText("0");
+            }
+        });
+
         ComboBox<String> cbTrangThai = new ComboBox<>(FXCollections.observableArrayList("ACTIVE", "INACTIVE", "BANNED"));
         cbTrangThai.setValue("ACTIVE");
         cbTrangThai.setPrefWidth(165);

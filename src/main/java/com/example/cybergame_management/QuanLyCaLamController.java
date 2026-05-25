@@ -172,6 +172,12 @@ public class QuanLyCaLamController {
         TextField txtBD = new TextField(); txtBD.setPromptText("Ví dụ: 08:00");
         TextField txtKT = new TextField(); txtKT.setPromptText("Ví dụ: 14:00");
         TextField txtSoGio = new TextField("6h");
+        txtSoGio.setEditable(false);
+        txtSoGio.setStyle("-fx-background-color: #f3f4f6; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-text-fill: #6b7280;");
+        
+        txtBD.textProperty().addListener((obs, oldVal, newVal) -> calculateDuration(txtBD, txtKT, txtSoGio));
+        txtKT.textProperty().addListener((obs, oldVal, newVal) -> calculateDuration(txtBD, txtKT, txtSoGio));
+
         TextField txtTangCa = new TextField("—");
         ComboBox<String> cbTrangThai = new ComboBox<>(FXCollections.observableArrayList("Đang làm", "Sắp tới", "Đã kết thúc"));
         cbTrangThai.setValue("Sắp tới");
@@ -179,7 +185,7 @@ public class QuanLyCaLamController {
         grid.add(new Label("Mã Ca (Tự động)"), 0, 0); grid.add(new TextField("CA" + String.format("%03d", data.size()+1)), 0, 1);
         grid.add(new Label("Giờ Bắt Đầu *"), 0, 2); grid.add(txtBD, 0, 3);
         grid.add(new Label("Giờ Kết Thúc *"), 0, 4); grid.add(txtKT, 0, 5);
-        grid.add(new Label("Số Giờ Làm"), 0, 6); grid.add(txtSoGio, 0, 7);
+        grid.add(new Label("Số Giờ Làm (Tự động)"), 0, 6); grid.add(txtSoGio, 0, 7);
         grid.add(new Label("Số Giờ Tăng Ca"), 0, 8); grid.add(txtTangCa, 0, 9);
         grid.add(new Label("Trạng thái"), 0, 10); grid.add(cbTrangThai, 0, 11);
 
@@ -189,7 +195,9 @@ public class QuanLyCaLamController {
             } else if (n instanceof TextField) {
                 TextField tf = (TextField) n;
                 tf.setPrefHeight(38.0);
-                tf.setStyle("-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6;");
+                if (tf != txtSoGio) {
+                    tf.setStyle("-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6;");
+                }
                 if (grid.getRowIndex(n) == 1) {
                     tf.setEditable(false);
                     tf.setStyle("-fx-background-color: #f3f4f6; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-text-fill: #6b7280;");
@@ -377,6 +385,29 @@ public class QuanLyCaLamController {
             updateStats();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void calculateDuration(TextField txtBD, TextField txtKT, TextField txtSoGio) {
+        String bd = txtBD.getText().trim();
+        String kt = txtKT.getText().trim();
+        if (bd.isEmpty() || kt.isEmpty()) {
+            return;
+        }
+        try {
+            java.time.LocalTime tBD = java.time.LocalTime.parse(bd);
+            java.time.LocalTime tKT = java.time.LocalTime.parse(kt);
+            if (tKT.isAfter(tBD)) {
+                java.time.Duration duration = java.time.Duration.between(tBD, tKT);
+                double hours = duration.toMinutes() / 60.0;
+                if (hours == (long) hours) {
+                    txtSoGio.setText((long) hours + "h");
+                } else {
+                    txtSoGio.setText(String.format(java.util.Locale.US, "%.1fh", hours));
+                }
+            }
+        } catch (Exception e) {
+            // ignore while typing incomplete/invalid times
         }
     }
 }

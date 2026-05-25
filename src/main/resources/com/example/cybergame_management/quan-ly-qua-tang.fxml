@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyDoiQuaController">
+<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyQuaTangController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -16,10 +16,10 @@
             <children>
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-purple" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Số Lần Đổi" textFill="WHITE">
+                        <Label layoutX="20.0" layoutY="20.0" text="Tổng Số Quà Tặng" textFill="WHITE">
                             <font><Font name="System Bold" size="16.0" /></font>
                         </Label>
-                        <Label fx:id="lblTongDoiQua" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
+                        <Label fx:id="lblTongQuaTang" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
                             <font><Font name="System Bold" size="48.0" /></font>
                         </Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" stroke="TRANSPARENT" strokeType="INSIDE" AnchorPane.rightAnchor="20.0" />
@@ -28,10 +28,10 @@
 
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-blue" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Đang Chờ Duyệt" textFill="WHITE">
+                        <Label layoutX="20.0" layoutY="20.0" text="Tiêu Hao Cao Nhất" textFill="WHITE">
                             <font><Font name="System Bold" size="16.0" /></font>
                         </Label>
-                        <Label fx:id="lblDangCho" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
+                        <Label fx:id="lblDiemCaoNhat" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
                             <font><Font name="System Bold" size="48.0" /></font>
                         </Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" stroke="TRANSPARENT" strokeType="INSIDE" AnchorPane.rightAnchor="20.0" />
@@ -40,10 +40,10 @@
 
                 <AnchorPane prefHeight="130.0" styleClass="stat-card-yellow" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Số Loại Quà" textFill="WHITE">
+                        <Label layoutX="20.0" layoutY="20.0" text="Tiêu Hao Thấp Nhất" textFill="WHITE">
                             <font><Font name="System Bold" size="16.0" /></font>
                         </Label>
-                        <Label fx:id="lblSoLoaiQua" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
+                        <Label fx:id="lblDiemThapNhat" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
                             <font><Font name="System Bold" size="48.0" /></font>
                         </Label>
                         <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" stroke="TRANSPARENT" strokeType="INSIDE" AnchorPane.rightAnchor="20.0" />
@@ -57,7 +57,7 @@
             <children>
                 <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
                     <children>
-                        <Label text="Quản Lý Đổi Quà" styleClass="header-title" />
+                        <Label text="Danh Sách Quà Tặng" styleClass="header-title" />
                         <Region HBox.hgrow="ALWAYS" />
                         <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
                         <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
@@ -78,14 +78,11 @@
                     </children>
                 </HBox>
 
-                <TableView fx:id="tbDoiQua" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tbQuaTang" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colMaDQ" prefWidth="170.0" text="Mã ĐQ" />
-                        <TableColumn fx:id="colMaKH" prefWidth="120.0" text="Mã KH" />
-                        <TableColumn fx:id="colMaQT" prefWidth="120.0" text="Mã QT" />
-                        <TableColumn fx:id="colNgayDoi" prefWidth="150.0" text="Ngày Đổi" />
-                        <TableColumn fx:id="colSoLuong" prefWidth="100.0" text="Số Lượng" />
-                        <TableColumn fx:id="colTrangThai" prefWidth="150.0" text="Trạng Thái" />
+                        <TableColumn fx:id="colMaQT" prefWidth="150.0" text="Mã Quà Tặng" />
+                        <TableColumn fx:id="colNoiDung" prefWidth="450.0" text="Nội Dung Chi Tiết" />
+                        <TableColumn fx:id="colSoDiemTieuHao" prefWidth="180.0" text="Số Điểm Tiêu Hao" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

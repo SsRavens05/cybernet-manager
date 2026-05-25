@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:controller="com.example.cybergame_management.UpdateNhanVienController" prefWidth="480.0" spacing="15.0" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 12; -fx-border-radius: 12;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:controller="com.example.cybergame_management.UpdateNhanVienController" prefWidth="600.0" spacing="15.0" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 12; -fx-border-radius: 12;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <children>
 
         <HBox alignment="CENTER_LEFT">
@@ -25,63 +25,95 @@
         <VBox spacing="15.0">
             <children>
 
-                <VBox spacing="8.0">
+                <HBox spacing="20.0">
                     <children>
-                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Mã NV" />
-                        <TextField fx:id="txtMaNV" editable="false" prefHeight="40.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #64748b; -fx-padding: 0 15 0 15;" />
-                    </children>
-                </VBox>
-
-                <VBox spacing="8.0">
-                    <children>
-                        <HBox spacing="3.0">
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                             <children>
-                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Họ Tên" />
-                                <Label style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 13px;" text="*" />
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Mã NV" />
+                                <TextField fx:id="txtMaNV" editable="false" prefHeight="40.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #64748b; -fx-padding: 0 15 0 15;" />
                             </children>
-                        </HBox>
-                        <TextField fx:id="txtHoTen" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                        </VBox>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox spacing="3.0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Họ Tên" />
+                                        <Label style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 13px;" text="*" />
+                                    </children>
+                                </HBox>
+                                <TextField fx:id="txtHoTen" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                            </children>
+                        </VBox>
                     </children>
-                </VBox>
+                </HBox>
 
-                <VBox spacing="8.0">
+                <HBox spacing="20.0">
                     <children>
-                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Mã số thuế" />
-                        <TextField fx:id="txtMaSoThue" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox spacing="3.0">
+                                    <children>
+                                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Loại Nhân Viên" />
+                                        <Label style="-fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-font-size: 13px;" text="*" />
+                                    </children>
+                                </HBox>
+                                <ComboBox fx:id="cbChucVu" maxWidth="2000.0" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Mã số thuế" />
+                                <TextField fx:id="txtMaSoThue" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                            </children>
+                        </VBox>
                     </children>
-                </VBox>
+                </HBox>
 
-                <VBox spacing="8.0">
+                <HBox spacing="20.0">
                     <children>
-                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Số BHYT" />
-                        <TextField fx:id="txtSoBHYT" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
-                    </children>
-                </VBox>
-
-                <HBox spacing="15.0">
-                    <children>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Số BHYT" />
+                                <TextField fx:id="txtSoBHYT" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                            </children>
+                        </VBox>
                         <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                             <children>
                                 <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Ngày vào làm" />
                                 <TextField fx:id="txtNgayVao" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
                             </children>
                         </VBox>
+                    </children>
+                </HBox>
 
+                <HBox spacing="20.0">
+                    <children>
                         <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                             <children>
                                 <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Ngày thôi việc" />
                                 <TextField fx:id="txtNgayThoiViec" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
                             </children>
                         </VBox>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Trạng Thái" />
+                                <ComboBox fx:id="cbTrangThai" maxWidth="2000.0" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                            </children>
+                        </VBox>
                     </children>
                 </HBox>
 
-                <VBox spacing="8.0">
+                <HBox spacing="20.0">
                     <children>
-                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Trạng Thái" />
-                        <ComboBox fx:id="cbTrangThai" maxWidth="2000.0" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Ca Làm *" />
+                                <ComboBox fx:id="cbCaLam" maxWidth="2000.0" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS" />
                     </children>
-                </VBox>
+                </HBox>
 
             </children>
         </VBox>

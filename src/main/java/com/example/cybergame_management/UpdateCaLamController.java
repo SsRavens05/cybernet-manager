@@ -27,6 +27,12 @@ public class UpdateCaLamController {
         txtSoGioLam.setText(cl.getSoGioLam());
         txtSoGioTangCa.setText(cl.getSoGioTangCa());
 
+        txtSoGioLam.setEditable(false);
+        txtSoGioLam.setStyle("-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #64748b;");
+
+        txtThoiGianBD.textProperty().addListener((obs, oldVal, newVal) -> calculateDuration(txtThoiGianBD, txtThoiGianKT, txtSoGioLam));
+        txtThoiGianKT.textProperty().addListener((obs, oldVal, newVal) -> calculateDuration(txtThoiGianBD, txtThoiGianKT, txtSoGioLam));
+
         cbTrangThai.getItems().setAll("Đang làm", "Sắp tới", "Đã kết thúc");
         cbTrangThai.setValue(cl.getTrangThai());
     }
@@ -128,5 +134,28 @@ public class UpdateCaLamController {
     private void dongForm() {
         Stage stage = (Stage) txtMaCa.getScene().getWindow();
         stage.close();
+    }
+
+    private void calculateDuration(TextField txtBD, TextField txtKT, TextField txtSoGio) {
+        String bd = txtBD.getText().trim();
+        String kt = txtKT.getText().trim();
+        if (bd.isEmpty() || kt.isEmpty()) {
+            return;
+        }
+        try {
+            java.time.LocalTime tBD = java.time.LocalTime.parse(bd);
+            java.time.LocalTime tKT = java.time.LocalTime.parse(kt);
+            if (tKT.isAfter(tBD)) {
+                java.time.Duration duration = java.time.Duration.between(tBD, tKT);
+                double hours = duration.toMinutes() / 60.0;
+                if (hours == (long) hours) {
+                    txtSoGio.setText((long) hours + "h");
+                } else {
+                    txtSoGio.setText(String.format(java.util.Locale.US, "%.1fh", hours));
+                }
+            }
+        } catch (Exception e) {
+            // ignore while typing incomplete/invalid times
+        }
     }
 }

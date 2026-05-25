@@ -2,12 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyDoiQuaController">
+<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyLichSuDoiQuaController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -57,24 +56,9 @@
             <children>
                 <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
                     <children>
-                        <Label text="Quản Lý Đổi Quà" styleClass="header-title" />
+                        <Label text="Lịch Sử Đổi Quà (Chỉ Đọc)" styleClass="header-title" />
                         <Region HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
-                        <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
-                        <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">
-                            <graphic>
-                                <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
-                                    <image><Image url="@icons/xoa.png" /></image>
-                                </ImageView>
-                            </graphic>
-                        </Button>
-                        <Button fx:id="btnUpdate" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onUpdateClick" styleClass="btn-action" text="Update">
-                            <graphic>
-                                <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
-                                    <image><Image url="@icons/cap-nhat.png" /></image>
-                                </ImageView>
-                            </graphic>
-                        </Button>
+                        <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="240.0" styleClass="search-box" />
                     </children>
                 </HBox>
 

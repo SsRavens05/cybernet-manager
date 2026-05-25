@@ -57,8 +57,14 @@ public class UpdatePCController {
         cbMaKV.setItems(kvList);
         cbMaKV.setValue(pc.getMaKV());
 
-        cbTrangThai.getItems().setAll("HOATDONG", "BAOTRI");
-        cbTrangThai.setValue(pc.getTrangThai());
+        cbTrangThai.getItems().setAll("Hoạt động", "Bảo trì");
+        if ("HOATDONG".equalsIgnoreCase(pc.getTrangThai()) || "Hoạt động".equalsIgnoreCase(pc.getTrangThai())) {
+            cbTrangThai.setValue("Hoạt động");
+        } else if ("BAOTRI".equalsIgnoreCase(pc.getTrangThai()) || "Bảo trì".equalsIgnoreCase(pc.getTrangThai())) {
+            cbTrangThai.setValue("Bảo trì");
+        } else {
+            cbTrangThai.setValue(pc.getTrangThai());
+        }
     }
 
     @FXML
@@ -70,7 +76,15 @@ public class UpdatePCController {
         pcDangSua.setRom(txtRom.getText().trim());
         pcDangSua.setSoMay(txtSoMay.getText().trim());
         pcDangSua.setLoaiPC(txtLoaiPC.getText().trim());
-        pcDangSua.setTrangThai(cbTrangThai.getValue());
+        
+        String status = cbTrangThai.getValue();
+        if ("Bảo trì".equalsIgnoreCase(status)) {
+            pcDangSua.setTrangThai("BAOTRI");
+        } else if ("Hoạt động".equalsIgnoreCase(status)) {
+            pcDangSua.setTrangThai("HOATDONG");
+        } else {
+            pcDangSua.setTrangThai(status);
+        }
 
         dongForm();
     }

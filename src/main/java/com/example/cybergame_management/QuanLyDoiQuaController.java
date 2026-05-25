@@ -109,6 +109,21 @@ public class QuanLyDoiQuaController {
 
     @FXML
     public void onInsertClick() {
+        ObservableList<KhachHang> customers;
+        ObservableList<QuaTang> gifts;
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                customers = KhachHangRepository.findAll();
+                gifts = QuaTangRepository.findAll();
+            } else {
+                customers = DatabaseSeedData.khachHang();
+                gifts = DatabaseSeedData.quaTang();
+            }
+        } catch (Exception ex) {
+            customers = DatabaseSeedData.khachHang();
+            gifts = DatabaseSeedData.quaTang();
+        }
+
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.TRANSPARENT);
@@ -131,8 +146,20 @@ public class QuanLyDoiQuaController {
         grid.setHgap(15);
         grid.setVgap(15);
 
-        TextField txtMaKH = new TextField(); txtMaKH.setPromptText("Ví dụ: KH001");
-        TextField txtMaQT = new TextField(); txtMaQT.setPromptText("Ví dụ: QT01");
+        ComboBox<String> cbMaKH = new ComboBox<>();
+        for (KhachHang kh : customers) {
+            cbMaKH.getItems().add(kh.getMaKH() + " - " + kh.getHoTen());
+        }
+        cbMaKH.setPromptText("Chọn Khách Hàng *");
+        cbMaKH.setPrefWidth(400);
+
+        ComboBox<String> cbMaQT = new ComboBox<>();
+        for (QuaTang qt : gifts) {
+            cbMaQT.getItems().add(qt.getMaQT() + " - " + qt.getNoiDung() + " (" + qt.getSoDiemTieuHao() + " ⭐)");
+        }
+        cbMaQT.setPromptText("Chọn Quà Tặng *");
+        cbMaQT.setPrefWidth(400);
+
         TextField txtSoLuong = new TextField("1");
         TextField txtNgay = new TextField(LocalDate.now().toString());
 
@@ -140,12 +167,12 @@ public class QuanLyDoiQuaController {
         cbTrangThai.setValue("Pending");
         cbTrangThai.setPrefWidth(400);
 
-        for (Control c : new Control[]{txtMaKH, txtMaQT, txtSoLuong, txtNgay, cbTrangThai}) {
+        for (Control c : new Control[]{cbMaKH, cbMaQT, txtSoLuong, txtNgay, cbTrangThai}) {
             c.setPrefWidth(400);
         }
 
-        grid.add(new Label("Mã Khách Hàng *"), 0, 0); grid.add(txtMaKH, 0, 1);
-        grid.add(new Label("Mã Quà Tặng *"), 0, 2); grid.add(txtMaQT, 0, 3);
+        grid.add(new Label("Khách Hàng *"), 0, 0); grid.add(cbMaKH, 0, 1);
+        grid.add(new Label("Quà Tặng *"), 0, 2); grid.add(cbMaQT, 0, 3);
         grid.add(new Label("Số Lượng *"), 0, 4); grid.add(txtSoLuong, 0, 5);
         grid.add(new Label("Ngày Đổi"), 0, 6); grid.add(txtNgay, 0, 7);
         grid.add(new Label("Trạng Thái"), 0, 8); grid.add(cbTrangThai, 0, 9);
@@ -160,11 +187,15 @@ public class QuanLyDoiQuaController {
         Button bLuu = new Button("Lưu");
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
-            if (txtMaKH.getText().trim().isEmpty() || txtMaQT.getText().trim().isEmpty()) {
+            if (cbMaKH.getValue() == null || cbMaQT.getValue() == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Vui lòng chọn đầy đủ Khách Hàng và Quà Tặng!");
+                alert.showAndWait();
                 return;
             }
 
-            String maKH = txtMaKH.getText().trim().toUpperCase();
+            String maKH = cbMaKH.getValue().split(" - ")[0].trim();
+            String maQT = cbMaQT.getValue().split(" - ")[0].trim();
+            
             long count = data.stream()
                     .filter(dq -> dq.getMaKH().equalsIgnoreCase(maKH))
                     .count();
@@ -179,7 +210,7 @@ public class QuanLyDoiQuaController {
 
             String randomMillis = String.valueOf(System.currentTimeMillis()).substring(7);
             String maMoi = "DQ" + LocalDate.now().toString().replace("-", "") + randomMillis;
-            DoiQua newDQ = new DoiQua(maMoi, maKH, txtMaQT.getText().trim().toUpperCase(),
+            DoiQua newDQ = new DoiQua(maMoi, maKH, maQT,
                     txtNgay.getText(), txtSoLuong.getText(), cbTrangThai.getValue());
             try {
                 if (DatabaseConnection.isConfigured()) {
@@ -190,8 +221,17 @@ public class QuanLyDoiQuaController {
                 stage.close();
             } catch (java.sql.SQLException ex) {
                 ex.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu đổi quà vào Database: " + ex.getMessage());
-                alert.showAndWait();
+                String msg = ex.getMessage();
+                if (msg != null && msg.contains("20003")) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Không Đủ Điểm Tích Lũy");
+                    alert.setHeaderText("Đổi quà thất bại!");
+                    alert.setContentText("Khách hàng không đủ điểm tích lũy để thực hiện đổi quà này.");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu đổi quà vào Database: " + ex.getMessage());
+                    alert.showAndWait();
+                }
             }
         });
 
@@ -269,6 +309,21 @@ public class QuanLyDoiQuaController {
             return;
         }
 
+        ObservableList<KhachHang> customers;
+        ObservableList<QuaTang> gifts;
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                customers = KhachHangRepository.findAll();
+                gifts = QuaTangRepository.findAll();
+            } else {
+                customers = DatabaseSeedData.khachHang();
+                gifts = DatabaseSeedData.quaTang();
+            }
+        } catch (Exception ex) {
+            customers = DatabaseSeedData.khachHang();
+            gifts = DatabaseSeedData.quaTang();
+        }
+
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.TRANSPARENT);
@@ -279,7 +334,7 @@ public class QuanLyDoiQuaController {
         root.setPrefWidth(450);
 
         BorderPane header = new BorderPane();
-        Label lblTitle = new Label("Cập Nhật Trạng Thái Đổi Quà");
+        Label lblTitle = new Label("Cập Nhật Lịch Sử Đổi Quà");
         lblTitle.getStyleClass().add("dialog-header-text");
         Button btnX = new Button("✕");
         btnX.getStyleClass().add("dialog-close-btn");
@@ -291,11 +346,53 @@ public class QuanLyDoiQuaController {
         grid.setHgap(15);
         grid.setVgap(15);
 
+        ComboBox<String> cbMaKH = new ComboBox<>();
+        String selectedKhEntry = null;
+        for (KhachHang kh : customers) {
+            String entry = kh.getMaKH() + " - " + kh.getHoTen();
+            cbMaKH.getItems().add(entry);
+            if (kh.getMaKH().equalsIgnoreCase(selectedItem.getMaKH())) {
+                selectedKhEntry = entry;
+            }
+        }
+        if (selectedKhEntry != null) {
+            cbMaKH.setValue(selectedKhEntry);
+        } else {
+            cbMaKH.setValue(selectedItem.getMaKH());
+        }
+        cbMaKH.setPrefWidth(400);
+
+        ComboBox<String> cbMaQT = new ComboBox<>();
+        String selectedQtEntry = null;
+        for (QuaTang qt : gifts) {
+            String entry = qt.getMaQT() + " - " + qt.getNoiDung() + " (" + qt.getSoDiemTieuHao() + " ⭐)";
+            cbMaQT.getItems().add(entry);
+            if (qt.getMaQT().equalsIgnoreCase(selectedItem.getMaQT())) {
+                selectedQtEntry = entry;
+            }
+        }
+        if (selectedQtEntry != null) {
+            cbMaQT.setValue(selectedQtEntry);
+        } else {
+            cbMaQT.setValue(selectedItem.getMaQT());
+        }
+        cbMaQT.setPrefWidth(400);
+
+        TextField txtSoLuong = new TextField(selectedItem.getSoLuong());
+        txtSoLuong.setPrefWidth(400);
+
         ComboBox<String> cbTrangThai = new ComboBox<>(FXCollections.observableArrayList("Pending", "Completed", "Cancelled"));
         cbTrangThai.setValue(selectedItem.getTrangThai());
         cbTrangThai.setPrefWidth(400);
 
-        grid.add(new Label("Trạng Thái Mới *"), 0, 0); grid.add(cbTrangThai, 0, 1);
+        for (Control c : new Control[]{cbMaKH, cbMaQT, txtSoLuong, cbTrangThai}) {
+            c.setPrefWidth(400);
+        }
+
+        grid.add(new Label("Khách Hàng *"), 0, 0); grid.add(cbMaKH, 0, 1);
+        grid.add(new Label("Quà Tặng *"), 0, 2); grid.add(cbMaQT, 0, 3);
+        grid.add(new Label("Số Lượng *"), 0, 4); grid.add(txtSoLuong, 0, 5);
+        grid.add(new Label("Trạng Thái *"), 0, 6); grid.add(cbTrangThai, 0, 7);
 
         HBox footer = new HBox(10);
         footer.setAlignment(Pos.CENTER_RIGHT);
@@ -307,10 +404,53 @@ public class QuanLyDoiQuaController {
         Button bLuu = new Button("Lưu");
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
+            if (cbMaKH.getValue() == null || cbMaQT.getValue() == null || txtSoLuong.getText().trim().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Vui lòng chọn đầy đủ các thông tin bắt buộc!");
+                alert.showAndWait();
+                return;
+            }
+
+            String maKH = cbMaKH.getValue().split(" - ")[0].trim();
+            String maQT = cbMaQT.getValue().split(" - ")[0].trim();
+            String soLuongStr = txtSoLuong.getText().trim();
+
+            try {
+                long sl = Long.parseLong(soLuongStr);
+                if (sl <= 0) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException ex) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Số lượng phải là một số nguyên dương (> 0)!");
+                alert.showAndWait();
+                return;
+            }
+
+            selectedItem.setMaKH(maKH);
+            selectedItem.setMaQT(maQT);
+            selectedItem.setSoLuong(soLuongStr);
             selectedItem.setTrangThai(cbTrangThai.getValue());
-            tbDoiQua.refresh();
-            updateStats();
-            stage.close();
+
+            try {
+                if (DatabaseConnection.isConfigured()) {
+                    DoiQuaRepository.update(selectedItem);
+                }
+                tbDoiQua.refresh();
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                String msg = ex.getMessage();
+                if (msg != null && msg.contains("20003")) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Không Đủ Điểm Tích Lũy");
+                    alert.setHeaderText("Cập nhật đổi quà thất bại!");
+                    alert.setContentText("Khách hàng không đủ điểm tích lũy để thực hiện đổi quà này.");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi cập nhật đổi quà vào Database: " + ex.getMessage());
+                    alert.showAndWait();
+                }
+            }
         });
 
         footer.getChildren().addAll(bHuy, bLuu);

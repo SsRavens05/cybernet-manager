@@ -68,13 +68,16 @@ public class QuanLyPCController {
                     setGraphic(null);
                     setText(null);
                 } else {
-                    Label badge = new Label(item);
+                    Label badge = new Label();
                     badge.getStyleClass().add("badge");
-                    if (item.equals("HOATDONG")) {
+                    if (item.equalsIgnoreCase("HOATDONG") || item.equalsIgnoreCase("Hoạt động")) {
+                        badge.setText("Hoạt động");
                         badge.getStyleClass().add("badge-active"); // Xanh
-                    } else if (item.equals("BAOTRI")) {
+                    } else if (item.equalsIgnoreCase("BAOTRI") || item.equalsIgnoreCase("Bảo trì")) {
+                        badge.setText("Bảo trì");
                         badge.getStyleClass().add("badge-warning"); // Cam
                     } else {
+                        badge.setText(item);
                         badge.getStyleClass().add("badge-default"); // Xám
                     }
                     setGraphic(badge);
@@ -129,10 +132,10 @@ public class QuanLyPCController {
     private void updateStats() {
         lblTongPC.setText(String.valueOf(data.size()));
         lblPCHoatDong.setText(String.valueOf(data.stream()
-                .filter(pc -> "HOATDONG".equalsIgnoreCase(pc.getTrangThai()))
+                .filter(pc -> "HOATDONG".equalsIgnoreCase(pc.getTrangThai()) || "Hoạt động".equalsIgnoreCase(pc.getTrangThai()))
                 .count()));
         lblPCBaoTri.setText(String.valueOf(data.stream()
-                .filter(pc -> "BAOTRI".equalsIgnoreCase(pc.getTrangThai()))
+                .filter(pc -> "BAOTRI".equalsIgnoreCase(pc.getTrangThai()) || "Bảo trì".equalsIgnoreCase(pc.getTrangThai()))
                 .count()));
     }
 
@@ -202,8 +205,8 @@ public class QuanLyPCController {
         TextField txtSoMay = new TextField(String.valueOf(data.size() + 1));
         TextField txtLoaiPC = new TextField("VIP");
 
-        ComboBox<String> cbTrangThai = new ComboBox<>(FXCollections.observableArrayList("HOATDONG", "BAOTRI"));
-        cbTrangThai.setValue("HOATDONG");
+        ComboBox<String> cbTrangThai = new ComboBox<>(FXCollections.observableArrayList("Hoạt động", "Bảo trì"));
+        cbTrangThai.setValue("Hoạt động");
         cbTrangThai.setPrefWidth(400);
 
         grid.add(new Label("Mã PC *"), 0, 0); grid.add(txtMaPC, 0, 1);
@@ -268,7 +271,7 @@ public class QuanLyPCController {
                     txtRom.getText().trim(),
                     txtSoMay.getText().trim(),
                     txtLoaiPC.getText().trim(),
-                    cbTrangThai.getValue(),
+                    "Bảo trì".equalsIgnoreCase(cbTrangThai.getValue()) ? "BAOTRI" : "HOATDONG",
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             );
 

@@ -24,6 +24,8 @@ public class UpdateKhachHangController {
         txtSoDu.setText(DisplayFormat.money(DisplayFormat.parseMoney(kh.getSoDu())));
         txtSoDu.setEditable(false);
         txtSoDiemTichLuy.setText(kh.getSoDiemTichLuy());
+        txtSoDiemTichLuy.setEditable(false);
+        txtSoDiemTichLuy.setStyle("-fx-background-color: #f3f4f6; -fx-text-fill: #6b7280;");
 
         cbTrangThai.getItems().setAll("ACTIVE", "INACTIVE", "BANNED");
         cbTrangThai.setValue(kh.getTrangThai());

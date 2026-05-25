@@ -69,6 +69,33 @@ public class QuanLyKhuVucController {
             }
         });
 
+        // Tạo huy hiệu cho cột Loại Khu Vực
+        colMoTa.setCellFactory(column -> new TableCell<KhuVuc, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+                } else {
+                    Label badge = new Label(item);
+                    badge.getStyleClass().add("badge");
+                    if ("VIP".equalsIgnoreCase(item)) {
+                        badge.getStyleClass().add("badge-purple");
+                    } else if ("Thường".equalsIgnoreCase(item) || "Thuong".equalsIgnoreCase(item)) {
+                        badge.getStyleClass().add("badge-default");
+                    } else if ("Esport".equalsIgnoreCase(item)) {
+                        badge.getStyleClass().add("badge-active");
+                    } else if ("Offline".equalsIgnoreCase(item)) {
+                        badge.getStyleClass().add("badge-warning");
+                    } else {
+                        badge.getStyleClass().add("badge-default");
+                    }
+                    setGraphic(badge);
+                    setText(null);
+                }
+            }
+        });
+
         loadData();
 
         FilteredList<KhuVuc> filtered = new FilteredList<>(data, item -> true);
@@ -160,8 +187,19 @@ public class QuanLyKhuVucController {
 
         TextField txtTenKV = new TextField(); txtTenKV.setPrefWidth(400);
         TextField txtSoMay = new TextField("0");
-        TextField txtGiaThue = new TextField("0");
-        TextField txtMoTa = new TextField();
+        TextField txtGiaThue = new TextField("10.000đ");
+        txtGiaThue.setEditable(false);
+        txtGiaThue.setStyle("-fx-background-color: #f3f4f6; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-text-fill: #6b7280;");
+
+        ComboBox<String> cbLoaiKV = new ComboBox<>(FXCollections.observableArrayList("VIP", "Thường", "Esport", "Offline"));
+        cbLoaiKV.setValue("Thường");
+        cbLoaiKV.setPrefWidth(400);
+        cbLoaiKV.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if ("VIP".equals(newVal)) txtGiaThue.setText("15.000đ");
+            else if ("Thường".equals(newVal)) txtGiaThue.setText("10.000đ");
+            else if ("Esport".equals(newVal)) txtGiaThue.setText("20.000đ");
+            else if ("Offline".equals(newVal)) txtGiaThue.setText("8.000đ");
+        });
 
         ComboBox<String> cbTrangThai = new ComboBox<>(FXCollections.observableArrayList("HOATDONG", "BAOTRI", "DONG_CUA"));
         cbTrangThai.setValue("HOATDONG");
@@ -169,9 +207,27 @@ public class QuanLyKhuVucController {
 
         grid.add(new Label("Tên Khu Vực *"), 0, 0); grid.add(txtTenKV, 0, 1);
         grid.add(new Label("Số Máy"), 0, 2); grid.add(txtSoMay, 0, 3);
-        grid.add(new Label("Giá Thuê/h"), 0, 4); grid.add(txtGiaThue, 0, 5);
-        grid.add(new Label("Mô Tả"), 0, 6); grid.add(txtMoTa, 0, 7);
+        grid.add(new Label("Loại Khu Vực *"), 0, 4); grid.add(cbLoaiKV, 0, 5);
+        grid.add(new Label("Giá Thuê/h (Tự động)"), 0, 6); grid.add(txtGiaThue, 0, 7);
         grid.add(new Label("Trạng Thái"), 0, 8); grid.add(cbTrangThai, 0, 9);
+
+        // Styling elements in popup
+        for (javafx.scene.Node n : grid.getChildren()) {
+            if (n instanceof Label) {
+                ((Label) n).setStyle("-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 12px;");
+            } else if (n instanceof TextField) {
+                TextField tf = (TextField) n;
+                tf.setPrefHeight(38.0);
+                if (tf != txtGiaThue) {
+                    tf.setStyle("-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6;");
+                }
+            } else if (n instanceof ComboBox) {
+                ComboBox<?> cb = (ComboBox<?>) n;
+                cb.setPrefHeight(38.0);
+                cb.setMaxWidth(Double.MAX_VALUE);
+                cb.setStyle("-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6;");
+            }
+        }
 
         // Footer
         HBox footer = new HBox(10);
@@ -184,14 +240,19 @@ public class QuanLyKhuVucController {
         Button bLuu = new Button("Lưu");
         bLuu.getStyleClass().add("btn-save"); // Ăn CSS màu Xanh Lá
         bLuu.setOnAction(e -> {
+            if (txtTenKV.getText() == null || txtTenKV.getText().trim().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Vui lòng nhập Tên Khu Vực!");
+                alert.showAndWait();
+                return;
+            }
+
             // Tự động sinh mã KV mới
             String maMoi = "KV" + String.format("%03d", data.size() + 1);
 
-            // Xử lý thêm chữ "đ" vào giá thuê nếu người dùng gõ số không
             String gia = txtGiaThue.getText();
             if(!gia.endsWith("đ")) gia += "đ";
 
-            KhuVuc newKv = new KhuVuc(maMoi, txtTenKV.getText(), txtSoMay.getText(), gia, cbTrangThai.getValue(), txtMoTa.getText());
+            KhuVuc newKv = new KhuVuc(maMoi, txtTenKV.getText().trim(), txtSoMay.getText().trim(), gia, cbTrangThai.getValue(), cbLoaiKV.getValue());
             if (KhuVucRepository.isDatabaseEnabled()) {
                 try {
                     KhuVucRepository.insert(newKv);

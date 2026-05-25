@@ -11,7 +11,7 @@ public class UpdateKhuVucController {
     @FXML private TextField txtTenKV;
     @FXML private TextField txtSoMay;
     @FXML private TextField txtGiaThue;
-    @FXML private TextField txtMoTa;
+    @FXML private ComboBox<String> cbLoaiKV;
     @FXML private ComboBox<String> cbTrangThai;
 
     private KhuVuc khuVucDangSua;
@@ -23,7 +23,33 @@ public class UpdateKhuVucController {
         txtTenKV.setText(kv.getTenKV());
         txtSoMay.setText(kv.getSoMay());
         txtGiaThue.setText(kv.getGiaThue());
-        txtMoTa.setText(kv.getMoTa());
+
+        // Setup và đổ data cho ComboBox Loại Khu Vực
+        cbLoaiKV.getItems().setAll("VIP", "Thường", "Esport", "Offline");
+        String currentLkv = kv.getMoTa();
+        if (currentLkv != null) {
+            if (currentLkv.contains("VIP") || currentLkv.equalsIgnoreCase("LKV001")) {
+                cbLoaiKV.setValue("VIP");
+            } else if (currentLkv.contains("Thường") || currentLkv.contains("Thuong") || currentLkv.equalsIgnoreCase("LKV002")) {
+                cbLoaiKV.setValue("Thường");
+            } else if (currentLkv.contains("Esport") || currentLkv.equalsIgnoreCase("LKV003")) {
+                cbLoaiKV.setValue("Esport");
+            } else if (currentLkv.contains("Offline") || currentLkv.equalsIgnoreCase("LKV004")) {
+                cbLoaiKV.setValue("Offline");
+            } else {
+                cbLoaiKV.setValue("Thường");
+            }
+        } else {
+            cbLoaiKV.setValue("Thường");
+        }
+
+        // Đăng ký listener tự cập nhật Giá Thuê
+        cbLoaiKV.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if ("VIP".equals(newVal)) txtGiaThue.setText("15.000đ");
+            else if ("Thường".equals(newVal)) txtGiaThue.setText("10.000đ");
+            else if ("Esport".equals(newVal)) txtGiaThue.setText("20.000đ");
+            else if ("Offline".equals(newVal)) txtGiaThue.setText("8.000đ");
+        });
 
         cbTrangThai.getItems().setAll("HOATDONG", "BAOTRI", "DONG_CUA");
         cbTrangThai.setValue(kv.getTrangThai());
@@ -35,7 +61,7 @@ public class UpdateKhuVucController {
         khuVucDangSua.setSoMay(txtSoMay.getText());
         khuVucDangSua.setGiaThue(chuanHoaTien(txtGiaThue.getText()));
         khuVucDangSua.setTrangThai(cbTrangThai.getValue());
-        khuVucDangSua.setMoTa(txtMoTa.getText());
+        khuVucDangSua.setMoTa(cbLoaiKV.getValue());
 
         try {
             if (KhuVucRepository.isDatabaseEnabled()) {

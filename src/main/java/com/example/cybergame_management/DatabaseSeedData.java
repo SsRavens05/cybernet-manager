@@ -174,4 +174,16 @@ final class DatabaseSeedData {
     static ObservableList<DoiQua> doiQua() {
         return doiQuaData;
     }
+
+    private static final ObservableList<QuaTang> quaTangData = FXCollections.observableArrayList(
+            new QuaTang("QT01", "Gấu bông Teddy loại to", "150"),
+            new QuaTang("QT02", "Bàn phím cơ DareU EK87", "500"),
+            new QuaTang("QT03", "Nước uống Sting đỏ", "30"),
+            new QuaTang("QT04", "Chuột chơi game Logitech G102", "400"),
+            new QuaTang("QT05", "Tai nghe chụp tai gaming", "350")
+    );
+
+    static ObservableList<QuaTang> quaTang() {
+        return quaTangData;
+    }
 }
