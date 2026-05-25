@@ -23,4 +23,10 @@ public class DichVuDaDung {
     public StringProperty soLuongProperty() { return soLuong; }
     public StringProperty trangThaiProperty() { return trangThai; }
     public StringProperty thoiGianProperty() { return thoiGian; }
+
+    public String getMaDVDD() { return maDVDD.get(); }
+    public String getMaSP() { return maSP.get(); }
+    public String getSoLuong() { return soLuong.get(); }
+    public String getTrangThai() { return trangThai.get(); }
+    public String getThoiGian() { return thoiGian.get(); }
 }

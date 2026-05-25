@@ -35,10 +35,21 @@ public class QuanLyNhanVienController {
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
-    private final ObservableList<NhanVien> data = DatabaseSeedData.nhanVien();
+    private ObservableList<NhanVien> data = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                data = NhanVienRepository.findAll();
+            } else {
+                data = DatabaseSeedData.nhanVien();
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            data = DatabaseSeedData.nhanVien();
+        }
+
         colMaNV.setCellValueFactory(cellData -> cellData.getValue().maNVProperty());
         colHoTen.setCellValueFactory(cellData -> cellData.getValue().hoTenProperty());
         colMaSoThue.setCellValueFactory(cellData -> cellData.getValue().maSoThueProperty());
@@ -171,9 +182,19 @@ public class QuanLyNhanVienController {
             String ngayV = txtNgayVao.getText() == null || txtNgayVao.getText().trim().isEmpty() ? java.time.LocalDate.now().toString() : txtNgayVao.getText().trim();
             String ngayT = txtNgayThoi.getText() == null || txtNgayThoi.getText().trim().isEmpty() ? "—" : txtNgayThoi.getText().trim();
 
-            data.add(new NhanVien("NV" + String.format("%03d", data.size()+1), txtTen.getText(), mst, bhyt, ngayV, ngayT, cbTrangThai.getValue()));
-            updateStats();
-            stage.close();
+            NhanVien newNV = new NhanVien("NV" + String.format("%03d", data.size() + 1), txtTen.getText(), mst, bhyt, ngayV, ngayT, cbTrangThai.getValue());
+            try {
+                if (DatabaseConnection.isConfigured()) {
+                    NhanVienRepository.insert(newNV);
+                }
+                data.add(newNV);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu nhân viên vào Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
         footer.getChildren().addAll(bHuy, bLuu);
 
@@ -225,9 +246,18 @@ public class QuanLyNhanVienController {
         Button btnXoa = new Button("Xóa");
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
-            data.remove(selectedItem);
-            updateStats();
-            stage.close();
+            try {
+                if (DatabaseConnection.isConfigured()) {
+                    NhanVienRepository.softDelete(selectedItem.getMaNV());
+                }
+                data.remove(selectedItem);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi xóa nhân viên từ Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         bottomBox.getChildren().addAll(btnHuy, btnXoa);
@@ -260,6 +290,19 @@ public class QuanLyNhanVienController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             stage.showAndWait();
+
+            if (DatabaseConnection.isConfigured()) {
+                try {
+                    NhanVienRepository.update(selectedNV);
+                } catch (java.sql.SQLException ex) {
+                    ex.printStackTrace();
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Lỗi Database");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Không thể cập nhật nhân viên trong database: " + ex.getMessage());
+                    alert.showAndWait();
+                }
+            }
 
             tbNhanVien.refresh();
             updateStats();

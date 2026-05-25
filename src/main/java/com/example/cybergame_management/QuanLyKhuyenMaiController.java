@@ -31,10 +31,21 @@ public class QuanLyKhuyenMaiController {
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
-    private final ObservableList<KhuyenMai> data = DatabaseSeedData.khuyenMai();
+    private final ObservableList<KhuyenMai> data = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        try {
+            if (KhuyenMaiRepository.isDatabaseEnabled()) {
+                data.setAll(KhuyenMaiRepository.findAll());
+            } else {
+                data.setAll(DatabaseSeedData.khuyenMai());
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            data.setAll(DatabaseSeedData.khuyenMai());
+        }
+
         colMaCTR.setCellValueFactory(cellData -> cellData.getValue().maCTRProperty());
         colTenCTR.setCellValueFactory(cellData -> cellData.getValue().tenCTRProperty());
         colLoaiCTR.setCellValueFactory(cellData -> cellData.getValue().loaiCTRProperty());
@@ -201,23 +212,58 @@ public class QuanLyKhuyenMaiController {
             }
 
             if (isUpdate) {
+                String oldTen = item.getTenCTR();
+                String oldLoai = item.getLoaiCTR();
+                String oldCK = item.getChietKhau();
+                String oldNBD = item.getNgayBD();
+                String oldNKT = item.getNgayKT();
+                String oldTrangThai = item.getTrangThai();
+
                 item.setTenCTR(txtTen.getText());
                 item.setLoaiCTR(cbLoai.getValue());
                 item.setChietKhau(txtChietKhau.getText());
                 item.setNgayBD(nbd);
                 item.setNgayKT(nkt);
                 item.setTrangThai(cbTrangThai.getValue());
-                tbKhuyenMai.refresh();
+
+                try {
+                    if (KhuyenMaiRepository.isDatabaseEnabled()) {
+                        KhuyenMaiRepository.update(item);
+                    }
+                    tbKhuyenMai.refresh();
+                    updateStats();
+                    stage.close();
+                } catch (java.sql.SQLException ex) {
+                    ex.printStackTrace();
+                    item.setTenCTR(oldTen);
+                    item.setLoaiCTR(oldLoai);
+                    item.setChietKhau(oldCK);
+                    item.setNgayBD(oldNBD);
+                    item.setNgayKT(oldNKT);
+                    item.setTrangThai(oldTrangThai);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi cập nhật khuyến mãi: " + ex.getMessage());
+                    alert.showAndWait();
+                }
             } else {
                 String ma = txtMa.getText().trim();
                 if (ma.isEmpty()) {
-                    ma = "CTR" + String.format("%03d", data.size() + 1);
+                    ma = KhuyenMaiRepository.getNextMaCTR();
                 }
-                data.add(new KhuyenMai(ma, txtTen.getText(), cbLoai.getValue(), txtChietKhau.getText(),
-                        nbd, nkt, cbTrangThai.getValue()));
+                KhuyenMai newKM = new KhuyenMai(ma, txtTen.getText(), cbLoai.getValue(), txtChietKhau.getText(),
+                        nbd, nkt, cbTrangThai.getValue());
+                try {
+                    if (KhuyenMaiRepository.isDatabaseEnabled()) {
+                        KhuyenMaiRepository.insert(newKM);
+                    }
+                    data.add(newKM);
+                    updateStats();
+                    stage.close();
+                } catch (java.sql.SQLException ex) {
+                    ex.printStackTrace();
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi thêm khuyến mãi mới: " + ex.getMessage());
+                    alert.showAndWait();
+                }
             }
-            updateStats();
-            stage.close();
         });
         HBox footer = new HBox(10, cancel, save);
         footer.setAlignment(Pos.CENTER_RIGHT);
@@ -265,8 +311,17 @@ public class QuanLyKhuyenMaiController {
             return;
         }
         confirmDelete("Bạn có chắc muốn xóa chương trình này?", () -> {
-            data.remove(selected);
-            updateStats();
+            try {
+                if (KhuyenMaiRepository.isDatabaseEnabled()) {
+                    KhuyenMaiRepository.softDelete(selected.getMaCTR());
+                }
+                data.remove(selected);
+                updateStats();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi xóa khuyến mãi: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
     }
 

@@ -53,10 +53,17 @@ public class UpdateNhapHangController {
         nhapHangDangSua.setNguoiNhap(txtNguoiNhap.getText());
         nhapHangDangSua.setTrangThai(cbTrangThai.getValue());
 
-        // TODO: Gọi lệnh Update xuống CSDL Oracle ở đây.
-        System.out.println("Đã lưu cập nhật cho Mã PN: " + nhapHangDangSua.getMaPN());
-
-        dongForm();
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                NhapHangRepository.update(nhapHangDangSua);
+            }
+            System.out.println("Đã lưu cập nhật cho Mã PN: " + nhapHangDangSua.getMaPN());
+            dongForm();
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR, "Lỗi khi cập nhật phiếu nhập vào Database: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     @FXML

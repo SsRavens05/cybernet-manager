@@ -57,6 +57,16 @@ final class DatabaseSeedData {
         );
     }
 
+    static ObservableList<PC> pc() {
+        return FXCollections.observableArrayList(
+                new PC("PC001", "KV001", "Intel Core i7-12700K", "16GB", "RTX 3070", "512GB", "1", "VIP", "HOATDONG", "2026-05-01 08:00:00"),
+                new PC("PC002", "KV001", "Intel Core i7-12700K", "16GB", "RTX 3070", "512GB", "2", "VIP", "HOATDONG", "2026-05-01 08:30:00"),
+                new PC("PC003", "KV002", "AMD Ryzen 5 5600X", "16GB", "GTX 1660 Super", "256GB SSD", "3", "Thường", "HOATDONG", "2026-05-02 09:00:00"),
+                new PC("PC004", "KV002", "AMD Ryzen 5 5600X", "16GB", "GTX 1660 Super", "256GB SSD", "4", "Thường", "BAOTRI", "2026-05-02 09:15:00"),
+                new PC("PC005", "KV003", "Intel Core i9-13900K", "32GB", "RTX 4080", "1TB SSD", "5", "Esport", "HOATDONG", "2026-05-03 10:00:00")
+        );
+    }
+
     static ObservableList<LoaiKhuVuc> loaiKhuVuc() {
         return FXCollections.observableArrayList(
                 new LoaiKhuVuc("LKV001", "VIP", "10", "15000", "2025-01-01 08:00:00"),
@@ -105,13 +115,15 @@ final class DatabaseSeedData {
         );
     }
 
+    private static final ObservableList<SuKien> caLamData = FXCollections.observableArrayList(
+            // Screen reused for CA_LAM because the database has no SU_KIEN table.
+            new SuKien("CA_SANG", "Ca sang", "2026-05-20", "08:00", "12:00", "4", "0", "DANG_DIEN_RA"),
+            new SuKien("CA_CHIEU", "Ca chieu", "2026-05-20", "13:00", "17:00", "3", "0", "SAP_DIEN_RA"),
+            new SuKien("CA_TOI", "Ca toi", "2026-05-20", "18:00", "22:00", "3", "0", "SAP_DIEN_RA")
+    );
+
     static ObservableList<SuKien> caLam() {
-        return FXCollections.observableArrayList(
-                // Screen reused for CA_LAM because the database has no SU_KIEN table.
-                new SuKien("CA_SANG", "Ca sang", "2026-05-20", "08:00", "12:00", "4", "0", "DANG_DIEN_RA"),
-                new SuKien("CA_CHIEU", "Ca chieu", "2026-05-20", "13:00", "17:00", "3", "0", "SAP_DIEN_RA"),
-                new SuKien("CA_TOI", "Ca toi", "2026-05-20", "18:00", "22:00", "3", "0", "SAP_DIEN_RA")
-        );
+        return caLamData;
     }
 
     static ObservableList<QuanLyTaiChinhController.GiaoDich> giaoDich() {

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:controller="com.example.cybergame_management.UpdatePCController" prefWidth="500.0" spacing="15.0" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 12; -fx-border-radius: 12;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <HBox alignment="CENTER_LEFT">
+            <children>
+                <Label text="Cập Nhật PC" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1f2937;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button mnemonicParsing="false" onAction="#onHuyClick" style="-fx-background-color: transparent; -fx-text-fill: #9ca3af; -fx-font-size: 16px; -fx-cursor: hand;" text="✕" />
+            </children>
+        </HBox>
+
+        <Separator style="-fx-padding: 5 0 5 0;" />
+
+        <ScrollPane fitToWidth="true" prefHeight="350.0" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <content>
+                <VBox spacing="15.0" style="-fx-background-color: transparent;">
+                    <children>
+                        <VBox spacing="8.0">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Mã PC" />
+                                <TextField fx:id="txtMaPC" editable="false" prefHeight="40.0" style="-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #64748b; -fx-padding: 0 15 0 15;" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="8.0">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Khu Vực" />
+                                <ComboBox fx:id="cbMaKV" maxWidth="2000.0" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="8.0">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="CPU" />
+                                <TextField fx:id="txtCpu" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="8.0">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="RAM" />
+                                <TextField fx:id="txtRam" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="8.0">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="VGA" />
+                                <TextField fx:id="txtVga" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="8.0">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="ROM" />
+                                <TextField fx:id="txtRom" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                            </children>
+                        </VBox>
+
+                        <HBox spacing="15.0">
+                            <children>
+                                <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Số Máy" />
+                                        <TextField fx:id="txtSoMay" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Loại PC" />
+                                        <TextField fx:id="txtLoaiPC" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15 0 15;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <VBox spacing="8.0">
+                            <children>
+                                <Label style="-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 13px;" text="Trạng Thái" />
+                                <ComboBox fx:id="cbTrangThai" maxWidth="2000.0" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+
+        <Separator style="-fx-padding: 10 0 5 0;" />
+
+        <HBox alignment="CENTER_RIGHT" spacing="15.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#onHuyClick" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 25 0 25; -fx-font-weight: bold; -fx-text-fill: #4b5563; -fx-cursor: hand;" text="Hủy" />
+                <Button mnemonicParsing="false" onAction="#onLuuClick" prefHeight="40.0" style="-fx-background-color: #8b0000; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 0 25 0 25; -fx-cursor: hand;" text="Lưu thay đổi" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

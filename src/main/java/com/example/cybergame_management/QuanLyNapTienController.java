@@ -40,13 +40,27 @@ public class QuanLyNapTienController {
 
     @FXML
     public void initialize() {
-        cbKhachHang.setItems(FXCollections.observableArrayList(
-                "KH001 - Nguyen Van An",
-                "KH002 - Tran Thi Binh",
-                "KH003 - Le Minh Cuong",
-                "KH004 - Pham Thu Dung"
-        ));
-        cbKhuyenMai.setItems(FXCollections.observableArrayList("Khong", "Tang 10%", "Tang 20%"));
+        ObservableList<String> customerList = FXCollections.observableArrayList();
+        if (KhachHangRepository.isDatabaseEnabled()) {
+            try {
+                for (KhachHang kh : KhachHangRepository.findAll()) {
+                    customerList.add(kh.getMaKH() + " - " + kh.getHoTen());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Fallback to seed data in case of error
+                for (KhachHang kh : DatabaseSeedData.khachHang()) {
+                    customerList.add(kh.getMaKH() + " - " + kh.getHoTen());
+                }
+            }
+        } else {
+            for (KhachHang kh : DatabaseSeedData.khachHang()) {
+                customerList.add(kh.getMaKH() + " - " + kh.getHoTen());
+            }
+        }
+        cbKhachHang.setItems(customerList);
+
+        cbKhuyenMai.setItems(getPromotionsFromDb());
         cbKhuyenMai.setValue("Khong");
         cbPhuongThuc.setItems(FXCollections.observableArrayList("Tien mat", "Chuyen khoan", "Momo"));
         cbPhuongThuc.setValue("Tien mat");
@@ -100,6 +114,16 @@ public class QuanLyNapTienController {
         String khuyenMai = cbKhuyenMai.getValue();
         int diemCong = calculatePoints(soTien, khuyenMai);
 
+        if (KhachHangRepository.isDatabaseEnabled()) {
+            try {
+                KhachHangRepository.deposit(maKH, soTien, diemCong);
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                showError("Không thể nạp tiền vào database: " + ex.getMessage());
+                return;
+            }
+        }
+
         String maGD = "GD" + String.format("%03d", data.size() + 1);
         String thoiGian = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd\nHH:mm"));
         data.add(0, new NapTien(maGD, thoiGian, maKH, tenKH, String.valueOf(soTien), String.valueOf(diemCong),
@@ -114,13 +138,54 @@ public class QuanLyNapTienController {
 
     private int calculatePoints(long soTien, String khuyenMai) {
         int basePoints = (int) (soTien / 1000);
-        if ("Tang 10%".equals(khuyenMai)) {
-            return (int) Math.round(basePoints * 1.1);
+        if (khuyenMai == null || "Khong".equalsIgnoreCase(khuyenMai)) {
+            return basePoints;
         }
-        if ("Tang 20%".equals(khuyenMai)) {
-            return (int) Math.round(basePoints * 1.2);
-        }
+
+        try {
+            // Tự động tìm số phần trăm chiết khấu (ví dụ: "20%") trong chuỗi khuyến mãi để nhân điểm cộng
+            java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(\\d+)%").matcher(khuyenMai);
+            if (matcher.find()) {
+                double pct = Double.parseDouble(matcher.group(1));
+                return (int) Math.round(basePoints * (1.0 + pct / 100.0));
+            }
+        } catch (Exception ignored) {}
+
         return basePoints;
+    }
+
+    private ObservableList<String> getPromotionsFromDb() {
+        ObservableList<String> list = FXCollections.observableArrayList();
+        list.add("Khong");
+
+        if (!DatabaseConnection.isConfigured()) {
+            loadSeedPromotions(list);
+            return list;
+        }
+
+        // Truy vấn các chương trình khuyến mãi có Loại là GIAM_GIA (Giảm giá)
+        String sql = "SELECT TENCTR, CHIETKHAU FROM CHUONG_TRINH_KHUYEN_MAI WHERE (UPPER(LOAICTR) = 'GIAM_GIA' OR LOAICTR = N'Giảm giá') AND NVL(IS_DELETE, 0) = 0";
+        try (java.sql.Connection conn = DatabaseConnection.getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+             java.sql.ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String ten = rs.getString("TENCTR");
+                double chietKhau = rs.getDouble("CHIETKHAU");
+                list.add(ten + " (Giảm " + (int) chietKhau + "%)");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            loadSeedPromotions(list);
+        }
+        return list;
+    }
+
+    private void loadSeedPromotions(ObservableList<String> list) {
+        for (KhuyenMai km : DatabaseSeedData.khuyenMai()) {
+            if ("GIAM_GIA".equalsIgnoreCase(km.getLoaiCTR())) {
+                list.add(km.getTenCTR() + " (Giảm " + km.getChietKhau() + ")");
+            }
+        }
     }
 
     private TableCell<NapTien, String> badgeCell(String styleClass) {
@@ -166,6 +231,14 @@ public class QuanLyNapTienController {
     private void showWarning(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Thông báo");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Lỗi");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

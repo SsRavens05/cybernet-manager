@@ -63,8 +63,17 @@ public class UpdateThietBiController {
         thietBiĐangSua.setTrangThai(trangThai);
         thietBiĐangSua.setNgayMua(maPC);
 
-        // TODO: Gọi lệnh Update xuống CSDL Oracle ở đây
-        System.out.println("Đã lưu cập nhật cho Mã TB: " + thietBiĐangSua.getMaTB());
+        // Gọi lệnh Update xuống CSDL Oracle ở đây
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                ThietBiRepository.update(thietBiĐangSua);
+            }
+        } catch (java.sql.SQLException ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi cập nhật thiết bị vào Database: " + ex.getMessage());
+            alert.showAndWait();
+            return;
+        }
 
         dongForm();
     }

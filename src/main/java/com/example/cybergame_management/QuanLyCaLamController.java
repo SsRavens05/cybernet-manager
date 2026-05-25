@@ -35,10 +35,21 @@ public class QuanLyCaLamController {
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
-    private final ObservableList<CaLam> data = DatabaseSeedData.caLamShifts();
+    private final ObservableList<CaLam> data = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        try {
+            if (CaLamRepository.isDatabaseEnabled()) {
+                data.setAll(CaLamRepository.findAll());
+            } else {
+                data.setAll(DatabaseSeedData.caLamShifts());
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            data.setAll(DatabaseSeedData.caLamShifts());
+        }
+
         colMaCa.setCellValueFactory(cellData -> cellData.getValue().maCaProperty());
         colThoiGianBD.setCellValueFactory(cellData -> cellData.getValue().thoiGianBDProperty());
         colThoiGianKT.setCellValueFactory(cellData -> cellData.getValue().thoiGianKTProperty());
@@ -230,9 +241,19 @@ public class QuanLyCaLamController {
                 return;
             }
 
-            data.add(new CaLam("CA" + String.format("%03d", data.size()+1), bd, kt, sg, cbTrangThai.getValue(), tc));
-            updateStats();
-            stage.close();
+            CaLam newCa = new CaLam(CaLamRepository.getNextMaCa(), bd, kt, sg, cbTrangThai.getValue(), tc);
+            try {
+                if (CaLamRepository.isDatabaseEnabled()) {
+                    CaLamRepository.insert(newCa);
+                }
+                data.add(newCa);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu ca làm vào Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
         footer.getChildren().addAll(bHuy, bLuu);
 
@@ -307,9 +328,18 @@ public class QuanLyCaLamController {
         Button btnXoa = new Button("Xóa");
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
-            data.remove(selectedItem);
-            updateStats();
-            stage.close();
+            try {
+                if (CaLamRepository.isDatabaseEnabled()) {
+                    CaLamRepository.softDelete(selectedItem.getMaCa());
+                }
+                data.remove(selectedItem);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi xóa ca làm từ Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         bottomBox.getChildren().addAll(btnHuy, btnXoa);

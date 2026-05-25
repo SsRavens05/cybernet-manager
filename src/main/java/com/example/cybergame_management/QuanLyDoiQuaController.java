@@ -34,10 +34,20 @@ public class QuanLyDoiQuaController {
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
-    private final ObservableList<DoiQua> data = DatabaseSeedData.doiQua();
+    private ObservableList<DoiQua> data = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                data = DoiQuaRepository.findAll();
+            } else {
+                data = DatabaseSeedData.doiQua();
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            data = DatabaseSeedData.doiQua();
+        }
         colMaDQ.setCellValueFactory(cellData -> cellData.getValue().maDQProperty());
         colMaKH.setCellValueFactory(cellData -> cellData.getValue().maKHProperty());
         colMaQT.setCellValueFactory(cellData -> cellData.getValue().maQTProperty());
@@ -169,10 +179,20 @@ public class QuanLyDoiQuaController {
 
             String randomMillis = String.valueOf(System.currentTimeMillis()).substring(7);
             String maMoi = "DQ" + LocalDate.now().toString().replace("-", "") + randomMillis;
-            data.add(new DoiQua(maMoi, maKH, txtMaQT.getText().trim().toUpperCase(),
-                    txtNgay.getText(), txtSoLuong.getText(), cbTrangThai.getValue()));
-            updateStats();
-            stage.close();
+            DoiQua newDQ = new DoiQua(maMoi, maKH, txtMaQT.getText().trim().toUpperCase(),
+                    txtNgay.getText(), txtSoLuong.getText(), cbTrangThai.getValue());
+            try {
+                if (DatabaseConnection.isConfigured()) {
+                    DoiQuaRepository.insert(newDQ);
+                }
+                data.add(newDQ);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu đổi quà vào Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         footer.getChildren().addAll(bHuy, bLuu);

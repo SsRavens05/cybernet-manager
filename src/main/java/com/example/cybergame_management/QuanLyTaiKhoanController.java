@@ -33,10 +33,21 @@ public class QuanLyTaiKhoanController {
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
-    private final ObservableList<TaiKhoan> data = DatabaseSeedData.taiKhoan();
+    private ObservableList<TaiKhoan> data = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                data = TaiKhoanRepository.findAll();
+            } else {
+                data = DatabaseSeedData.taiKhoan();
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            data = DatabaseSeedData.taiKhoan();
+        }
+
         colTenDangNhap.setCellValueFactory(cellData -> cellData.getValue().tenDangNhapProperty());
         colMatKhau.setCellValueFactory(cellData -> cellData.getValue().matKhauProperty());
         colVaiTro.setCellValueFactory(cellData -> cellData.getValue().vaiTroProperty());
@@ -220,9 +231,19 @@ public class QuanLyTaiKhoanController {
                 return;
             }
 
-            data.add(new TaiKhoan(cleanUser, password, cbVaiTro.getValue(), cbTrangThai.getValue(), java.time.LocalDate.now().toString()));
-            updateStats();
-            stage.close();
+            TaiKhoan newTK = new TaiKhoan(cleanUser, password, cbVaiTro.getValue(), cbTrangThai.getValue(), java.time.LocalDate.now().toString());
+            try {
+                if (DatabaseConnection.isConfigured()) {
+                    TaiKhoanRepository.insert(newTK);
+                }
+                data.add(newTK);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu tài khoản vào Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
         footer.getChildren().addAll(bHuy, bLuu);
 
@@ -325,9 +346,18 @@ public class QuanLyTaiKhoanController {
             selected.setVaiTro(cbVaiTro.getValue());
             selected.setTrangThai(cbTrangThai.getValue());
 
-            tbTaiKhoan.refresh();
-            updateStats();
-            stage.close();
+            try {
+                if (DatabaseConnection.isConfigured()) {
+                    TaiKhoanRepository.update(selected);
+                }
+                tbTaiKhoan.refresh();
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi cập nhật tài khoản: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
         footer.getChildren().addAll(bHuy, bLuu);
 
@@ -381,9 +411,18 @@ public class QuanLyTaiKhoanController {
         Button btnXoa = new Button("Xóa");
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
-            data.remove(selected);
-            updateStats();
-            stage.close();
+            try {
+                if (DatabaseConnection.isConfigured()) {
+                    TaiKhoanRepository.softDelete(selected.getTenDangNhap());
+                }
+                data.remove(selected);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi xóa tài khoản từ Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         bottomBox.getChildren().addAll(btnHuy, btnXoa);

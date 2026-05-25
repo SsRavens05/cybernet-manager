@@ -24,6 +24,7 @@ public class MainController {
     private StackPane contentArea;
 
     @FXML private AnchorPane btnThietBi;
+    @FXML private AnchorPane btnPC;
     @FXML private AnchorPane btnKhachHang;
     @FXML private AnchorPane btnSubKhachHang;
     @FXML private AnchorPane btnNapTien;
@@ -174,7 +175,7 @@ public class MainController {
 
     private void setActiveMenu(AnchorPane activeBtn) {
         // Gom tất cả các nút vào 1 mảng để xử lý cho lẹ
-        AnchorPane[] allBtns = {btnThietBi, btnKhachHang, btnNhanVien, btnSanPham,
+        AnchorPane[] allBtns = {btnThietBi, btnPC, btnKhachHang, btnNhanVien, btnSanPham,
                 btnTaiChinh, btnKhuVuc, btnKhuyenMai, btnNhapHang, btnTaiKhoan};
 
         for (AnchorPane btn : allBtns) {
@@ -335,6 +336,18 @@ public class MainController {
             // 3. Nhét cái ruột mới tải vào giữa
             contentArea.getChildren().add(fxml);
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onPCMenuClick() {
+        setActiveMenu(btnPC);
+        try {
+            Parent fxml = FXMLLoader.load(getClass().getResource("quan-ly-pc.fxml"));
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(fxml);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -544,8 +557,18 @@ public class MainController {
 
             // Lấy Stage hiện tại và chuyển Scene
             Stage stage = (Stage) btnUserProfile.getScene().getWindow();
-            Scene scene = new Scene(root);
+            
+            // Hủy phóng to nếu có
+            stage.setMaximized(false);
+            
+            // Chuyển sang Scene với kích thước chuẩn 1280x720 như lúc khởi chạy
+            Scene scene = new Scene(root, 1280, 720);
             stage.setScene(scene);
+            
+            // Reset kích thước Stage
+            stage.setWidth(1280);
+            stage.setHeight(720);
+            
             stage.centerOnScreen();
             stage.show();
 

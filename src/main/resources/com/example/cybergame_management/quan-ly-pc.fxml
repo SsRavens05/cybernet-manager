@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="600.0" prefWidth="900.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyPCController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <HBox styleClass="stats-row">
+            <children>
+                <VBox prefHeight="130.0" prefWidth="280.0" styleClass="stat-card-blue" HBox.hgrow="ALWAYS">
+                    <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                    <children>
+                        <Label text="Tổng PC" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
+                        <Label fx:id="lblTongPC" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                    </children>
+                </VBox>
+                <VBox prefHeight="130.0" prefWidth="280.0" styleClass="stat-card-yellow" HBox.hgrow="ALWAYS">
+                    <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                    <children>
+                        <Label text="Hoạt động" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
+                        <Label fx:id="lblPCHoatDong" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                    </children>
+                </VBox>
+                <VBox prefHeight="130.0" prefWidth="280.0" styleClass="stat-card-purple" HBox.hgrow="ALWAYS">
+                    <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                    <children>
+                        <Label text="Bảo trì" textFill="WHITE"><font><Font name="System Bold" size="16.0" /></font></Label>
+                        <Label fx:id="lblPCBaoTri" text="0" textFill="WHITE"><font><Font name="System Bold" size="48.0" /></font></Label>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
+            <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
+                    <children>
+                        <Label text="Danh Sách PC" styleClass="header-title" />
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
+
+                        <Button mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
+                        <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">
+                            <graphic>
+                                <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                                    <image><Image url="@icons/xoa.png" /></image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnUpdate" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onUpdateClick" styleClass="btn-action" text="Update">
+                            <graphic>
+                                <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                                    <image><Image url="@icons/cap-nhat.png" /></image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+
+                <TableView fx:id="tbPC" prefHeight="400.0" prefWidth="850.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colMaPC" prefWidth="90.0" text="Mã PC" />
+                        <TableColumn fx:id="colMaKV" prefWidth="100.0" text="Khu Vực" />
+                        <TableColumn fx:id="colCpu" prefWidth="150.0" text="CPU" />
+                        <TableColumn fx:id="colRam" prefWidth="80.0" text="RAM" />
+                        <TableColumn fx:id="colVga" prefWidth="120.0" text="VGA" />
+                        <TableColumn fx:id="colRom" prefWidth="80.0" text="ROM" />
+                        <TableColumn fx:id="colSoMay" prefWidth="80.0" text="Số Máy" />
+                        <TableColumn fx:id="colLoaiPC" prefWidth="90.0" text="Loại PC" />
+                        <TableColumn fx:id="colTrangThai" prefWidth="110.0" text="Trạng Thái" />
+                        <TableColumn fx:id="colCreateAt" prefWidth="140.0" text="Ngày Tạo" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</VBox>

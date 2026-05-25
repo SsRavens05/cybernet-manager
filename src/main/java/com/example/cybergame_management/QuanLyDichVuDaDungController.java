@@ -1,5 +1,6 @@
 package com.example.cybergame_management;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -22,10 +23,20 @@ public class QuanLyDichVuDaDungController {
     @FXML private TableColumn<DichVuDaDung, String> colThoiGian;
     @FXML private TextField txtSearch;
 
-    private final ObservableList<DichVuDaDung> data = DatabaseSeedData.dichVuDaDung();
+    private ObservableList<DichVuDaDung> data = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                data = DichVuDaDungRepository.findAll();
+            } else {
+                data = DatabaseSeedData.dichVuDaDung();
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            data = DatabaseSeedData.dichVuDaDung();
+        }
         colMaDVDD.setCellValueFactory(cellData -> cellData.getValue().maDVDDProperty());
         colMaSP.setCellValueFactory(cellData -> cellData.getValue().maSPProperty());
         colSoLuong.setCellValueFactory(cellData -> cellData.getValue().soLuongProperty());

@@ -1,5 +1,6 @@
 package com.example.cybergame_management;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -40,10 +41,21 @@ public class QuanLySanPhamController {
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
 
-    private final ObservableList<SanPham> data = DatabaseSeedData.sanPham();
+    private final ObservableList<SanPham> data = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        try {
+            if (SanPhamRepository.isDatabaseEnabled()) {
+                data.setAll(SanPhamRepository.findAll());
+            } else {
+                data.setAll(DatabaseSeedData.sanPham());
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            data.setAll(DatabaseSeedData.sanPham());
+        }
+
         colMaSP.setCellValueFactory(cellData -> cellData.getValue().maSPProperty());
         colTenSP.setCellValueFactory(cellData -> cellData.getValue().tenSPProperty());
         colLoai.setCellValueFactory(cellData -> cellData.getValue().loaiProperty());
@@ -171,11 +183,21 @@ public class QuanLySanPhamController {
                 return;
             }
 
-            String maMoi = "SP" + String.format("%03d", data.size() + 1);
-            data.add(new SanPham(maMoi, txtTen.getText(), txtLoai.getText(), txtGia.getText(),
-                    slStr, txtDonVi.getText(), txtDiem.getText()));
-            updateStats();
-            stage.close();
+            String maMoi = SanPhamRepository.getNextMaSP();
+            SanPham newSP = new SanPham(maMoi, txtTen.getText(), txtLoai.getText(), txtGia.getText(),
+                    slStr, txtDonVi.getText(), txtDiem.getText());
+            try {
+                if (SanPhamRepository.isDatabaseEnabled()) {
+                    SanPhamRepository.insert(newSP);
+                }
+                data.add(newSP);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu sản phẩm vào Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         footer.getChildren().addAll(bHuy, bLuu);
@@ -230,9 +252,18 @@ public class QuanLySanPhamController {
         Button btnXoa = new Button("Xóa");
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
-            data.remove(selectedItem);
-            updateStats();
-            stage.close();
+            try {
+                if (SanPhamRepository.isDatabaseEnabled()) {
+                    SanPhamRepository.softDelete(selectedItem.maSPProperty().get());
+                }
+                data.remove(selectedItem);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi xóa sản phẩm từ Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         bottomBox.getChildren().addAll(btnHuy, btnXoa);
@@ -330,6 +361,13 @@ public class QuanLySanPhamController {
                 return;
             }
 
+            String oldTen = selectedItem.tenSPProperty().get();
+            String oldLoai = selectedItem.loaiProperty().get();
+            String oldGia = selectedItem.giaProperty().get();
+            String oldSL = selectedItem.soLuongProperty().get();
+            String oldDonVi = selectedItem.donViProperty().get();
+            String oldDiem = selectedItem.soDiemTichLuyProperty().get();
+
             selectedItem.tenSPProperty().set(txtTen.getText());
             selectedItem.loaiProperty().set(txtLoai.getText());
             selectedItem.giaProperty().set(txtGia.getText());
@@ -337,9 +375,24 @@ public class QuanLySanPhamController {
             selectedItem.donViProperty().set(txtDonVi.getText());
             selectedItem.soDiemTichLuyProperty().set(txtDiem.getText());
 
-            tbSanPham.refresh();
-            updateStats();
-            stage.close();
+            try {
+                if (SanPhamRepository.isDatabaseEnabled()) {
+                    SanPhamRepository.update(selectedItem);
+                }
+                tbSanPham.refresh();
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                selectedItem.tenSPProperty().set(oldTen);
+                selectedItem.loaiProperty().set(oldLoai);
+                selectedItem.giaProperty().set(oldGia);
+                selectedItem.soLuongProperty().set(oldSL);
+                selectedItem.donViProperty().set(oldDonVi);
+                selectedItem.soDiemTichLuyProperty().set(oldDiem);
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi cập nhật sản phẩm vào Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         footer.getChildren().addAll(bHuy, bLuu);

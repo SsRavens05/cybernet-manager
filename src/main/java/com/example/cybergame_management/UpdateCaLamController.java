@@ -68,13 +68,33 @@ public class UpdateCaLamController {
             return;
         }
 
+        String oldBD = caLamDangSua.getThoiGianBD();
+        String oldKT = caLamDangSua.getThoiGianKT();
+        String oldSG = caLamDangSua.getSoGioLam();
+        String oldTC = caLamDangSua.getSoGioTangCa();
+        String oldTrangThai = caLamDangSua.getTrangThai();
+
         caLamDangSua.setThoiGianBD(bd);
         caLamDangSua.setThoiGianKT(kt);
         caLamDangSua.setSoGioLam(sg);
         caLamDangSua.setSoGioTangCa(txtSoGioTangCa.getText().trim().isEmpty() ? "—" : txtSoGioTangCa.getText().trim());
         caLamDangSua.setTrangThai(cbTrangThai.getValue());
 
-        dongForm();
+        try {
+            if (CaLamRepository.isDatabaseEnabled()) {
+                CaLamRepository.update(caLamDangSua);
+            }
+            dongForm();
+        } catch (java.sql.SQLException ex) {
+            ex.printStackTrace();
+            caLamDangSua.setThoiGianBD(oldBD);
+            caLamDangSua.setThoiGianKT(oldKT);
+            caLamDangSua.setSoGioLam(oldSG);
+            caLamDangSua.setSoGioTangCa(oldTC);
+            caLamDangSua.setTrangThai(oldTrangThai);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi cập nhật ca làm vào Database: " + ex.getMessage());
+            alert.showAndWait();
+        }
     }
 
     private boolean validateThoiGianCaLam(String bd, String kt) {

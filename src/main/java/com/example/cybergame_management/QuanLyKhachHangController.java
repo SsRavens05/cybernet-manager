@@ -128,7 +128,7 @@ public class QuanLyKhachHangController {
                 .filter(kh -> "ACTIVE".equalsIgnoreCase(kh.getTrangThai()))
                 .count()));
         lblKhachInactive.setText(String.valueOf(data.stream()
-                .filter(kh -> !"ACTIVE".equalsIgnoreCase(kh.getTrangThai()))
+                .filter(kh -> "BANNED".equalsIgnoreCase(kh.getTrangThai()))
                 .count()));
     }
 
@@ -209,9 +209,21 @@ public class QuanLyKhachHangController {
                 return;
             }
 
-            String maKH = "KH" + String.format("%03d", data.size() + 1);
-            data.add(new KhachHang(maKH, txtHoTen.getText(), String.valueOf(DisplayFormat.parseMoney(txtSoDu.getText())),
-                    diemStr, cbTrangThai.getValue(), LocalDate.now().toString()));
+            String maKH = KhachHangRepository.getNextMaKH();
+            KhachHang newKh = new KhachHang(maKH, txtHoTen.getText(), String.valueOf(DisplayFormat.parseMoney(txtSoDu.getText())),
+                    diemStr, cbTrangThai.getValue(), LocalDate.now().toString());
+
+            if (KhachHangRepository.isDatabaseEnabled()) {
+                try {
+                    KhachHangRepository.insert(newKh);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    showError("Không thể lưu khách hàng vào database: " + ex.getMessage());
+                    return;
+                }
+            }
+
+            data.add(newKh);
             updateStats();
             stage.close();
         });

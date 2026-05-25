@@ -2,7 +2,7 @@
 
 Project uses Oracle JDBC.
 
-1. Create your Oracle schema from `C:\Users\ACER\Downloads\DBDOAN.sql`.
+1. Create your Oracle schema from `src/main/resources/database/final.sql`.
 2. Configure the app in `src/main/resources/com/example/cybergame_management/database.properties`.
 
 You can also override the file with environment variables:

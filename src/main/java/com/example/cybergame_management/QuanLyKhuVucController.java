@@ -69,7 +69,8 @@ public class QuanLyKhuVucController {
             }
         });
 
-        // Dữ liệu giả y hệt thiết kế
+        loadData();
+
         FilteredList<KhuVuc> filtered = new FilteredList<>(data, item -> true);
         tbKhuVuc.setItems(filtered);
         txtSearch.textProperty().addListener((obs, oldValue, newValue) -> filtered.setPredicate(this::matchesFilter));
@@ -90,6 +91,26 @@ public class QuanLyKhuVucController {
                 btnUpdate.setManaged(false);
             }
         }
+    }
+
+    private void loadData() {
+        if (!KhuVucRepository.isDatabaseEnabled()) {
+            return;
+        }
+        try {
+            data.setAll(KhuVucRepository.findAll());
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            showError("Không thể tải danh sách khu vực từ database. Ứng dụng sẽ dùng dữ liệu mẫu.");
+        }
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Lỗi database");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private boolean matchesFilter(KhuVuc item) {
@@ -170,8 +191,19 @@ public class QuanLyKhuVucController {
             String gia = txtGiaThue.getText();
             if(!gia.endsWith("đ")) gia += "đ";
 
+            KhuVuc newKv = new KhuVuc(maMoi, txtTenKV.getText(), txtSoMay.getText(), gia, cbTrangThai.getValue(), txtMoTa.getText());
+            if (KhuVucRepository.isDatabaseEnabled()) {
+                try {
+                    KhuVucRepository.insert(newKv);
+                } catch (java.sql.SQLException ex) {
+                    ex.printStackTrace();
+                    showError("Không thể lưu khu vực vào database: " + ex.getMessage());
+                    return;
+                }
+            }
+
             // Thêm vào bảng
-            data.add(new KhuVuc(maMoi, txtTenKV.getText(), txtSoMay.getText(), gia, cbTrangThai.getValue(), txtMoTa.getText()));
+            data.add(newKv);
             updateStats();
             stage.close();
         });
@@ -186,7 +218,6 @@ public class QuanLyKhuVucController {
         stage.setScene(scene);
         stage.showAndWait();
     }
-
 
     @FXML
     public void onDeleteClick() {
@@ -235,7 +266,15 @@ public class QuanLyKhuVucController {
         Button btnXoa = new Button("Xóa");
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
-            // THỰC HIỆN XÓA KHỎI BẢNG (Và sau này là xóa khỏi Database)
+            if (KhuVucRepository.isDatabaseEnabled()) {
+                try {
+                    KhuVucRepository.delete(selectedItem.getMaKV());
+                } catch (java.sql.SQLException ex) {
+                    ex.printStackTrace();
+                    showError("Không thể xóa khu vực khỏi database: " + ex.getMessage());
+                    return;
+                }
+            }
             data.remove(selectedItem);
             updateStats();
             stage.close(); // Xóa xong thì đóng popup

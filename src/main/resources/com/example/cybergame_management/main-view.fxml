@@ -55,6 +55,21 @@
                             </children>
                          </AnchorPane>
 
+                         <AnchorPane fx:id="btnPC" onMouseClicked="#onPCMenuClick" prefHeight="45.0" prefWidth="235.0" styleClass="sidebar-btn">
+                            <children>
+                               <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                                  <image>
+                                     <Image url="@icons/PC.png"/>
+                                  </image>
+                               </ImageView>
+                               <Label layoutX="45.0" layoutY="12.0" text="Quản Lý PC" textFill="WHITE">
+                               <font>
+                                  <Font name="System Bold" size="14.0" />
+                                </font>
+                               </Label>
+                            </children>
+                         </AnchorPane>
+
                          <VBox fx:id="customerMenuGroup" spacing="4.0">
                             <children>
                                <AnchorPane fx:id="btnKhachHang" onMouseClicked="#onKhachHangMenuClick" prefHeight="45.0" prefWidth="235.0" styleClass="sidebar-btn">

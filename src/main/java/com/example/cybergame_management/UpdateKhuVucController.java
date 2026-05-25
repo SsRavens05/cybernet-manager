@@ -37,10 +37,17 @@ public class UpdateKhuVucController {
         khuVucDangSua.setTrangThai(cbTrangThai.getValue());
         khuVucDangSua.setMoTa(txtMoTa.getText());
 
-        // TODO: Gọi lệnh Update xuống CSDL Oracle ở đây.
-        System.out.println("Đã lưu cập nhật cho Mã KV: " + khuVucDangSua.getMaKV());
-
-        dongForm();
+        try {
+            if (KhuVucRepository.isDatabaseEnabled()) {
+                KhuVucRepository.update(khuVucDangSua);
+            }
+            System.out.println("Đã lưu cập nhật cho Mã KV: " + khuVucDangSua.getMaKV());
+            dongForm();
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR, "Lỗi khi cập nhật khu vực vào Database: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     @FXML

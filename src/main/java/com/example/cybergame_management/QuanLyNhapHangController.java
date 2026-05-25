@@ -32,10 +32,20 @@ public class QuanLyNhapHangController {
     @FXML private TextField txtSearch;
     @FXML private Button btnDelete;
     @FXML private Button btnUpdate;
-    private final ObservableList<NhapHang> data = DatabaseSeedData.nhapHang();
+    private ObservableList<NhapHang> data = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                data = NhapHangRepository.findAll();
+            } else {
+                data = DatabaseSeedData.nhapHang();
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            data = DatabaseSeedData.nhapHang();
+        }
         // Ánh xạ dữ liệu
         colMaPN.setCellValueFactory(cellData -> cellData.getValue().maPNProperty());
         colNgayNhap.setCellValueFactory(cellData -> cellData.getValue().ngayNhapProperty());
@@ -179,14 +189,29 @@ public class QuanLyNhapHangController {
         Button bLuu = new Button("Lưu");
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
-            String maMoi = "PN" + String.format("%03d", data.size() + 1);
+            try {
+                String maMoi;
+                if (DatabaseConnection.isConfigured()) {
+                    maMoi = NhapHangRepository.getNextMaPN();
+                } else {
+                    maMoi = "PN" + String.format("%03d", data.size() + 1);
+                }
+                
+                String tongTienStr = lblTongTien.getText().replace("Tổng tiền nhập: ", "");
 
-            // Tách lấy con số tổng tiền từ cái Label để lưu vào bảng
-            String tongTienStr = lblTongTien.getText().replace("Tổng tiền nhập: ", "");
-
-            data.add(new NhapHang(maMoi, txtLoaiHang.getText(), txtNCC.getText(), txtSL.getText(), txtDonGia.getText() + "đ", tongTienStr, java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), txtNguoiNhap.getText(), cbTrangThai.getValue()));
-            updateStats();
-            stage.close();
+                NhapHang nh = new NhapHang(maMoi, txtLoaiHang.getText(), txtNCC.getText(), txtSL.getText(), txtDonGia.getText() + "đ", tongTienStr, java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), txtNguoiNhap.getText(), cbTrangThai.getValue());
+                
+                if (DatabaseConnection.isConfigured()) {
+                    NhapHangRepository.insert(nh);
+                }
+                data.add(nh);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu phiếu nhập vào Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         footer.getChildren().addAll(bHuy, bLuu);
@@ -248,10 +273,18 @@ public class QuanLyNhapHangController {
         Button btnXoa = new Button("Xóa");
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
-            // THỰC HIỆN XÓA KHỎI BẢNG (Và sau này là xóa khỏi Database)
-            data.remove(selectedItem);
-            updateStats();
-            stage.close(); // Xóa xong thì đóng popup
+            try {
+                if (DatabaseConnection.isConfigured()) {
+                    NhapHangRepository.delete(selectedItem.getMaPN());
+                }
+                data.remove(selectedItem);
+                updateStats();
+                stage.close(); // Xóa xong thì đóng popup
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi xóa phiếu nhập khỏi Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         bottomBox.getChildren().addAll(btnHuy, btnXoa);

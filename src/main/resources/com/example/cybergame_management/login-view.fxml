@@ -6,9 +6,16 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.effect.GaussianBlur?>
 
-<HBox prefHeight="600.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.LoginController">
+<GridPane prefHeight="600.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.LoginController">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="50.0" hgrow="ALWAYS" />
+        <ColumnConstraints percentWidth="50.0" hgrow="ALWAYS" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="100.0" vgrow="ALWAYS" />
+    </rowConstraints>
     <children>
-        <StackPane fx:id="leftPane" prefWidth="500.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #111111;">
+        <StackPane fx:id="leftPane" style="-fx-background-color: #111111;" GridPane.columnIndex="0" GridPane.rowIndex="0">
             <children>
                 <ImageView fitHeight="${leftPane.height}" fitWidth="${leftPane.width}" pickOnBounds="true" preserveRatio="false" opacity="0.6">
                     <image>
@@ -26,7 +33,7 @@
             </children>
         </StackPane>
 
-        <VBox alignment="CENTER_LEFT" prefWidth="500.0" spacing="15.0" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 60;">
+        <VBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: white; -fx-padding: 60;" GridPane.columnIndex="1" GridPane.rowIndex="0">
             <children>
                 <Label text="Đăng nhập" textFill="#1a202c">
                     <font><Font name="System Bold" size="32.0" /></font>
@@ -53,4 +60,4 @@
             </children>
         </VBox>
     </children>
-</HBox>
+</GridPane>

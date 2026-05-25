@@ -42,10 +42,20 @@ public class QuanLyThietBiController {
     private Button btnDelete;
     @FXML
     private Button btnUpdate;
-    private final ObservableList<ThietBi> data = DatabaseSeedData.thietBi();
+    private ObservableList<ThietBi> data = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                data = ThietBiRepository.findAll();
+            } else {
+                data = DatabaseSeedData.thietBi();
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            data = DatabaseSeedData.thietBi();
+        }
         // 1. Ánh xạ dữ liệu
         colMaTB.setCellValueFactory(cellData -> cellData.getValue().maTBProperty());
         colTenTB.setCellValueFactory(cellData -> cellData.getValue().tenTBProperty());
@@ -164,6 +174,26 @@ public class QuanLyThietBiController {
         grid.add(new Label("Ngày Mua"), 0, 8);
         grid.add(txtNgayMua, 0, 9);
 
+        // Áp dụng định dạng thẩm mỹ cho các phần tử trong hộp thoại
+        for (javafx.scene.Node n : grid.getChildren()) {
+            if (n instanceof Label) {
+                ((Label) n).setStyle("-fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-font-size: 12px;");
+            } else if (n instanceof TextField) {
+                TextField tf = (TextField) n;
+                tf.setPrefHeight(38.0);
+                tf.setStyle("-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;");
+                Integer rowIndex = GridPane.getRowIndex(n);
+                if (rowIndex != null && rowIndex == 1) { // txtMaTB (Đã bị khóa sẵn)
+                    tf.setStyle("-fx-background-color: #f3f4f6; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-text-fill: #6b7280; -fx-padding: 8;");
+                }
+            } else if (n instanceof ComboBox) {
+                ComboBox<?> cb = (ComboBox<?>) n;
+                cb.setPrefHeight(38.0);
+                cb.setMaxWidth(Double.MAX_VALUE);
+                cb.setStyle("-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6;");
+            }
+        }
+
         // Footer
         HBox footer = new HBox(10);
         footer.setAlignment(Pos.CENTER_RIGHT);
@@ -192,9 +222,19 @@ public class QuanLyThietBiController {
                 }
             }
 
-            data.add(new ThietBi(txtMaTB.getText(), txtTenTB.getText(), cbLoai.getValue(), trangThai, maPC));
-            updateStats();
-            stage.close();
+            ThietBi newTB = new ThietBi(txtMaTB.getText(), txtTenTB.getText(), cbLoai.getValue(), trangThai, maPC);
+            try {
+                if (DatabaseConnection.isConfigured()) {
+                    ThietBiRepository.insert(newTB);
+                }
+                data.add(newTB);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu thiết bị vào Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         footer.getChildren().addAll(bHuy, bLuu);
@@ -255,10 +295,18 @@ public class QuanLyThietBiController {
         Button btnXoa = new Button("Xóa");
         btnXoa.getStyleClass().add("btn-danger");
         btnXoa.setOnAction(e -> {
-            // THỰC HIỆN XÓA KHỎI BẢNG (Và sau này là xóa khỏi Database)
-            data.remove(selectedItem);
-            updateStats();
-            stage.close(); // Xóa xong thì đóng popup
+            try {
+                if (DatabaseConnection.isConfigured()) {
+                    ThietBiRepository.softDelete(selectedItem.getMaTB());
+                }
+                data.remove(selectedItem);
+                updateStats();
+                stage.close();
+            } catch (java.sql.SQLException ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi xóa thiết bị khỏi Database: " + ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
         bottomBox.getChildren().addAll(btnHuy, btnXoa);
