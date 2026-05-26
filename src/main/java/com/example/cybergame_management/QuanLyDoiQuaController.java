@@ -15,12 +15,17 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.time.LocalDate;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class QuanLyDoiQuaController {
 
     @FXML private Label lblTongDoiQua;
-    @FXML private Label lblDangCho;
-    @FXML private Label lblSoLoaiQua;
+    @FXML private ComboBox<String> cbKhachHang;
+    @FXML private ComboBox<String> cbQuaTang;
+    @FXML private TextField txtSoLuong;
 
     @FXML private TableView<DoiQua> tbDoiQua;
     @FXML private TableColumn<DoiQua, String> colMaDQ;
@@ -35,6 +40,8 @@ public class QuanLyDoiQuaController {
     @FXML private Button btnUpdate;
 
     private ObservableList<DoiQua> data = FXCollections.observableArrayList();
+    private ObservableList<KhachHang> customersList = FXCollections.observableArrayList();
+    private ObservableList<QuaTang> giftsList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -82,6 +89,33 @@ public class QuanLyDoiQuaController {
             }
         });
 
+        // Load ComboBox data for customers and gifts
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                customersList = KhachHangRepository.findAll();
+                giftsList = QuaTangRepository.findAll();
+            } else {
+                customersList = DatabaseSeedData.khachHang();
+                giftsList = DatabaseSeedData.quaTang();
+            }
+        } catch (Exception ex) {
+            customersList = DatabaseSeedData.khachHang();
+            giftsList = DatabaseSeedData.quaTang();
+        }
+
+        ObservableList<String> customerList = FXCollections.observableArrayList();
+        for (KhachHang kh : customersList) {
+            customerList.add(kh.getMaKH() + " - " + kh.getHoTen());
+        }
+        cbKhachHang.setItems(customerList);
+
+        ObservableList<String> giftList = FXCollections.observableArrayList();
+        for (QuaTang qt : giftsList) {
+            giftList.add(qt.getMaQT() + " - " + qt.getNoiDung() + " (" + qt.getSoDiemTieuHao() + " ⭐)");
+        }
+        cbQuaTang.setItems(giftList);
+        txtSoLuong.setText("1");
+
         FilteredList<DoiQua> filtered = new FilteredList<>(data, item -> true);
         tbDoiQua.setItems(filtered);
 
@@ -102,9 +136,157 @@ public class QuanLyDoiQuaController {
     }
 
     private void updateStats() {
-        lblTongDoiQua.setText(String.valueOf(data.size()));
-        lblDangCho.setText(String.valueOf(data.stream().filter(dq -> "Pending".equalsIgnoreCase(dq.getTrangThai())).count()));
-        lblSoLoaiQua.setText(String.valueOf(data.stream().map(DoiQua::getMaQT).distinct().count()));
+        if (lblTongDoiQua != null) {
+            lblTongDoiQua.setText("Tổng: " + data.size() + " lần đổi");
+        }
+    }
+
+    @FXML
+    public void onDoiQuaClick() {
+        if (cbKhachHang.getValue() == null || cbKhachHang.getValue().isBlank()) {
+            showWarning("Vui lòng chọn khách hàng.");
+            return;
+        }
+        if (cbQuaTang.getValue() == null || cbQuaTang.getValue().isBlank()) {
+            showWarning("Vui lòng chọn quà tặng.");
+            return;
+        }
+
+        String soLuongStr = txtSoLuong.getText().trim();
+        long sl = 1;
+        try {
+            sl = Long.parseLong(soLuongStr);
+            if (sl <= 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException ex) {
+            showWarning("Số lượng phải là một số nguyên dương (> 0)!");
+            return;
+        }
+
+        String maKH = cbKhachHang.getValue().split(" - ")[0].trim();
+        String maQT = cbQuaTang.getValue().split(" - ")[0].trim();
+
+        // Tìm đối tượng KhachHang và QuaTang tương ứng để kiểm tra điểm tích lũy
+        KhachHang selectedKH = null;
+        for (KhachHang kh : customersList) {
+            if (kh.getMaKH().equals(maKH)) {
+                selectedKH = kh;
+                break;
+            }
+        }
+
+        QuaTang selectedQT = null;
+        for (QuaTang qt : giftsList) {
+            if (qt.getMaQT().equals(maQT)) {
+                selectedQT = qt;
+                break;
+            }
+        }
+
+        long currentPoints = 0;
+        if (selectedKH != null) {
+            try {
+                currentPoints = Long.parseLong(selectedKH.getSoDiemTichLuy().trim());
+            } catch (Exception e) {
+                // bỏ qua
+            }
+        }
+
+        // Truy vấn trực tiếp từ database nếu có cấu hình để lấy điểm số mới nhất chính xác
+        if (DatabaseConnection.isConfigured()) {
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement("SELECT SODIEMTICHLUY FROM KHACHHANG WHERE MAKH = ?")) {
+                stmt.setString(1, maKH);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        currentPoints = rs.getLong("SODIEMTICHLUY");
+                        if (selectedKH != null) {
+                            selectedKH.setSoDiemTichLuy(String.valueOf(currentPoints));
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        long pointsNeeded = 0;
+        if (selectedQT != null) {
+            try {
+                pointsNeeded = Long.parseLong(selectedQT.getSoDiemTieuHao().trim()) * sl;
+            } catch (Exception e) {
+                // bỏ qua
+            }
+        }
+
+        if (currentPoints < pointsNeeded) {
+            showWarning("Khách hàng không đủ điểm tích lũy để thực hiện đổi quà này.\n" +
+                        "Điểm hiện tại: " + currentPoints + " ⭐ | Điểm cần: " + pointsNeeded + " ⭐");
+            return;
+        }
+
+        // Ràng buộc R17: tối đa 30 quà tặng
+        long count = data.stream()
+                .filter(dq -> dq.getMaKH().equalsIgnoreCase(maKH))
+                .count();
+        if (count >= 30) {
+            showWarning("Vi phạm ràng buộc R17: Mỗi khách hàng chỉ được đổi tối đa 30 lần!");
+            return;
+        }
+
+        String randomMillis = String.valueOf(System.currentTimeMillis()).substring(7);
+        String maMoi = "DQ" + LocalDate.now().toString().replace("-", "") + randomMillis;
+        DoiQua newDQ = new DoiQua(maMoi, maKH, maQT,
+                LocalDate.now().toString(), String.valueOf(sl), "Pending");
+
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                DoiQuaRepository.insert(newDQ);
+            }
+            data.add(0, newDQ);
+            updateStats();
+            
+            // Cập nhật lại điểm của khách hàng cục bộ sau khi đã trừ điểm thành công ở Database
+            if (selectedKH != null) {
+                selectedKH.setSoDiemTichLuy(String.valueOf(currentPoints - pointsNeeded));
+            }
+            
+            // Clear input fields
+            cbKhachHang.getSelectionModel().clearSelection();
+            cbQuaTang.getSelectionModel().clearSelection();
+            txtSoLuong.setText("1");
+            
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Thành công");
+            alert.setHeaderText(null);
+            alert.setContentText("Đổi quà thành công! Đang ở trạng thái chờ duyệt (Pending).");
+            alert.show();
+        } catch (java.sql.SQLException ex) {
+            ex.printStackTrace();
+            String msg = ex.getMessage();
+            if (msg != null && msg.contains("20003")) {
+                showWarning("Khách hàng không đủ điểm tích lũy để thực hiện đổi quà này.");
+            } else {
+                showError("Lỗi khi lưu đổi quà vào Database: " + ex.getMessage());
+            }
+        }
+    }
+
+    private void showWarning(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Thông báo");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Lỗi");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML

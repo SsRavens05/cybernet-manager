@@ -4,63 +4,84 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyDoiQuaController">
+<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyDoiQuaController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <children>
-        <HBox styleClass="stats-row">
+        <VBox styleClass="topup-card">
             <children>
-                <AnchorPane prefHeight="130.0" styleClass="stat-card-purple" HBox.hgrow="ALWAYS">
+                <VBox spacing="6.0">
+                    <padding>
+                        <Insets bottom="20.0" left="22.0" right="22.0" top="22.0" />
+                    </padding>
                     <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Số Lần Đổi" textFill="WHITE">
-                            <font><Font name="System Bold" size="16.0" /></font>
-                        </Label>
-                        <Label fx:id="lblTongDoiQua" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
-                            <font><Font name="System Bold" size="48.0" /></font>
-                        </Label>
-                        <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" stroke="TRANSPARENT" strokeType="INSIDE" AnchorPane.rightAnchor="20.0" />
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <children>
+                                <Label styleClass="topup-title-icon" text="🎁" />
+                                <Label styleClass="topup-title" text="Đổi Quà Tặng - Khấu Trừ Điểm Tích Lũy">
+                                    <font><Font name="System Bold" size="18.0" /></font>
+                                </Label>
+                            </children>
+                        </HBox>
+                        <Label styleClass="topup-subtitle" text="Mỗi phần quà tương ứng với số điểm tích lũy khấu trừ nhất định từ tài khoản của khách hàng." />
                     </children>
-                </AnchorPane>
+                </VBox>
 
-                <AnchorPane prefHeight="130.0" styleClass="stat-card-blue" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Đang Chờ Duyệt" textFill="WHITE">
-                            <font><Font name="System Bold" size="16.0" /></font>
-                        </Label>
-                        <Label fx:id="lblDangCho" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
-                            <font><Font name="System Bold" size="48.0" /></font>
-                        </Label>
-                        <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" stroke="TRANSPARENT" strokeType="INSIDE" AnchorPane.rightAnchor="20.0" />
-                    </children>
-                </AnchorPane>
+                <Separator />
 
-                <AnchorPane prefHeight="130.0" styleClass="stat-card-yellow" HBox.hgrow="ALWAYS">
+                <VBox spacing="24.0">
+                    <padding>
+                        <Insets bottom="24.0" left="22.0" right="22.0" top="24.0" />
+                    </padding>
                     <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Số Loại Quà" textFill="WHITE">
-                            <font><Font name="System Bold" size="16.0" /></font>
-                        </Label>
-                        <Label fx:id="lblSoLoaiQua" layoutX="20.0" layoutY="50.0" text="0" textFill="WHITE">
-                            <font><Font name="System Bold" size="48.0" /></font>
-                        </Label>
-                        <Circle fill="#ffffff22" layoutX="250.0" layoutY="65.0" radius="40.0" stroke="TRANSPARENT" strokeType="INSIDE" AnchorPane.rightAnchor="20.0" />
+                        <HBox spacing="20.0">
+                            <children>
+                                <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="field-label" text="Khách Hàng (MAKH - Tên) *" />
+                                        <ComboBox fx:id="cbKhachHang" maxWidth="Infinity" prefHeight="46.0" promptText="Chọn khách hàng..." styleClass="form-control" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="field-label" text="Quà Tặng (Mã - Tên) *" />
+                                        <ComboBox fx:id="cbQuaTang" maxWidth="Infinity" prefHeight="46.0" promptText="Chọn quà tặng..." styleClass="form-control" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="field-label" text="Số Lượng Đổi *" />
+                                        <TextField fx:id="txtSoLuong" prefHeight="46.0" promptText="1" styleClass="form-control" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_RIGHT">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#onDoiQuaClick" prefHeight="50.0" styleClass="btn-topup" text="+  Thực Hiện Đổi Quà" />
+                            </children>
+                        </HBox>
                     </children>
-                </AnchorPane>
+                </VBox>
             </children>
-        </HBox>
+        </VBox>
 
         <VBox styleClass="table-panel" VBox.vgrow="ALWAYS">
-            <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
             <children>
-                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
+                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="topup-history-header">
                     <children>
-                        <Label text="Quản Lý Đổi Quà" styleClass="header-title" />
+                        <Label styleClass="topup-title-icon" text="↺" />
+                        <Label styleClass="topup-title" text="Lịch Sử Đổi Quà">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Label>
                         <Region HBox.hgrow="ALWAYS" />
                         <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
-                        <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#onInsertClick" styleClass="btn-action" text="+ Insert" />
                         <Button fx:id="btnDelete" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onDeleteClick" styleClass="btn-delete" text="Delete">
                             <graphic>
                                 <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
@@ -75,15 +96,16 @@
                                 </ImageView>
                             </graphic>
                         </Button>
+                        <Label fx:id="lblTongDoiQua" styleClass="topup-count" text="Tổng: 0 lần đổi" />
                     </children>
                 </HBox>
 
                 <TableView fx:id="tbDoiQua" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colMaDQ" prefWidth="170.0" text="Mã ĐQ" />
+                        <TableColumn fx:id="colNgayDoi" prefWidth="150.0" text="Ngày Đổi" />
                         <TableColumn fx:id="colMaKH" prefWidth="120.0" text="Mã KH" />
                         <TableColumn fx:id="colMaQT" prefWidth="120.0" text="Mã QT" />
-                        <TableColumn fx:id="colNgayDoi" prefWidth="150.0" text="Ngày Đổi" />
                         <TableColumn fx:id="colSoLuong" prefWidth="100.0" text="Số Lượng" />
                         <TableColumn fx:id="colTrangThai" prefWidth="150.0" text="Trạng Thái" />
                     </columns>

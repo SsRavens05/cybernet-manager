@@ -4,100 +4,233 @@
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="650.0" prefWidth="1000.0" spacing="24.0" styleClass="dashboard-page" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyTaiChinhController">
+<VBox prefHeight="650.0" prefWidth="1000.0" spacing="20.0" styleClass="dashboard-page" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cybergame_management.QuanLyTaiChinhController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <children>
-        <HBox styleClass="stats-row">
-            <children>
-                <AnchorPane prefHeight="130.0" styleClass="stat-card-blue" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Thu" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
-                        <Label fx:id="lblTongThu" layoutX="20.0" layoutY="50.0" text="0đ" textFill="WHITE"><font><Font name="System Bold" size="36.0" /></font></Label>
-                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
-                    </children>
-                </AnchorPane>
-
-                <AnchorPane prefHeight="130.0" styleClass="stat-card-red" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Tổng Chi" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
-                        <Label fx:id="lblTongChi" layoutX="20.0" layoutY="50.0" text="0đ" textFill="WHITE"><font><Font name="System Bold" size="36.0" /></font></Label>
-                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
-                    </children>
-                </AnchorPane>
-
-                <AnchorPane prefHeight="130.0" styleClass="stat-card-yellow" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label layoutX="60.0" layoutY="20.0" text="Lợi Nhuận" textFill="WHITE"><font><Font name="System" size="16.0" /></font></Label>
-                        <Label fx:id="lblLoiNhuan" layoutX="20.0" layoutY="50.0" text="0đ" textFill="WHITE"><font><Font name="System Bold" size="36.0" /></font></Label>
-                        <Circle fill="TRANSPARENT" layoutX="250.0" layoutY="65.0" radius="45.0" stroke="#ffffff33" strokeWidth="10.0" AnchorPane.rightAnchor="10.0" />
-                    </children>
-                </AnchorPane>
-            </children>
-        </HBox>
-
+        <!-- Horizontal Mockup Tabs (Filtered to existing functional data tabs) -->
         <HBox spacing="10.0">
             <children>
-                <Button fx:id="btnTongQuan" mnemonicParsing="false" onAction="#showTongQuan" prefHeight="35.0" prefWidth="110.0" styleClass="tab-primary" text="Tổng Quan"><font><Font name="System Bold" size="14.0" /></font></Button>
-                <Button fx:id="btnGiaoDich" mnemonicParsing="false" onAction="#showGiaoDich" prefHeight="35.0" prefWidth="110.0" styleClass="tab-secondary" text="Giao Dịch"><font><Font name="System Bold" size="14.0" /></font></Button>
-            </children>
-        </HBox>
-
-        <HBox fx:id="overviewPane" spacing="20.0" VBox.vgrow="ALWAYS">
-            <children>
-                <VBox styleClass="chart-panel" HBox.hgrow="ALWAYS">
-                    <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+                <HBox styleClass="mockup-tab-container">
                     <children>
-                        <Label text="Thu Chi Theo Mã Giao Dịch"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <BarChart fx:id="barChartDoanhThu" legendVisible="true" VBox.vgrow="ALWAYS">
-                            <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
-                            <yAxis><NumberAxis side="LEFT" /></yAxis>
-                        </BarChart>
-                    </children>
-                </VBox>
-
-                <VBox styleClass="chart-panel" HBox.hgrow="ALWAYS">
-                    <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
-                    <children>
-                        <Label text="Lợi Nhuận Lũy Kế Theo Giao Dịch"><font><Font name="System Bold" size="16.0" /></font></Label>
-                        <LineChart fx:id="lineChartLoiNhuan" legendVisible="false" VBox.vgrow="ALWAYS">
-                            <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
-                            <yAxis><NumberAxis side="LEFT" /></yAxis>
-                        </LineChart>
-                    </children>
-                </VBox>
-            </children>
-        </HBox>
-
-        <VBox fx:id="transactionPane" managed="false" visible="false" styleClass="table-panel" VBox.vgrow="ALWAYS">
-            <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
-            <children>
-                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
-                    <children>
-                        <Label text="Lịch Sử Giao Dịch" styleClass="header-title" />
-                        <Region HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
+                        <Button fx:id="btnTongQuan" mnemonicParsing="false" onAction="#showTongQuan" styleClass="mockup-tab-btn" text="Tổng Quan" />
+                        <Button fx:id="btnDoanhThu" mnemonicParsing="false" onAction="#showDoanhThu" styleClass="mockup-tab-btn-active" text="Doanh Thu" />
+                        <Button fx:id="btnGiaoDich" mnemonicParsing="false" onAction="#showGiaoDich" styleClass="mockup-tab-btn" text="Giao Dịch" />
                     </children>
                 </HBox>
-
-                <TableView fx:id="tbGiaoDich" prefHeight="350.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="colMaGD" prefWidth="100.0" text="Mã GD" />
-                        <TableColumn fx:id="colNgay" prefWidth="190.0" text="Ngày" />
-                        <TableColumn fx:id="colKhachHang" prefWidth="210.0" text="Khách Hàng" />
-                        <TableColumn fx:id="colLoai" prefWidth="150.0" text="Loại" />
-                        <TableColumn fx:id="colSoTien" prefWidth="130.0" text="Số Tiền" />
-                        <TableColumn fx:id="colGhiChu" prefWidth="220.0" text="Ghi Chú" />
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                    </columnResizePolicy>
-                </TableView>
             </children>
-        </VBox>
+        </HBox>
+
+        <!-- Main Content Area with ScrollPane for Smooth Responsiveness -->
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+            <content>
+                <StackPane style="-fx-background-color: transparent;">
+                    <children>
+                        <!-- PANE 1: OVERVIEW PANE -->
+                        <HBox fx:id="overviewPane" spacing="20.0" visible="false" managed="false">
+                            <children>
+                                <VBox styleClass="chart-panel" HBox.hgrow="ALWAYS">
+                                    <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+                                    <children>
+                                        <Label text="Thu Chi Theo Mã Giao Dịch"><font><Font name="System Bold" size="16.0" /></font></Label>
+                                        <BarChart fx:id="barChartDoanhThu" legendVisible="true" prefHeight="450.0" VBox.vgrow="ALWAYS">
+                                            <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
+                                            <yAxis><NumberAxis side="LEFT" /></yAxis>
+                                        </BarChart>
+                                    </children>
+                                </VBox>
+
+                                <VBox styleClass="chart-panel" HBox.hgrow="ALWAYS">
+                                    <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+                                    <children>
+                                        <Label text="Lợi Nhuận Lũy Kế Theo Giao Dịch"><font><Font name="System Bold" size="16.0" /></font></Label>
+                                        <LineChart fx:id="lineChartLoiNhuan" legendVisible="false" prefHeight="450.0" VBox.vgrow="ALWAYS">
+                                            <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
+                                            <yAxis><NumberAxis side="LEFT" /></yAxis>
+                                        </LineChart>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- PANE 2: REVENUE PANE (MOCKUP DESIGN) -->
+                        <VBox fx:id="revenuePane" spacing="20.0" visible="true" managed="true">
+                            <children>
+                                <!-- Horizontal 3 Stats Cards -->
+                                <HBox spacing="20.0" styleClass="stats-row">
+                                    <children>
+                                        <!-- Card 1: Tổng Doanh Thu (Nạp tiền) -->
+                                        <VBox HBox.hgrow="ALWAYS" styleClass="premium-card" spacing="12.0">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <HBox styleClass="premium-card-icon-container, icon-blue" alignment="CENTER">
+                                                            <children>
+                                                                <Label text="💳" style="-fx-font-size: 16px;" />
+                                                            </children>
+                                                        </HBox>
+                                                        <Label fx:id="lblCard1Title" text="Tổng Doanh Thu (Nạp Tiền)" styleClass="premium-card-title" />
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="lblCard1Val" text="0đ" styleClass="premium-card-value-blue" />
+                                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                                    <children>
+                                                        <Label text="Tỷ trọng" styleClass="premium-card-footer" />
+                                                        <ProgressBar fx:id="pbCard1" progress="0.0" prefHeight="6.0" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="premium-progress-bar-blue" />
+                                                        <Label fx:id="lblCard1Pct" text="0%" styleClass="premium-progress-percentage-blue" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                        <!-- Card 2: Chi phí Nhập Kho (Nhập hàng) -->
+                                        <VBox HBox.hgrow="ALWAYS" styleClass="premium-card" spacing="12.0">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <HBox styleClass="premium-card-icon-container, icon-green" alignment="CENTER">
+                                                            <children>
+                                                                <Label text="📦" style="-fx-font-size: 16px;" />
+                                                            </children>
+                                                        </HBox>
+                                                        <Label fx:id="lblCard2Title" text="Chi Phí Nhập Kho" styleClass="premium-card-title" />
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="lblCard2Val" text="0đ" styleClass="premium-card-value-green" />
+                                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                                    <children>
+                                                        <Label text="Tỷ trọng" styleClass="premium-card-footer" />
+                                                        <ProgressBar fx:id="pbCard2" progress="0.0" prefHeight="6.0" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="premium-progress-bar-green" />
+                                                        <Label fx:id="lblCard2Pct" text="0%" styleClass="premium-progress-percentage-green" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                        <!-- Card 3: Lợi Nhuận Ròng (Doanh thu - Chi phí) -->
+                                        <VBox HBox.hgrow="ALWAYS" styleClass="premium-card" spacing="12.0">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <HBox styleClass="premium-card-icon-container, icon-purple" alignment="CENTER">
+                                                            <children>
+                                                                <Label text="📈" style="-fx-font-size: 16px;" />
+                                                            </children>
+                                                        </HBox>
+                                                        <Label fx:id="lblCard3Title" text="Lợi Nhuận Ròng" styleClass="premium-card-title" />
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="lblCard3Val" text="0đ" styleClass="premium-card-value-purple" />
+                                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                                    <children>
+                                                        <Label text="Biên LN" styleClass="premium-card-footer" />
+                                                        <ProgressBar fx:id="pbCard3" progress="0.0" prefHeight="6.0" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="premium-progress-bar-purple" />
+                                                        <Label fx:id="lblCard3Pct" text="0%" styleClass="premium-progress-percentage-purple" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- Monthly Stacked Bar Chart & Top Selling Products -->
+                                <HBox spacing="20.0">
+                                    <children>
+                                        <VBox styleClass="chart-panel" HBox.hgrow="ALWAYS">
+                                            <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-padding: 0 0 10 0;">
+                                                    <children>
+                                                        <Label fx:id="lblChartTitle" text="Doanh Thu Theo Nguồn — Từng Tháng" styleClass="chart-title-label" />
+                                                        <Region HBox.hgrow="ALWAYS" />
+                                                        <HBox styleClass="mockup-tab-container" spacing="0">
+                                                            <children>
+                                                                <Button fx:id="btnStatNgay" mnemonicParsing="false" onAction="#handleStatNgay" styleClass="mockup-tab-btn" text="Ngày" />
+                                                                <Button fx:id="btnStatThang" mnemonicParsing="false" onAction="#handleStatThang" styleClass="mockup-tab-btn-active" text="Tháng" />
+                                                                <Button fx:id="btnStatQuy" mnemonicParsing="false" onAction="#handleStatQuy" styleClass="mockup-tab-btn" text="Quý" />
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </HBox>
+                                                <StackedBarChart fx:id="stackedBarChartDoanhThu" legendVisible="true" prefHeight="330.0" VBox.vgrow="ALWAYS">
+                                                    <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
+                                                    <yAxis><NumberAxis side="LEFT" /></yAxis>
+                                                </StackedBarChart>
+                                            </children>
+                                        </VBox>
+
+                                        <VBox prefWidth="340.0" styleClass="chart-panel">
+                                            <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                                            <children>
+                                                <Label text="Top Sản Phẩm Bán Chạy" styleClass="chart-title-label" />
+                                                <!-- Dynamic product rows container loaded in Java controller -->
+                                                <VBox fx:id="vboxTopProducts" spacing="16.0" VBox.vgrow="ALWAYS">
+                                                    <VBox.margin>
+                                                        <Insets top="15.0" />
+                                                    </VBox.margin>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- Top Customers Contributing to Revenue -->
+                                <VBox styleClass="table-panel">
+                                    <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
+                                            <children>
+                                                <Label text="👥  Top Khách Hàng Đóng Góp Doanh Thu" styleClass="header-title" />
+                                            </children>
+                                        </HBox>
+                                        <TableView fx:id="tbTopKhachHang" prefHeight="260.0" stylesheets="@style.css">
+                                            <columns>
+                                                <TableColumn fx:id="colRank" prefWidth="60.0" text="#" />
+                                                <TableColumn fx:id="colKhachHangTen" prefWidth="250.0" text="Khách hàng" />
+                                                <TableColumn fx:id="colNapTienTieu" prefWidth="200.0" text="Nạp tiền" />
+                                                <TableColumn fx:id="colDichVuTieu" prefWidth="200.0" text="Dịch vụ" />
+                                                <TableColumn fx:id="colTongDT" prefWidth="200.0" text="Tổng DT" />
+                                            </columns>
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                            </columnResizePolicy>
+                                        </TableView>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+
+                        <!-- PANE 3: TRANSACTION PANE -->
+                        <VBox fx:id="transactionPane" visible="false" managed="false" styleClass="table-panel" VBox.vgrow="ALWAYS">
+                            <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="table-toolbar">
+                                    <children>
+                                        <Label text="Lịch Sử Giao Dịch" styleClass="header-title" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <TextField fx:id="txtSearch" promptText="Tìm kiếm..." prefHeight="35.0" prefWidth="200.0" styleClass="search-box" />
+                                    </children>
+                                </HBox>
+
+                                <TableView fx:id="tbGiaoDich" prefHeight="450.0" stylesheets="@style.css" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="colMaGD" prefWidth="100.0" text="Mã GD" />
+                                        <TableColumn fx:id="colNgay" prefWidth="190.0" text="Ngày" />
+                                        <TableColumn fx:id="colKhachHang" prefWidth="210.0" text="Khách Hàng" />
+                                        <TableColumn fx:id="colLoai" prefWidth="150.0" text="Loại" />
+                                        <TableColumn fx:id="colSoTien" prefWidth="130.0" text="Số Tiền" />
+                                        <TableColumn fx:id="colGhiChu" prefWidth="220.0" text="Ghi Chú" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+                            </children>
+                        </VBox>
+                    </children>
+                </StackPane>
+            </content>
+        </ScrollPane>
     </children>
 </VBox>

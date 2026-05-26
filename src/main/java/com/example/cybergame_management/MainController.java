@@ -30,7 +30,6 @@ public class MainController {
     @FXML private AnchorPane btnNapTien;
     @FXML private AnchorPane btnLichSuChoi;
     @FXML private AnchorPane btnDoiQua;
-    @FXML private AnchorPane btnLichSuDoiQua;
     @FXML private AnchorPane btnQuaTang;
     @FXML private AnchorPane btnNhanVien;
     @FXML private AnchorPane btnSanPham;
@@ -235,7 +234,7 @@ public class MainController {
     }
 
     private void setActiveCustomerSub(AnchorPane activeSubBtn) {
-        AnchorPane[] customerBtns = {btnSubKhachHang, btnNapTien, btnLichSuChoi, btnDoiQua, btnLichSuDoiQua, btnQuaTang};
+        AnchorPane[] customerBtns = {btnSubKhachHang, btnNapTien, btnLichSuChoi, btnDoiQua, btnQuaTang};
         for (AnchorPane btn : customerBtns) {
             if (btn != null) {
                 btn.getStyleClass().remove("sidebar-sub-btn-active");
@@ -390,11 +389,6 @@ public class MainController {
         setActiveCustomerSub(btnDoiQua);
     }
 
-    @FXML
-    public void onLichSuDoiQuaMenuClick() {
-        loadContent("quan-ly-lich-su-doi-qua.fxml", btnKhachHang);
-        setActiveCustomerSub(btnLichSuDoiQua);
-    }
 
     @FXML
     public void onQuaTangMenuClick() {

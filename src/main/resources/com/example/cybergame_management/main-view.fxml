@@ -118,13 +118,6 @@
                                            </Label>
                                         </children>
                                      </AnchorPane>
-                                     <AnchorPane fx:id="btnLichSuDoiQua" onMouseClicked="#onLichSuDoiQuaMenuClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
-                                        <children>
-                                           <Label layoutX="46.0" layoutY="10.0" text="📜  Lịch Sử Đổi Quà" textFill="#f0a3ad">
-                                              <font><Font name="System Bold" size="13.0" /></font>
-                                           </Label>
-                                        </children>
-                                     </AnchorPane>
                                      <AnchorPane fx:id="btnQuaTang" onMouseClicked="#onQuaTangMenuClick" prefHeight="38.0" prefWidth="235.0" styleClass="sidebar-sub-btn">
                                         <children>
                                            <Label layoutX="46.0" layoutY="10.0" text="🧸  Quà Tặng" textFill="#f0a3ad">

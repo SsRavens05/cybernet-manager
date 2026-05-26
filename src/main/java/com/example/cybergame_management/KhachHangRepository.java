@@ -122,19 +122,43 @@ final class KhachHangRepository {
     }
 
     static void deposit(String maKH, long soTien, long diemCong) throws SQLException {
-        String sql = """
+        String sqlUpdate = """
                 UPDATE KHACHHANG
                 SET SODU = NVL(SODU, 0) + ?,
                     SODIEMTICHLUY = NVL(SODIEMTICHLUY, 0) + ?
                 WHERE MAKH = ?
                 """;
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, soTien);
-            statement.setLong(2, diemCong);
-            statement.setString(3, maKH);
-            statement.executeUpdate();
+        String sqlInsert = """
+                INSERT INTO PHIEUNAPTIEN (MAPN, MAKH, SOTIEN, DIEMCONG, NGAYNAP)
+                VALUES (?, ?, ?, ?, SYSDATE)
+                """;
+
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            connection.setAutoCommit(false);
+            try {
+                try (PreparedStatement statement = connection.prepareStatement(sqlUpdate)) {
+                    statement.setLong(1, soTien);
+                    statement.setLong(2, diemCong);
+                    statement.setString(3, maKH);
+                    statement.executeUpdate();
+                }
+
+                String mapn = "NT" + System.currentTimeMillis() % 1000000;
+                try (PreparedStatement statement = connection.prepareStatement(sqlInsert)) {
+                    statement.setString(1, mapn);
+                    statement.setString(2, maKH);
+                    statement.setLong(3, soTien);
+                    statement.setLong(4, diemCong);
+                    statement.executeUpdate();
+                }
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            } finally {
+                connection.setAutoCommit(true);
+            }
         }
     }
 

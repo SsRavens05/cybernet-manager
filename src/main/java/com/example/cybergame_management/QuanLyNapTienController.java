@@ -12,6 +12,22 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.util.Duration;
+import javafx.geometry.Pos;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -113,6 +129,225 @@ public class QuanLyNapTienController {
         String tenKH = customerParts.length > 1 ? customerParts[1] : "";
         String khuyenMai = cbKhuyenMai.getValue();
         int diemCong = calculatePoints(soTien, khuyenMai);
+        String phuongThuc = cbPhuongThuc.getValue();
+
+        if ("Chuyen khoan".equals(phuongThuc) || "Momo".equals(phuongThuc)) {
+            showMomoQRDialog(maKH, tenKH, soTien, diemCong, khuyenMai, phuongThuc);
+        } else {
+            if (KhachHangRepository.isDatabaseEnabled()) {
+                try {
+                    KhachHangRepository.deposit(maKH, soTien, diemCong);
+                } catch (java.sql.SQLException ex) {
+                    ex.printStackTrace();
+                    showError("Không thể nạp tiền vào database: " + ex.getMessage());
+                    return;
+                }
+            }
+
+            String maGD = "GD" + String.format("%03d", data.size() + 1);
+            String thoiGian = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd\nHH:mm"));
+            data.add(0, new NapTien(maGD, thoiGian, maKH, tenKH, String.valueOf(soTien), String.valueOf(diemCong),
+                    phuongThuc, khuyenMai, "Admin"));
+
+            txtSoTien.clear();
+            cbKhachHang.getSelectionModel().clearSelection();
+            cbKhuyenMai.setValue("Khong");
+            cbPhuongThuc.setValue("Tien mat");
+            updateStats();
+        }
+    }
+
+    private void showMomoQRDialog(String maKH, String tenKH, long soTien, int diemCong, String khuyenMai, String phuongThuc) {
+        // === CẤU HÌNH TÀI KHOẢN MOMO NHẬN TIỀN CỦA BẠN ===
+        String momoPhone = "0878008115"; // SĐT đăng ký MoMo của bạn (Thay bằng SĐT MoMo thật ở đây)
+        String momoName = "PHAM CHI NGHIA"; // Tên chủ tài khoản MoMo viết hoa không dấu
+
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.initStyle(StageStyle.UTILITY);
+        dialogStage.setTitle("Thanh Toán Chuyển Khoản MoMo");
+        dialogStage.setResizable(false);
+
+        VBox root = new VBox(15);
+        root.setStyle("-fx-background-color: #ffffff; -fx-padding: 20; -fx-alignment: center;");
+        root.setPrefWidth(400);
+
+        HBox header = new HBox();
+        header.setAlignment(Pos.CENTER);
+        header.setStyle("-fx-background-color: #A50064; -fx-background-radius: 8; -fx-padding: 10;");
+        header.setPrefWidth(360);
+        Label lblTitle = new Label("NẠP TIỀN QUA VÍ MOMO");
+        lblTitle.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 15px; -fx-font-weight: bold;");
+        header.getChildren().add(lblTitle);
+
+        long soTienCanThanhToan = soTien;
+        if (khuyenMai != null && !"Khong".equalsIgnoreCase(khuyenMai)) {
+            try {
+                java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(\\d+)%").matcher(khuyenMai);
+                if (matcher.find()) {
+                    double pct = Double.parseDouble(matcher.group(1));
+                    if (khuyenMai.toLowerCase().contains("giảm") || khuyenMai.toLowerCase().contains("giam")) {
+                        soTienCanThanhToan = (long) (soTien * (1.0 - pct / 100.0));
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
+        VBox detailsCard = new VBox(6);
+        detailsCard.setStyle("-fx-background-color: #fff0f6; -fx-border-color: #ffd6e7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12;");
+        detailsCard.setAlignment(Pos.CENTER_LEFT);
+        detailsCard.setPrefWidth(360);
+
+        Label lblKhachHangInfo = new Label("Khách hàng: " + maKH + " - " + tenKH);
+        lblKhachHangInfo.setStyle("-fx-font-size: 13px; -fx-text-fill: #4b5563; -fx-font-weight: bold;");
+
+        Label lblSoTienInfo = new Label("Số tiền nạp (Cộng tài khoản): " + DisplayFormat.money(soTien));
+        lblSoTienInfo.setStyle("-fx-font-size: 13px; -fx-text-fill: #6b7280; -fx-font-weight: bold;");
+
+        Label lblKhuyenMaiInfo = new Label("Khuyến mãi áp dụng: " + khuyenMai);
+        lblKhuyenMaiInfo.setStyle("-fx-font-size: 13px; -fx-text-fill: #db2777; -fx-font-weight: bold;");
+
+        Label lblThanhToanInfo = new Label("SỐ TIỀN CẦN THANH TOÁN: " + DisplayFormat.money(soTienCanThanhToan));
+        lblThanhToanInfo.setStyle("-fx-font-size: 16px; -fx-text-fill: #A50064; -fx-font-weight: bold;");
+
+        String maGDTemp = "GD" + String.format("%03d", data.size() + 1);
+        String addInfo = "NAP_" + maKH + "_" + maGDTemp;
+        Label lblNoiDung = new Label("Nội dung CK: " + addInfo);
+        lblNoiDung.setStyle("-fx-font-size: 12px; -fx-text-fill: #4b5563; -fx-font-family: 'Courier New', monospace; -fx-font-weight: bold;");
+
+        if (khuyenMai != null && !"Khong".equalsIgnoreCase(khuyenMai)) {
+            detailsCard.getChildren().addAll(lblKhachHangInfo, lblSoTienInfo, lblKhuyenMaiInfo, lblThanhToanInfo, lblNoiDung);
+        } else {
+            detailsCard.getChildren().addAll(lblKhachHangInfo, lblSoTienInfo, lblThanhToanInfo, lblNoiDung);
+        }
+
+        StackPane qrFrame = new StackPane();
+        qrFrame.setStyle("-fx-background-color: #ffffff; -fx-border-color: #f472b6; -fx-border-radius: 8; -fx-border-width: 1.5; -fx-background-radius: 8; -fx-padding: 8;");
+        qrFrame.setPrefSize(220, 220);
+        qrFrame.setMaxSize(220, 220);
+
+        ProgressIndicator progress = new ProgressIndicator();
+        progress.setStyle("-fx-progress-color: #A50064;");
+        progress.setMaxSize(35, 35);
+
+        ImageView qrImageView = new ImageView();
+        qrImageView.setFitWidth(200);
+        qrImageView.setFitHeight(200);
+        qrImageView.setPreserveRatio(true);
+
+        qrFrame.getChildren().addAll(progress, qrImageView);
+
+        Image qrImage = null;
+        try {
+            // 1. Tự động sinh mã VietQR MoMo động chứa sẵn số tiền và nội dung chuyển khoản từ VietQR API
+            String qrUrl = "https://img.vietqr.io/image/momo-" + momoPhone + "-compact.png?amount=" + soTienCanThanhToan + "&addInfo=" + addInfo + "&cardHolder=" + momoName.replace(" ", "%20");
+            qrImage = new Image(qrUrl, true);
+            
+            qrImage.progressProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal.doubleValue() == 1.0) {
+                    progress.setVisible(false);
+                }
+            });
+            qrImage.errorProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal) {
+                    // 2. Tự động dự phòng: Nếu không có kết nối Internet hoặc lỗi API, nạp ảnh mã QR tĩnh của bạn!
+                    try {
+                        java.net.URL resourceUrl = getClass().getResource("images/momo_qr.png");
+                        Image backupImage = null;
+                        if (resourceUrl != null) {
+                            backupImage = new Image(resourceUrl.toExternalForm());
+                        } else {
+                            java.io.File file = new java.io.File("src/main/resources/com/example/cybergame_management/images/momo_qr.png");
+                            if (file.exists()) {
+                                backupImage = new Image(file.toURI().toString());
+                            } else {
+                                java.io.File fileTemp = new java.io.File("C:\\Users\\ACER\\.gemini\\antigravity\\brain\\f6498dcd-259b-4eb2-bab8-72381e3468b0\\media__1779779547053.png");
+                                if (fileTemp.exists()) {
+                                    backupImage = new Image(fileTemp.toURI().toString());
+                                }
+                            }
+                        }
+                        if (backupImage != null) {
+                            qrImageView.setImage(backupImage);
+                        } else {
+                            Label lblError = new Label("Lỗi mạng\nKhông thể tải mã QR!");
+                            lblError.setStyle("-fx-text-fill: #ef4444; -fx-text-alignment: center; -fx-font-weight: bold;");
+                            qrFrame.getChildren().add(lblError);
+                        }
+                    } catch (Exception ignored) {}
+                    progress.setVisible(false);
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        if (qrImage != null) {
+            qrImageView.setImage(qrImage);
+        } else {
+            progress.setVisible(false);
+            Label lblError = new Label("Lỗi tải mã QR\nVui lòng thử lại!");
+            lblError.setStyle("-fx-text-fill: #ef4444; -fx-text-alignment: center; -fx-font-weight: bold;");
+            qrFrame.getChildren().add(lblError);
+        }
+
+        HBox statusBox = new HBox(6);
+        statusBox.setAlignment(Pos.CENTER);
+        Label blinkingDot = new Label("●");
+        blinkingDot.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 14px;");
+
+        Timeline pulse = new Timeline(
+                new KeyFrame(Duration.ZERO, e -> blinkingDot.setOpacity(1.0)),
+                new KeyFrame(Duration.seconds(0.5), e -> blinkingDot.setOpacity(0.2)),
+                new KeyFrame(Duration.seconds(1.0), e -> blinkingDot.setOpacity(1.0))
+        );
+        pulse.setCycleCount(Timeline.INDEFINITE);
+        pulse.play();
+
+        Label lblStatus = new Label("Đang chờ quét mã thanh toán...");
+        lblStatus.setStyle("-fx-text-fill: #4b5563; -fx-font-size: 13px; -fx-font-weight: bold;");
+        statusBox.getChildren().addAll(blinkingDot, lblStatus);
+
+        Button btnConfirm = new Button("Xác nhận thành công");
+        btnConfirm.setStyle("-fx-background-color: #22c55e; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand; -fx-font-size: 12px;");
+
+        Button btnCancel = new Button("Hủy thanh toán");
+        btnCancel.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand; -fx-font-size: 12px;");
+
+        HBox buttonsBox = new HBox(12);
+        buttonsBox.setAlignment(Pos.CENTER);
+        buttonsBox.getChildren().addAll(btnCancel, btnConfirm);
+
+        btnConfirm.setOnAction(e -> {
+            btnConfirm.setDisable(true);
+            btnCancel.setDisable(true);
+            executeDepositAndSuccess(dialogStage, maKH, tenKH, soTien, diemCong, khuyenMai, phuongThuc, pulse, blinkingDot, lblStatus);
+        });
+
+        btnCancel.setOnAction(e -> {
+            pulse.stop();
+            dialogStage.close();
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Thông báo");
+            alert.setHeaderText(null);
+            alert.setContentText("Giao dịch nạp tiền đã bị hủy bởi nhân viên.");
+            alert.show();
+        });
+
+        root.getChildren().addAll(header, detailsCard, qrFrame, statusBox, buttonsBox);
+
+        Scene scene = new Scene(root);
+        dialogStage.setScene(scene);
+        dialogStage.showAndWait();
+    }
+
+    private void executeDepositAndSuccess(Stage stage, String maKH, String tenKH, long soTien, int diemCong, String khuyenMai, String phuongThuc, Timeline pulse, Label blinkingDot, Label lblStatus) {
+        pulse.stop();
+        blinkingDot.setText("✔");
+        blinkingDot.setStyle("-fx-text-fill: #22c55e; -fx-font-size: 16px;");
+        lblStatus.setText("Thanh toán thành công!");
+        lblStatus.setStyle("-fx-text-fill: #22c55e; -fx-font-size: 13px; -fx-font-weight: bold;");
 
         if (KhachHangRepository.isDatabaseEnabled()) {
             try {
@@ -120,6 +355,7 @@ public class QuanLyNapTienController {
             } catch (java.sql.SQLException ex) {
                 ex.printStackTrace();
                 showError("Không thể nạp tiền vào database: " + ex.getMessage());
+                stage.close();
                 return;
             }
         }
@@ -127,13 +363,24 @@ public class QuanLyNapTienController {
         String maGD = "GD" + String.format("%03d", data.size() + 1);
         String thoiGian = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd\nHH:mm"));
         data.add(0, new NapTien(maGD, thoiGian, maKH, tenKH, String.valueOf(soTien), String.valueOf(diemCong),
-                cbPhuongThuc.getValue(), khuyenMai, "Admin"));
+                phuongThuc, khuyenMai, "Admin"));
 
-        txtSoTien.clear();
-        cbKhachHang.getSelectionModel().clearSelection();
-        cbKhuyenMai.setValue("Khong");
-        cbPhuongThuc.setValue("Tien mat");
         updateStats();
+
+        Timeline closeTimeline = new Timeline(new KeyFrame(Duration.seconds(1.2), e -> {
+            stage.close();
+            txtSoTien.clear();
+            cbKhachHang.getSelectionModel().clearSelection();
+            cbKhuyenMai.setValue("Khong");
+            cbPhuongThuc.setValue("Tien mat");
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Thành công");
+            alert.setHeaderText(null);
+            alert.setContentText("Nạp tiền thành công cho khách hàng: " + tenKH + "\nSố tiền: " + DisplayFormat.money(soTien) + " (+ " + diemCong + " điểm)");
+            alert.show();
+        }));
+        closeTimeline.play();
     }
 
     private int calculatePoints(long soTien, String khuyenMai) {

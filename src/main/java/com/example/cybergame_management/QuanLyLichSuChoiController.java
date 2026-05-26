@@ -22,7 +22,6 @@ public class QuanLyLichSuChoiController {
     @FXML private TableColumn<LichSuChoi, String> colKhachHang;
     @FXML private TableColumn<LichSuChoi, String> colNgayBD;
     @FXML private TableColumn<LichSuChoi, String> colNgayKT;
-    @FXML private TableColumn<LichSuChoi, String> colTrangThai;
 
     private final ObservableList<LichSuChoi> data = FXCollections.observableArrayList(
             new LichSuChoi("LSC001", "PC001", "KH001", "Nguyen Van An", "2026-05-06 08:00:00", "2026-05-06 10:00:00", "Da thanh toan"),
@@ -38,7 +37,6 @@ public class QuanLyLichSuChoiController {
         colKhachHang.setCellValueFactory(cellData -> cellData.getValue().khachHangProperty());
         colNgayBD.setCellValueFactory(cellData -> cellData.getValue().ngayBDProperty());
         colNgayKT.setCellValueFactory(cellData -> cellData.getValue().ngayKTProperty());
-        colTrangThai.setCellValueFactory(cellData -> cellData.getValue().trangThaiProperty());
 
         FilteredList<LichSuChoi> filtered = new FilteredList<>(data, item -> true);
         tbLichSuChoi.setItems(filtered);
@@ -49,8 +47,7 @@ public class QuanLyLichSuChoiController {
     private boolean matchesFilter(LichSuChoi item) {
         return SearchMatcher.containsKeyword(txtSearch.getText(),
                 item.maLSProperty().get(), item.maPCProperty().get(), item.maKHProperty().get(),
-                item.khachHangProperty().get(), item.ngayBDProperty().get(), item.ngayKTProperty().get(),
-                item.trangThaiProperty().get());
+                item.khachHangProperty().get(), item.ngayBDProperty().get(), item.ngayKTProperty().get());
     }
 
     private void updateStats() {

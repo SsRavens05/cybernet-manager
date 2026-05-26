@@ -41,8 +41,12 @@
     -fx-size: 48px;
     -fx-padding: 0 20 0 20;
 }
-.table-view .column-header .label {
+.table-view .column-header .label,
+.table-view .column-header .text,
+.table-view .column-header-background .label,
+.table-view .column-header-background .text {
     -fx-text-fill: #64748b;
+    -fx-fill: #64748b;
     -fx-font-weight: bold;
     -fx-alignment: CENTER_LEFT;
 }
@@ -523,3 +527,249 @@
     -fx-font-weight: bold;
     -fx-font-size: 13px;
 }
+
+/* =========================================================================
+   [MOCKUP FINANCIAL DASHBOARD]
+   Custom styles for the redesigned Financial Dashboard matching the mockup.
+   ========================================================================= */
+
+.mockup-tab-container {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-padding: 4;
+}
+
+.mockup-tab-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #64748b;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.mockup-tab-btn:hover {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #334155;
+}
+
+.mockup-tab-btn-active {
+    -fx-background-color: #9f0719; /* Dark red matching app branding */
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 8;
+}
+
+.premium-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.06), 10, 0, 0, 2);
+    -fx-padding: 18;
+}
+
+.premium-card-icon-container {
+    -fx-background-radius: 8;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+    -fx-max-width: 32px;
+    -fx-max-height: 32px;
+    -fx-alignment: center;
+}
+
+.icon-blue {
+    -fx-background-color: #eff6ff;
+}
+.icon-green {
+    -fx-background-color: #ecfdf5;
+}
+.icon-orange {
+    -fx-background-color: #fff7ed;
+}
+.icon-purple {
+    -fx-background-color: #faf5ff;
+}
+
+.premium-card-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: bold;
+}
+
+.premium-card-value-blue {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4f46e5;
+}
+.premium-card-value-green {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #10b981;
+}
+.premium-card-value-orange {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f59e0b;
+}
+.premium-card-value-purple {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #a855f7;
+}
+
+.premium-card-footer {
+    -fx-font-size: 12px;
+    -fx-text-fill: #94a3b8;
+}
+
+/* Custom styles for JavaFX ProgressBars */
+.premium-progress-bar-blue .track,
+.premium-progress-bar-green .track,
+.premium-progress-bar-orange .track,
+.premium-progress-bar-purple .track {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 4;
+}
+
+.premium-progress-bar-blue .bar {
+    -fx-background-color: #4f46e5;
+    -fx-background-radius: 4;
+}
+.premium-progress-bar-green .bar {
+    -fx-background-color: #10b981;
+    -fx-background-radius: 4;
+}
+.premium-progress-bar-orange .bar {
+    -fx-background-color: #f59e0b;
+    -fx-background-radius: 4;
+}
+.premium-progress-bar-purple .bar {
+    -fx-background-color: #a855f7;
+    -fx-background-radius: 4;
+}
+
+.premium-progress-percentage-blue {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4f46e5;
+}
+.premium-progress-percentage-green {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #10b981;
+}
+.premium-progress-percentage-orange {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f59e0b;
+}
+.premium-progress-percentage-purple {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #a855f7;
+}
+
+.chart-title-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.product-row-name {
+    -fx-font-size: 14px;
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+}
+.product-row-value {
+    -fx-font-size: 14px;
+    -fx-text-fill: #f97316;
+    -fx-font-weight: bold;
+}
+
+/* Custom Table cell text styles */
+.rank-column-cell {
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b;
+}
+.customer-name-cell {
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+.naptien-cell {
+    -fx-font-weight: bold;
+    -fx-text-fill: #4f46e5;
+}
+.dichvu-cell {
+    -fx-font-weight: bold;
+    -fx-text-fill: #10b981;
+}
+.sanpham-cell {
+    -fx-font-weight: bold;
+    -fx-text-fill: #f59e0b;
+}
+.tongdt-cell {
+    -fx-font-weight: bold;
+    -fx-text-fill: #9f0719;
+}
+
+/* Premium chart series custom colors */
+/* Series 0: Nạp tiền (Indigo/Royal Blue) */
+.default-color0.chart-bar {
+    -fx-bar-fill: #4f46e5;
+    -fx-background-color: linear-gradient(to top, #4338ca, #4f46e5);
+}
+.chart-legend-item-symbol.default-color0 {
+    -fx-background-color: #4f46e5;
+}
+
+/* Series 1: Dịch vụ (Emerald Green) */
+.default-color1.chart-bar {
+    -fx-bar-fill: #10b981;
+    -fx-background-color: linear-gradient(to top, #059669, #10b981);
+}
+.chart-legend-item-symbol.default-color1 {
+    -fx-background-color: #10b981;
+}
+
+/* Force JavaFX chart axis tick labels to be visible in dark slate */
+.axis {
+    -fx-tick-label-fill: #475569;
+    -fx-tick-label-font-size: 12px;
+    -fx-tick-label-font-weight: bold;
+}
+
+/* Force JavaFX chart legend labels to match their series colors */
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+}
+.chart-legend-item {
+    -fx-text-fill: #475569; /* Fallback color so it is NEVER invisible */
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+.chart-legend-item.default-color0 {
+    -fx-text-fill: #4f46e5; /* Indigo/Blue for Nạp tiền */
+}
+.chart-legend-item.default-color1 {
+    -fx-text-fill: #10b981; /* Green for Dịch vụ */
+}
+.chart-legend-item.series0 {
+    -fx-text-fill: #4f46e5;
+}
+.chart-legend-item.series1 {
+    -fx-text-fill: #10b981;
+}
+
+
+
+
+
+
+
