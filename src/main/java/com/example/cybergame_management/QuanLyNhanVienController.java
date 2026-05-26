@@ -206,8 +206,30 @@ public class QuanLyNhanVienController {
         TextField txtNgayThoi = new TextField("—");
         ComboBox<String> cbTrangThai = new ComboBox<>(FXCollections.observableArrayList("Đang làm", "Nghỉ phép", "Nghỉ việc"));
         cbTrangThai.setValue("Đang làm");
-        ComboBox<String> cbCaLam = new ComboBox<>(FXCollections.observableArrayList("Ca Sáng", "Ca Trưa", "Ca Chiều", "Ca Đêm"));
-        cbCaLam.setValue("Ca Sáng");
+
+        ObservableList<String> shiftsList = FXCollections.observableArrayList();
+        try {
+            ObservableList<CaLam> activeShifts;
+            if (DatabaseConnection.isConfigured()) {
+                activeShifts = CaLamRepository.findAll();
+            } else {
+                activeShifts = DatabaseSeedData.caLamShifts();
+            }
+            for (CaLam cl : activeShifts) {
+                shiftsList.add(cl.getMaCa() + " (" + cl.getThoiGianBD() + " - " + cl.getThoiGianKT() + ")");
+            }
+        } catch (Exception ex) {
+            ObservableList<CaLam> activeShifts = DatabaseSeedData.caLamShifts();
+            for (CaLam cl : activeShifts) {
+                shiftsList.add(cl.getMaCa() + " (" + cl.getThoiGianBD() + " - " + cl.getThoiGianKT() + ")");
+            }
+        }
+        if (shiftsList.isEmpty()) {
+            shiftsList.setAll("Ca Sáng", "Ca Trưa", "Ca Chiều", "Ca Đêm");
+        }
+
+        ComboBox<String> cbCaLam = new ComboBox<>(shiftsList);
+        cbCaLam.setValue(shiftsList.get(0));
 
         // Row 0
         grid.add(new Label("Mã NV (Tự động)"), 0, 0);

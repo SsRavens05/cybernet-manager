@@ -252,6 +252,9 @@ public class QuanLyDoiQuaController {
                 selectedKH.setSoDiemTichLuy(String.valueOf(currentPoints - pointsNeeded));
             }
             
+            // Đồng bộ lại điểm thật từ Database nếu online
+            refreshCustomerPoints();
+            
             // Clear input fields
             cbKhachHang.getSelectionModel().clearSelection();
             cbQuaTang.getSelectionModel().clearSelection();
@@ -270,6 +273,24 @@ public class QuanLyDoiQuaController {
             } else {
                 showError("Lỗi khi lưu đổi quà vào Database: " + ex.getMessage());
             }
+        }
+    }
+
+    private void refreshCustomerPoints() {
+        try {
+            if (DatabaseConnection.isConfigured()) {
+                ObservableList<KhachHang> latest = KhachHangRepository.findAll();
+                for (KhachHang newKh : latest) {
+                    for (KhachHang oldKh : customersList) {
+                        if (oldKh.getMaKH().equals(newKh.getMaKH())) {
+                            oldKh.setSoDiemTichLuy(newKh.getSoDiemTichLuy());
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -366,6 +387,9 @@ public class QuanLyDoiQuaController {
         bHuy.getStyleClass().add("btn-cancel");
         bHuy.setOnAction(e -> stage.close());
 
+        final ObservableList<KhachHang> finalCustomers = customers;
+        final ObservableList<QuaTang> finalGifts = gifts;
+
         Button bLuu = new Button("Lưu");
         bLuu.getStyleClass().add("btn-save");
         bLuu.setOnAction(e -> {
@@ -378,6 +402,79 @@ public class QuanLyDoiQuaController {
             String maKH = cbMaKH.getValue().split(" - ")[0].trim();
             String maQT = cbMaQT.getValue().split(" - ")[0].trim();
             
+            // Tìm đối tượng KhachHang và QuaTang tương ứng để kiểm tra điểm tích lũy
+            KhachHang selectedKH = null;
+            for (KhachHang kh : finalCustomers) {
+                if (kh.getMaKH().equals(maKH)) {
+                    selectedKH = kh;
+                    break;
+                }
+            }
+
+            QuaTang selectedQT = null;
+            for (QuaTang qt : finalGifts) {
+                if (qt.getMaQT().equals(maQT)) {
+                    selectedQT = qt;
+                    break;
+                }
+            }
+
+            long currentPoints = 0;
+            if (selectedKH != null) {
+                try {
+                    currentPoints = Long.parseLong(selectedKH.getSoDiemTichLuy().trim());
+                } catch (Exception ex2) {
+                }
+            }
+
+            // Lấy điểm mới nhất từ database nếu có cấu hình
+            if (DatabaseConnection.isConfigured()) {
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement("SELECT SODIEMTICHLUY FROM KHACHHANG WHERE MAKH = ?")) {
+                    stmt.setString(1, maKH);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            currentPoints = rs.getLong("SODIEMTICHLUY");
+                            if (selectedKH != null) {
+                                selectedKH.setSoDiemTichLuy(String.valueOf(currentPoints));
+                            }
+                        }
+                    }
+                } catch (SQLException ex2) {
+                    ex2.printStackTrace();
+                }
+            }
+
+            long sl = 1;
+            try {
+                sl = Long.parseLong(txtSoLuong.getText().trim());
+                if (sl <= 0) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException ex2) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Số lượng phải là một số nguyên dương (> 0)!");
+                alert.showAndWait();
+                return;
+            }
+
+            long pointsNeeded = 0;
+            if (selectedQT != null) {
+                try {
+                    pointsNeeded = Long.parseLong(selectedQT.getSoDiemTieuHao().trim()) * sl;
+                } catch (Exception ex2) {
+                }
+            }
+
+            if (currentPoints < pointsNeeded) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Không Đủ Điểm Tích Lũy");
+                alert.setHeaderText("Đổi quà thất bại!");
+                alert.setContentText("Khách hàng không đủ điểm tích lũy để thực hiện đổi quà này.\n" +
+                                     "Điểm hiện tại: " + currentPoints + " ⭐ | Điểm cần: " + pointsNeeded + " ⭐");
+                alert.showAndWait();
+                return;
+            }
+
             long count = data.stream()
                     .filter(dq -> dq.getMaKH().equalsIgnoreCase(maKH))
                     .count();
@@ -400,6 +497,18 @@ public class QuanLyDoiQuaController {
                 }
                 data.add(newDQ);
                 updateStats();
+
+                // Cập nhật điểm cục bộ trong customersList của controller chính
+                for (KhachHang kh : QuanLyDoiQuaController.this.customersList) {
+                    if (kh.getMaKH().equals(maKH)) {
+                        kh.setSoDiemTichLuy(String.valueOf(currentPoints - pointsNeeded));
+                        break;
+                    }
+                }
+
+                // Đồng bộ từ database nếu online
+                refreshCustomerPoints();
+
                 stage.close();
             } catch (java.sql.SQLException ex) {
                 ex.printStackTrace();
@@ -618,6 +727,10 @@ public class QuanLyDoiQuaController {
                 }
                 tbDoiQua.refresh();
                 updateStats();
+                
+                // Đồng bộ lại điểm tích lũy của khách hàng
+                refreshCustomerPoints();
+                
                 stage.close();
             } catch (java.sql.SQLException ex) {
                 ex.printStackTrace();

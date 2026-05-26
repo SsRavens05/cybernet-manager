@@ -43,7 +43,7 @@ final class NhanVienRepository {
                 String luongStr = DisplayFormat.money(luongCB) + "đ";
                 String cl = resultSet.getString("CALAM");
                 if (cl == null || cl.trim().isEmpty()) {
-                    cl = "Ca Sáng";
+                    cl = "CA001 (06:00 - 12:00)";
                 }
 
                 result.add(new NhanVien(
@@ -216,10 +216,28 @@ final class NhanVienRepository {
              PreparedStatement stmt = connection.prepareStatement(checkSql);
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next() && rs.getInt(1) == 0) {
-                String alterSql = "ALTER TABLE NHAN_VIEN ADD CALAM VARCHAR2(100) DEFAULT 'Ca Sáng'";
+                String alterSql = "ALTER TABLE NHAN_VIEN ADD CALAM VARCHAR2(100) DEFAULT 'CA001 (06:00 - 12:00)'";
                 try (PreparedStatement alterStmt = connection.prepareStatement(alterSql)) {
                     alterStmt.executeUpdate();
                 }
+            }
+            
+            // Migrate any old hardcoded values to standard shift representations in Database
+            String migrateSql = """
+                    UPDATE NHAN_VIEN
+                    SET CALAM = CASE 
+                        WHEN CALAM LIKE '%Sáng%' OR CALAM = 'ca sang' OR CALAM = 'sang' THEN 'CA001 (06:00 - 12:00)'
+                        WHEN CALAM LIKE '%Chiều%' OR CALAM = 'ca chieu' OR CALAM = 'chieu' THEN 'CA002 (12:00 - 18:00)'
+                        WHEN CALAM LIKE '%Đêm%' OR CALAM = 'ca dem' OR CALAM = 'dem' THEN 'CA005 (00:00 - 06:00)'
+                        WHEN CALAM LIKE '%Trưa%' OR CALAM = 'ca trua' OR CALAM = 'trua' THEN 'CA002 (12:00 - 18:00)'
+                        ELSE CALAM
+                    END
+                    WHERE CALAM LIKE '%Sáng%' OR CALAM LIKE '%Chiều%' OR CALAM LIKE '%Đêm%' OR CALAM LIKE '%Trưa%' 
+                       OR CALAM = 'ca sang' OR CALAM = 'sang' OR CALAM = 'ca chieu' OR CALAM = 'chieu' 
+                       OR CALAM = 'ca dem' OR CALAM = 'dem' OR CALAM = 'ca trua' OR CALAM = 'trua'
+                    """;
+            try (PreparedStatement migrateStmt = connection.prepareStatement(migrateSql)) {
+                migrateStmt.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();

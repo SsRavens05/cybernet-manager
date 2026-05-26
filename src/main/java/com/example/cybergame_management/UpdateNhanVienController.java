@@ -56,22 +56,76 @@ public class UpdateNhanVienController {
         cbTrangThai.setValue(nv.getTrangThai());
 
         // Setup và đổ data cho ComboBox Ca Làm
-        cbCaLam.getItems().setAll("Ca Sáng", "Ca Trưa", "Ca Chiều", "Ca Đêm");
-        String currentShift = nv.getCaLam();
-        if (currentShift != null) {
-            if (currentShift.contains("Sáng") || currentShift.equalsIgnoreCase("ca sang") || currentShift.equalsIgnoreCase("sang")) {
-                cbCaLam.setValue("Ca Sáng");
-            } else if (currentShift.contains("Trưa") || currentShift.equalsIgnoreCase("ca trua") || currentShift.equalsIgnoreCase("trua")) {
-                cbCaLam.setValue("Ca Trưa");
-            } else if (currentShift.contains("Chiều") || currentShift.equalsIgnoreCase("ca chieu") || currentShift.equalsIgnoreCase("chieu")) {
-                cbCaLam.setValue("Ca Chiều");
-            } else if (currentShift.contains("Đêm") || currentShift.equalsIgnoreCase("ca dem") || currentShift.equalsIgnoreCase("dem")) {
-                cbCaLam.setValue("Ca Đêm");
+        ObservableList<String> shiftsList = FXCollections.observableArrayList();
+        try {
+            ObservableList<CaLam> activeShifts;
+            if (DatabaseConnection.isConfigured()) {
+                activeShifts = CaLamRepository.findAll();
             } else {
-                cbCaLam.setValue("Ca Sáng");
+                activeShifts = DatabaseSeedData.caLamShifts();
             }
-        } else {
-            cbCaLam.setValue("Ca Sáng");
+            for (CaLam cl : activeShifts) {
+                shiftsList.add(cl.getMaCa() + " (" + cl.getThoiGianBD() + " - " + cl.getThoiGianKT() + ")");
+            }
+        } catch (Exception ex) {
+            ObservableList<CaLam> activeShifts = DatabaseSeedData.caLamShifts();
+            for (CaLam cl : activeShifts) {
+                shiftsList.add(cl.getMaCa() + " (" + cl.getThoiGianBD() + " - " + cl.getThoiGianKT() + ")");
+            }
+        }
+        if (shiftsList.isEmpty()) {
+            shiftsList.setAll("Ca Sáng", "Ca Trưa", "Ca Chiều", "Ca Đêm");
+        }
+        cbCaLam.getItems().setAll(shiftsList);
+
+        String currentShift = nv.getCaLam();
+        boolean found = false;
+        for (String item : cbCaLam.getItems()) {
+            String maCa = item.split(" ")[0]; // e.g. "CA001"
+            if (currentShift != null && (currentShift.equalsIgnoreCase(maCa) || item.contains(currentShift) || currentShift.contains(maCa))) {
+                cbCaLam.setValue(item);
+                found = true;
+                break;
+            }
+        }
+        if (!found && currentShift != null) {
+            // Fallback matching
+            if (currentShift.contains("Sáng") || currentShift.equalsIgnoreCase("ca sang") || currentShift.equalsIgnoreCase("sang")) {
+                for (String item : cbCaLam.getItems()) {
+                    if (item.contains("06:00") || item.contains("08:00")) {
+                        cbCaLam.setValue(item);
+                        found = true;
+                        break;
+                    }
+                }
+            } else if (currentShift.contains("Trưa") || currentShift.equalsIgnoreCase("ca trua") || currentShift.equalsIgnoreCase("trua")) {
+                for (String item : cbCaLam.getItems()) {
+                    if (item.contains("12:00")) {
+                        cbCaLam.setValue(item);
+                        found = true;
+                        break;
+                    }
+                }
+            } else if (currentShift.contains("Chiều") || currentShift.equalsIgnoreCase("ca chieu") || currentShift.equalsIgnoreCase("chieu")) {
+                for (String item : cbCaLam.getItems()) {
+                    if (item.contains("13:00") || item.contains("18:00")) {
+                        cbCaLam.setValue(item);
+                        found = true;
+                        break;
+                    }
+                }
+            } else if (currentShift.contains("Đêm") || currentShift.equalsIgnoreCase("ca dem") || currentShift.equalsIgnoreCase("dem")) {
+                for (String item : cbCaLam.getItems()) {
+                    if (item.contains("00:00") || item.contains("24:00")) {
+                        cbCaLam.setValue(item);
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!found && !cbCaLam.getItems().isEmpty()) {
+            cbCaLam.setValue(cbCaLam.getItems().get(0));
         }
     }
 
